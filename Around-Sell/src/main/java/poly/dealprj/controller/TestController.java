@@ -1,11 +1,11 @@
 package poly.dealprj.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import poly.dealprj.mapper.UserMapper;
 
 @Controller
 public class TestController {
@@ -48,5 +48,14 @@ public class TestController {
             this.name = name;
         }
 
+    }
+
+    @Autowired
+    UserMapper userMapper;
+
+    @RequestMapping(method = RequestMethod.GET, value = "/user")
+    @ResponseBody
+    public String test() {
+        return userMapper.findAll("abc").getPw();
     }
 }

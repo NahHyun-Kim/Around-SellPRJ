@@ -1,0 +1,17 @@
+server:
+  port:8080
+
+
+spring:
+  redis:
+    host: root
+    port: 6379
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/AroundSell?autoReconnect=true&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: epdlxjqnstjrrhk
+    username: root
+
+mybatis:
+  type-aliases-package: kr.co.fastcampus.eatgo
+  mapper-locations: mybatis/mapper/**/*.xml
