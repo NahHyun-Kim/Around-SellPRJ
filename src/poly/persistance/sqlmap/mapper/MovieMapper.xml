@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.IMovieMapper">
+
+	<!-- 수집된 내용 DB에 등록 -->
+	<insert id="InsertMovieInfo" parameterType="MovieDTO">
+		INSERT INTO movie.movie
+			(
+				RANK_CHECK_TIME,
+				MOVIE_RANK,
+				MOVIE_NM,
+				SCORE,
+				OPEN_DAY,
+				REG_ID,
+				CHG_ID
+			)
+		VALUES(
+				#{rank_chkeck_time},
+				#{movie_rank},
+				#{movie_nm},
+				#{score},
+				#{open_day},
+				#{reg_id},
+				#{reg_id}
+		)
+	</insert>
+	
+	<!-- 수집된 데이터 조회 -->
+	<select id="getMovieInfo" parameterType="MovieDTO" resultType="MovieDTO">
+		SELECT 	
+			RANK_CHECK_TIME,
+			SEQ,
+			MOVIE_RANK,
+			MOVIE_NM,
+			SCORE,
+			OPEN_DAY,
+			REG_ID,
+			REG_DT,
+			CHG_ID,
+			CHG_DT
+		FROM
+			movie.movie
+		WHERE
+			RANK_CHECK_TIME = #{rank_chkeck_time}
+
+
+	</select>
+		
+</mapper>
+
