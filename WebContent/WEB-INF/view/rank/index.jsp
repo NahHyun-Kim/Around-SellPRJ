@@ -3,8 +3,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="/js/annyang.js"></script>
-<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/resource/js/annyang.js"></script>
+<script src="/resource/js/jquery-3.4.1.min.js"></script>
 <script>
 	/*
 	#########################################################################

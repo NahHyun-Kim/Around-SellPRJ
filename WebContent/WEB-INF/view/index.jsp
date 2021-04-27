@@ -12,7 +12,7 @@
 </style>
 </head>
 <body>
-와! 스프링 아시는구나!
-참고로 겁.나.어.렵.습.니.다
+<a href="/index.do">메인 페이지</a>
+<a href="/signup.do">회원가입</a>
 </body>
 </html>
