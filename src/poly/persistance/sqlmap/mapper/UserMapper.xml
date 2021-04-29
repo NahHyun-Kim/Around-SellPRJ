@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.IUserMapper">
+
+    <!--회원 가입하기(회원정보 등록하기) -->
+    <insert id="insertUser" parameterType="UserDTO">
+        INSERT INTO aroundsell.user_info
+            (
+                USER_EMAIL,
+                PASSWORD,
+                USER_NAME,
+                ADDR,
+                ADDR2,
+                REG_ID,
+                CHG_ID
+            )
+            VALUES(
+                #{user_email},
+                #{password},
+                #{user_name},
+                #{addr},
+                #{addr2},
+                #{user_name},
+                #{user_name}
+                  )
+    </insert>
+
+    <!--중복가입 방지를 위한 이메일 중복 확인 -->
+    <select id="emailCheck" parameterType="UserDTO" resultType="UserDTO">
+        SELECT
+            USER_EMAIL
+        FROM
+            aroundsell.user_info
+        WHERE
+            USER_EMAIL = #{user_email}
+    </select>
+</mapper>

@@ -1,0 +1,8 @@
+/* signUp.jsp(회원가입) CSS 지정 */
+/* 회원가입 시 표시되는 지도 크기 지정 */
+#map {
+    width: 350px;
+    height: 200px;
+    margin-top: 10px;
+    display: none
+}

@@ -6,9 +6,10 @@
 
 	<!-- MySQL dataSource -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://127.0.0.1:3306/work?useSSL=false&amp;serverTimezone=UTC" />
-        <property name="username" value="AroundSell"/> <!-- mysql 계정 -->
+        <!--connect 오류를 수정하기 위해 com.mysql.cj.jdbc.Driver 변경 -->
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/aroundsell?useSSL=false&amp;serverTimezone=UTC" />
+        <property name="username" value="root"/> <!-- mysql user 계정 -->
         <property name="password" value="epdlxjqnstjrrhk"/> <!-- mysql 패스워드 -->
     </bean>
     

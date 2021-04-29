@@ -37,6 +37,13 @@
 			<version>1.1</version>
 		</dependency>
 
+		<!--Text -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
 		<!-- 자바 메일 발송 라이브러리 -->
 		<dependency>
 			<groupId>javax.mail</groupId>
