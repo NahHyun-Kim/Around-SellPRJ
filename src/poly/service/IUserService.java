@@ -8,5 +8,7 @@ public interface IUserService {
     int insertUser(UserDTO pDTO) throws Exception;
     // 중복 회원가입 방지(이메일 중복확인)
     UserDTO emailCheck(String user_email) throws Exception;
+    // 로그인하기
+    UserDTO getLogin(UserDTO pDTO) throws Exception;
 
 }

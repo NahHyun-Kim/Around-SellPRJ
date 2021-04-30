@@ -70,7 +70,12 @@
 	<welcome-file-list>
 		<welcome-file>index.do</welcome-file>
 	</welcome-file-list>
-		
+
+	<!-- 세션 유효시간 설정 -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+
 	<!-- 에러 발생시, 에러페이지 이동 -->
 	<error-page>
 		<exception-type>java.lang.Throwable</exception-type>

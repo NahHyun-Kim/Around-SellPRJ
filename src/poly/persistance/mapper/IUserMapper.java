@@ -11,4 +11,8 @@ public interface IUserMapper {
 
     // 회원 가입 전, 중복 회원가입 방지
     UserDTO emailCheck(String user_email) throws Exception;
+
+    //  로그인하기
+    UserDTO getLogin(UserDTO pDTO) throws Exception;
+
 }

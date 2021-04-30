@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import poly.dto.UserDTO;
 import poly.persistance.mapper.IUserMapper;
 import poly.service.IUserService;
+import poly.util.CmmUtil;
 
 import javax.annotation.Resource;
 
@@ -27,6 +28,12 @@ public class UserService implements IUserService {
     @Override
     public UserDTO emailCheck(String user_email) throws Exception {
         return userMapper.emailCheck(user_email);
+    }
+
+    // 로그인하기
+    @Override
+    public UserDTO getLogin(UserDTO pDTO) throws Exception {
+        return userMapper.getLogin(pDTO);
     }
 
 

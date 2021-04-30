@@ -17,6 +17,14 @@ public class UserDTO {
     private String chg_id; //수정자
     private String chg_dt; //수정일
 
+    public String getUser_no() {
+        return user_no;
+    }
+
+    public void setUser_no(String user_no) {
+        this.user_no = user_no;
+    }
+
     public String getReg_id() {
         return reg_id;
     }
