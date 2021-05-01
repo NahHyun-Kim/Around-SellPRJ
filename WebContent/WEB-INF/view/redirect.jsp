@@ -10,10 +10,13 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <!-- jquery -->
+    <script src="/resource/js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript">
         alert("<%=msg%>");
         location.href="<%=url%>";
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <body>
 

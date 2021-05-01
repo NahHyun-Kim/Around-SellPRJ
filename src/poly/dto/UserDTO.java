@@ -3,11 +3,11 @@ package poly.dto;
 public class UserDTO {
 
     //회원가입 시 입력 정보
-    public String user_email; //이메일
-    public String password; //비밀번호
-    public String user_name; //회원이름
-    public String addr; //거주하는 주소
-    public String addr2; //시, 군, 구 주소 정보
+    private String user_email; //이메일
+    private String password; //비밀번호
+    private String user_name; //회원이름
+    private String addr; //거주하는 주소
+    private String addr2; //시, 군, 구 주소 정보
 
     //회원번호 생성
     private String user_no; //회원번호

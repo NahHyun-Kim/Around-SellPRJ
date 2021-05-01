@@ -5,7 +5,8 @@
     //Controller에 저장된 세션으로 로그인할 때 생성됨
     String SS_USER_NO = ((String)session.getAttribute("SS_USER_NO"));
     String SS_USER_NAME = ((String)session.getAttribute("SS_USER_NAME"));
-    String addr2 = CmmUtil.nvl((String)request.getAttribute("addr2"));
+    String addr = CmmUtil.nvl((String) request.getAttribute("addr"),"못 넘김");
+    String addr2 = CmmUtil.nvl((String) request.getAttribute("addr2"),"못 넘김");
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -20,7 +21,8 @@
     <a href="/logIn.do">로그인</a>
 <% } else { %> <!--세션이 설정된 경우에는, 이름 + 로그아웃 표시-->
     <%=SS_USER_NO%>번 회원 <%=SS_USER_NAME %>님 환영합니다~ <br>
-    <%=(String)request.getAttribute("addr2")%>
+    <br/>
+    <%=addr2%> <%=addr%>
     <a href="/logOut.do">로그아웃</a>
 <% } %>
 </body>

@@ -1,9 +1,11 @@
 package poly.controller;
 
+import org.apache.avro.generic.GenericData;
 import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.stereotype.Controller;
 
 import org.apache.log4j.Logger;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +21,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * Controller 선언해야만 Spring 프레임워크에서 Controller인지 인식 가능
@@ -45,7 +49,7 @@ public class UserController {
     //로그인 진행
     @RequestMapping(value="/getLogin", method = RequestMethod.POST)
     public String getLogin(HttpServletRequest request, HttpSession session,
-                           ModelMap model) throws Exception {
+                           Model model) throws Exception {
         log.info("getLogin Start!");
 
         // 이메일은 복호화가 가능한 AES128, 비밀번호는 복호화 불가능한 HASHSHA256 사용
@@ -86,21 +90,30 @@ public class UserController {
             log.info("rDTO.user_no : " + rDTO.getUser_no());
             msg = "환영합니다!";
 
+            String user_no = CmmUtil.nvl(rDTO.getUser_no());
+            String user_name = CmmUtil.nvl(rDTO.getUser_name());
+            String email = CmmUtil.nvl(rDTO.getUser_email());
+            String addr = CmmUtil.nvl(rDTO.getAddr());
+            String addr2 = CmmUtil.nvl(rDTO.getAddr2());
+
             // 회원 번호로 세션 올림, "ㅇㅇㅇ님, 환영합니다" 같은 문구 표시를 위해 user_name도 세션에 올림
-           session.setAttribute("SS_USER_NO", rDTO.getUser_no());
-           session.setAttribute("SS_USER_NAME", rDTO.getUser_name());
-           log.info("setting된 session : " + rDTO.getUser_no());
+           session.setAttribute("SS_USER_NO", user_name);
+           session.setAttribute("SS_USER_NAME", email);
            log.info("session.setAttribute 완료");
 
             log.info("model.addAttribute 시작!");
-           model.addAttribute("user_no", rDTO.getUser_no());
-           model.addAttribute("user_name", rDTO.getUser_name());
-           model.addAttribute("addr", rDTO.getAddr());
-           model.addAttribute("addr2", rDTO.getAddr2());
-           log.info("model에 넘겨주는 주소값 : " + rDTO.getAddr2());
-           log.info("model.addAttribute 끝!");
+            model.addAttribute("addr", addr);
+            model.addAttribute("addr2", addr2);
+            log.info("model에 넘겨주는 주소값 : " + addr2);
+            log.info("model.addAttribute 끝!");
 
            url = "/index.do"; //로그인 성공 후 리턴할 페이지
+
+            // 관리자 권한으로 로그인 시, 관리자 페이지로 이동
+            if(user_no.equals("0")) {
+                log.info("adminPage Start!");
+                url = "/adminPage.do";
+            }
         }
 
         model.addAttribute("msg", msg);
@@ -116,7 +129,7 @@ public class UserController {
     }
 
     // 로그아웃
-    @RequestMapping(value="logOut")
+    @RequestMapping(value="/logOut")
     public String logOut(HttpSession session, ModelMap model) throws Exception {
         log.info("logOut Start!");
 
@@ -139,7 +152,7 @@ public class UserController {
     }
 
     //회원가입 화면
-    @RequestMapping(value="signup")
+    @RequestMapping(value="/signup")
     public String SignUp(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         log.info(this.getClass().getName() + ".signup 시작!");
         return "/user/signUp";
@@ -256,4 +269,61 @@ public class UserController {
         log.info("Email Check End!");
         return res;
     }
+
+    /*
+    * 관리자 화면
+    * */
+    @RequestMapping(value="/adminPage")
+    public String adminPage(ModelMap model) {
+        log.info("/adminPage Start!");
+
+        return "/admin/adminPage";
+    }
+
+    /*
+    * 관리자 회원관리 화면
+    * */
+    @RequestMapping(value="/adminPage/userAdmin")
+    public String userAdmin(ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".userAdmin Start!");
+
+        // getMember() 함수를 통해 회원정보 리스트를 가져와 List 변수에 담음
+        List<UserDTO> rList = userService.getMember();
+
+        // rList가 제대로 생성되지 않은 경우, 메모리에 올려 생성함
+        if (rList == null) {
+            rList = new ArrayList<UserDTO>();
+        }
+
+        log.info("rList : " + rList);
+
+        // List 형태로 model에 넘겨줌(회원 리스트)
+        model.addAttribute("rList", rList);
+
+        // 메모리 효율화를 위해, 사용 후 변수 초기화
+        rList = null;
+        log.info(this.getClass().getName() + ".userAdmin End!");
+        return "/admin/userAdmin";
+    }
+
+    /* 관리자 권한으로 회원 삭제 */
+    @ResponseBody
+    @RequestMapping(value="/deleteForceUser", method=RequestMethod.POST)
+    public int deleteUser(HttpServletRequest request, ModelMap model) {
+        log.info("deleteUser Start!");
+
+        String user_no = CmmUtil.nvl(request.getParameter("user_no"));
+
+        log.info("삭제할 회원 번호 : " + user_no);
+
+        UserDTO pDTO = new UserDTO();
+        pDTO.setUser_no(user_no);
+        
+        //구현 예정
+        int res = 0;
+        
+        return res;
+    }
+
+
 }

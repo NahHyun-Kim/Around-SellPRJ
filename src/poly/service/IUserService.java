@@ -2,6 +2,8 @@ package poly.service;
 
 import poly.dto.UserDTO;
 
+import java.util.List;
+
 public interface IUserService {
 
     // 회원 가입하기(회원정보 등록)
@@ -10,5 +12,6 @@ public interface IUserService {
     UserDTO emailCheck(String user_email) throws Exception;
     // 로그인하기
     UserDTO getLogin(UserDTO pDTO) throws Exception;
-
+    // 관리자 회원목록 조회
+    List<UserDTO> getMember() throws Exception;
 }

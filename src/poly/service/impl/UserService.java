@@ -8,6 +8,7 @@ import poly.service.IUserService;
 import poly.util.CmmUtil;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service("UserService")
 public class UserService implements IUserService {
@@ -34,6 +35,12 @@ public class UserService implements IUserService {
     @Override
     public UserDTO getLogin(UserDTO pDTO) throws Exception {
         return userMapper.getLogin(pDTO);
+    }
+
+    // 관리자 회원목록 조회하기
+    @Override
+    public List<UserDTO> getMember() throws Exception {
+        return userMapper.getMember();
     }
 
 

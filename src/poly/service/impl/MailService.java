@@ -23,8 +23,8 @@ public class MailService implements IMailService {
 	private Logger log =Logger.getLogger(this.getClass());
 	
 	final String host = "smtp.naver.com";
-	final String user = "cherish3_@naver.com";
-	final String password = "Dudgk6837^~^";
+	final String user = "";
+	final String password = "";
 
 	@Override
 	public int doSendMail(MailDTO pDTO) {
