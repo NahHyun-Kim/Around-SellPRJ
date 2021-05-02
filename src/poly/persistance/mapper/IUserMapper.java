@@ -20,6 +20,12 @@ public interface IUserMapper {
     // 관리자 권한으로 회원 탈퇴
     int deleteForceUser(UserDTO pDTO) throws Exception;
 
-    // 관리자 회원 조회
-    List<UserDTO> getMember() throws Exception;
+    // 관리자 회원 목록 조회
+    List<UserDTO> getUser();
+
+    // 관리자 회원 상세정보 조회
+    UserDTO getUserDetail(UserDTO pDTO);
+
+    // 회원정보 수정
+
 }

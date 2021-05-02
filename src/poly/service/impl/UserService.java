@@ -39,8 +39,13 @@ public class UserService implements IUserService {
 
     // 관리자 회원목록 조회하기
     @Override
-    public List<UserDTO> getMember() throws Exception {
-        return userMapper.getMember();
+    public List<UserDTO> getUser() {
+        return userMapper.getUser();
+    }
+
+    @Override
+    public UserDTO getUserDetail(UserDTO pDTO) {
+        return userMapper.getUserDetail(pDTO);
     }
 
 

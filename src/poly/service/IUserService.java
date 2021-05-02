@@ -13,5 +13,7 @@ public interface IUserService {
     // 로그인하기
     UserDTO getLogin(UserDTO pDTO) throws Exception;
     // 관리자 회원목록 조회
-    List<UserDTO> getMember() throws Exception;
+    List<UserDTO> getUser();
+    // 관리자 회원 상세정보 조회
+    UserDTO getUserDetail(UserDTO pDTO);
 }

@@ -1,7 +1,5 @@
 package poly.controller;
 
-import org.apache.avro.generic.GenericData;
-import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.stereotype.Controller;
 
 import org.apache.log4j.Logger;
@@ -97,8 +95,8 @@ public class UserController {
             String addr2 = CmmUtil.nvl(rDTO.getAddr2());
 
             // 회원 번호로 세션 올림, "ㅇㅇㅇ님, 환영합니다" 같은 문구 표시를 위해 user_name도 세션에 올림
-           session.setAttribute("SS_USER_NO", user_name);
-           session.setAttribute("SS_USER_NAME", email);
+           session.setAttribute("SS_USER_NO", user_no);
+           session.setAttribute("SS_USER_NAME", user_name);
            log.info("session.setAttribute 완료");
 
             log.info("model.addAttribute 시작!");
@@ -283,12 +281,12 @@ public class UserController {
     /*
     * 관리자 회원관리 화면
     * */
-    @RequestMapping(value="/adminPage/userAdmin")
+    @RequestMapping(value="/getUser")
     public String userAdmin(ModelMap model) throws Exception {
         log.info(this.getClass().getName() + ".userAdmin Start!");
 
         // getMember() 함수를 통해 회원정보 리스트를 가져와 List 변수에 담음
-        List<UserDTO> rList = userService.getMember();
+        List<UserDTO> rList = userService.getUser();
 
         // rList가 제대로 생성되지 않은 경우, 메모리에 올려 생성함
         if (rList == null) {
@@ -303,7 +301,31 @@ public class UserController {
         // 메모리 효율화를 위해, 사용 후 변수 초기화
         rList = null;
         log.info(this.getClass().getName() + ".userAdmin End!");
-        return "/admin/userAdmin";
+        return "/admin/userList";
+    }
+
+    // 관리자 회원 정보 상세보기
+    @RequestMapping(value="/getUserDetail")
+    public String getUserDetail(HttpServletRequest request, ModelMap model)
+        throws Exception {
+
+        // 회원 번호 받아오기
+        String user_no = request.getParameter("no");
+
+        UserDTO pDTO = new UserDTO();
+        pDTO.setUser_no(user_no);
+
+        UserDTO rDTO = userService.getUserDetail(pDTO);
+
+        // 결과가 없을 경우, 메시지와 함께 회원 목록으로 리다이렉트
+        if (rDTO == null) {
+            model.addAttribute("msg", "일치하는 회원이 없습니다.");
+            model.addAttribute("url", "/getUser.do");
+            return "/redirect";
+        }
+
+        model.addAttribute("rDTO", rDTO);
+        return "/admin/userDetail";
     }
 
     /* 관리자 권한으로 회원 삭제 */

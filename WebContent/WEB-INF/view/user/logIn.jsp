@@ -19,13 +19,13 @@
     </form>
 </div>
 
-<!-- bootstrap, css 파일 -->
-<link rel="stylesheet" href="/resource/css/user.css"/>
-<script src="/resources/js/bootstrap.js"></script>
-<link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+    <!-- bootstrap, css 파일 -->
+    <link rel="stylesheet" href="/resource/css/user.css"/>
+    <script src="/resources/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
 
-<!-- 회원가입 유효성 체크 js -->
-<script type="text/javascript" src="/resource/valid/signupCheck.js"></script>
+    <!-- 회원가입 유효성 체크 js -->
+    <script type="text/javascript" src="/resource/valid/signupCheck.js"></script>
 </body>
 </html>
 

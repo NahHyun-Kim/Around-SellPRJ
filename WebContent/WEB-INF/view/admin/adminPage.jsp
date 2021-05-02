@@ -2,16 +2,18 @@
 <html>
 <head>
     <title>관리자 페이지</title>
+    <!-- jquery -->
+    <script src="/resource/js/jquery-3.4.1.min.js"></script>
 </head>
 <body>
     <!-- 상단 -->
-    <a href="/myPage/editUser.do">회원정보 수정</a>
+    <a href="/editUser.do">회원정보 수정</a>
     <br />
     <hr />
 
-    <a href="/adminPage/userAdmin.do">회원 관리</a>
+    <a href="/getUser.do">회원 관리</a>
     <!-- 클릭 시, 회원 상세정보를 모달로 구현 예정 -->
-    <a href="/">회원 조회</a>
+    <a href="/userDetail.do">회원 상세 조회</a>
     <a href="/newPost.do">판매글 작성</a>
 
 </body>

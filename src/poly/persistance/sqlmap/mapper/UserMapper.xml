@@ -38,23 +38,34 @@
 
     <!-- 로그인을 위해 이메일과 비밀번호가 일치하는지 확인 -->
     <select id="getLogin" parameterType="UserDTO" resultType="UserDTO">
-        SELECT USER_EMAIL,
-               USER_NAME,
-               PASSWORD,
-               USER_NO,
-               ADDR,
-               ADDR2
-            FROM aroundsell.user_info
+        SELECT *
+            FROM
+               aroundsell.user_info
         WHERE USER_EMAIL = #{user_email}
             AND PASSWORD = #{password}
     </select>
 
     <!-- 관리자 페이지에서 회원 목록 조회 -->
-    <select id="getMember" resultType="UserDTO">
-        SELECT USER_NAME,
-               USER_EMAIL
-               ADDR2,
-               REG_DT,
-            FROM aroundsell.userinfo
+    <select id="getUser" resultType="UserDTO">
+        SELECT *
+            FROM aroundsell.user_info
+        WHERE <![CDATA[USER_NO > 0]]>
+            ORDER BY REG_DT DESC,
+                     USER_NO ASC
     </select>
+
+    <!-- 관리자 회원 상세정보 조회 -->
+    <select id="getUserDetail" parameterType="UserDTO" resultType="UserDTO">
+        SELECT *
+            FROM aroundsell.user_info
+        WHERE USER_NO = #{user_no}
+    </select>
+
+    <!-- 마이페이지 회원 정보 수정 -->
+    <update id="update">
+
+    </update>
+
+
+
 </mapper>
