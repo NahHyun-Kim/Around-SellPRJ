@@ -8,6 +8,7 @@ public class UserDTO {
     private String user_name; //회원이름
     private String addr; //거주하는 주소
     private String addr2; //시, 군, 구 주소 정보
+    private String phone_no; //전화번호
 
     //회원번호 생성
     private String user_no; //회원번호
@@ -16,6 +17,14 @@ public class UserDTO {
     private String reg_dt; //작성일, default값 (CURDATE)
     private String chg_id; //수정자
     private String chg_dt; //수정일
+
+    public String getPhone_no() {
+        return phone_no;
+    }
+
+    public void setPhone_no(String phone_no) {
+        this.phone_no = phone_no;
+    }
 
     public String getUser_no() {
         return user_no;

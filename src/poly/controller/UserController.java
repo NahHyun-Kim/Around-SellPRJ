@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import poly.dto.MailDTO;
 import poly.dto.UserDTO;
+import poly.dto.WeatherDTO;
 import poly.service.IMailService;
 import poly.service.IUserService;
 import poly.util.CmmUtil;
@@ -29,23 +30,23 @@ import java.util.List;
 @Controller
 public class UserController {
 
-    @Resource(name="MailService")
+    @Resource(name = "MailService")
     private IMailService mailService;
 
-    @Resource(name="UserService")
+    @Resource(name = "UserService")
     private IUserService userService;
 
     private Logger log = Logger.getLogger(this.getClass());
 
     //로그인 화면
-    @RequestMapping(value="logIn")
+    @RequestMapping(value = "logIn")
     public String logIn() {
         log.info(this.getClass().getName() + ".login 시작!");
         return "/user/logIn";
     }
 
     //로그인 진행
-    @RequestMapping(value="/getLogin", method = RequestMethod.POST)
+    @RequestMapping(value = "/getLogin", method = RequestMethod.POST)
     public String getLogin(HttpServletRequest request, HttpSession session,
                            Model model) throws Exception {
         log.info("getLogin Start!");
@@ -66,13 +67,11 @@ public class UserController {
 
         log.info("pDTO.user_email : " + pDTO.getUser_email());
         log.info("pDTO.password : " + pDTO.getPassword());
-
         log.info("userService.getLogin 시작");
+
         UserDTO rDTO = userService.getLogin(pDTO);
 
-        pDTO = null;
-        log.info("rDTO null? " + (rDTO == null));
-
+        log.info("rDTO null? : " + (rDTO == null));
         String msg = "";
         String url = "";
 
@@ -83,32 +82,27 @@ public class UserController {
         }
         // 로그인 성공한 경우(rDTO != null)
         else {
-            log.info("rDTO.user_email : " + rDTO.getUser_email());
             log.info("rDTO.user_name: " + rDTO.getUser_name());
             log.info("rDTO.user_no : " + rDTO.getUser_no());
+            log.info("rDTO.addr2 : " + rDTO.getAddr2());
             msg = "환영합니다!";
 
-            String user_no = CmmUtil.nvl(rDTO.getUser_no());
-            String user_name = CmmUtil.nvl(rDTO.getUser_name());
-            String email = CmmUtil.nvl(rDTO.getUser_email());
-            String addr = CmmUtil.nvl(rDTO.getAddr());
-            String addr2 = CmmUtil.nvl(rDTO.getAddr2());
+            String user_no = rDTO.getUser_no();
+            String user_name = rDTO.getUser_name();
+            String addr2 = rDTO.getAddr2();
+
+            log.info("addr2 : " + addr2);
 
             // 회원 번호로 세션 올림, "ㅇㅇㅇ님, 환영합니다" 같은 문구 표시를 위해 user_name도 세션에 올림
-           session.setAttribute("SS_USER_NO", user_no);
-           session.setAttribute("SS_USER_NAME", user_name);
-           log.info("session.setAttribute 완료");
+            session.setAttribute("SS_USER_NO", user_no);
+            session.setAttribute("SS_USER_NAME", user_name);
+            session.setAttribute("SS_USER_ADDR2", addr2);
+            log.info("session.setAttribute 완료");
 
-            log.info("model.addAttribute 시작!");
-            model.addAttribute("addr", addr);
-            model.addAttribute("addr2", addr2);
-            log.info("model에 넘겨주는 주소값 : " + addr2);
-            log.info("model.addAttribute 끝!");
-
-           url = "/index.do"; //로그인 성공 후 리턴할 페이지
+            url = "/index.do"; //로그인 성공 후 리턴할 페이지
 
             // 관리자 권한으로 로그인 시, 관리자 페이지로 이동
-            if(user_no.equals("0")) {
+            if (user_no.equals("0")) {
                 log.info("adminPage Start!");
                 url = "/adminPage.do";
             }
@@ -119,15 +113,16 @@ public class UserController {
         log.info("msg : " + msg);
         log.info("url : " + url);
 
+
+        pDTO = null;
         rDTO = null;
-        log.info("rDTO null? : " + (rDTO == null));
         log.info("getLogin end");
 
         return "/redirect";
     }
 
     // 로그아웃
-    @RequestMapping(value="/logOut")
+    @RequestMapping(value = "/logOut")
     public String logOut(HttpSession session, ModelMap model) throws Exception {
         log.info("logOut Start!");
 
@@ -150,14 +145,14 @@ public class UserController {
     }
 
     //회원가입 화면
-    @RequestMapping(value="/signup")
+    @RequestMapping(value = "/signup")
     public String SignUp(HttpServletRequest request, HttpServletResponse response, ModelMap model) {
         log.info(this.getClass().getName() + ".signup 시작!");
         return "/user/signUp";
     }
 
     //회원가입 진행
-    @RequestMapping(value="/insertUser", method= RequestMethod.POST)
+    @RequestMapping(value = "/insertUser", method = RequestMethod.POST)
     public String insertUser(HttpServletRequest request, ModelMap model, HttpSession session) throws Exception {
 
         log.info("insertUser Start!");
@@ -171,8 +166,9 @@ public class UserController {
         String addr = CmmUtil.nvl(request.getParameter("addr"));
 
         // 서울특별시 강서구와 같은 입력에서, 지역구를 가져오기 위해 split 함수 사용
-        String[] addrsplit = CmmUtil.nvl(request.getParameter("addr")).split(" ",3);
+        String[] addrsplit = CmmUtil.nvl(request.getParameter("addr")).split(" ", 3);
         String addr2 = addrsplit[1].trim();
+        String phone_no = CmmUtil.nvl(request.getParameter("phone_no"));
 
         UserDTO pDTO = new UserDTO();
 
@@ -183,6 +179,7 @@ public class UserController {
         pDTO.setUser_name(user_name);
         pDTO.setAddr(addr);
         pDTO.setAddr2(addr2);
+        pDTO.setPhone_no(phone_no);
 
         // 회원정보가 제대로 전달되었는지 로그를 통해 확인
         log.info("user_email : " + user_email);
@@ -190,6 +187,7 @@ public class UserController {
         log.info("user_name : " + user_name);
         log.info("addr : " + addr);
         log.info("지역구(addr2) : " + addr2);
+        log.info("phone_number : " + phone_no);
 
         log.info("pDTO 세팅 끝");
 
@@ -220,7 +218,7 @@ public class UserController {
             if (res > 0) {
                 msg = "회원가입을 축하드립니다.";
             } else {
-                msg =  "회원정보를 확인 후 가입을 진행해 주세요.";
+                msg = "회원정보를 확인 후 가입을 진행해 주세요.";
             }
 
 
@@ -241,7 +239,7 @@ public class UserController {
     /* 이메일 중복 확인
      * @ResponseBody 사용으로, http에 값(res) 전달 */
     @ResponseBody
-    @RequestMapping(value="/signup/emailCheck", method=RequestMethod.POST)
+    @RequestMapping(value = "/signup/emailCheck", method = RequestMethod.POST)
     public int emailCheck(HttpServletRequest request) throws Exception {
         log.info("Email check Start");
 
@@ -269,9 +267,9 @@ public class UserController {
     }
 
     /*
-    * 관리자 화면
-    * */
-    @RequestMapping(value="/adminPage")
+     * 관리자 화면
+     * */
+    @RequestMapping(value = "/adminPage")
     public String adminPage(ModelMap model) {
         log.info("/adminPage Start!");
 
@@ -279,9 +277,9 @@ public class UserController {
     }
 
     /*
-    * 관리자 회원관리 화면
-    * */
-    @RequestMapping(value="/getUser")
+     * 관리자 회원관리 화면
+     * */
+    @RequestMapping(value = "/getUser")
     public String userAdmin(ModelMap model) throws Exception {
         log.info(this.getClass().getName() + ".userAdmin Start!");
 
@@ -305,9 +303,9 @@ public class UserController {
     }
 
     // 관리자 회원 정보 상세보기
-    @RequestMapping(value="/getUserDetail")
+    @RequestMapping(value = "/getUserDetail")
     public String getUserDetail(HttpServletRequest request, ModelMap model)
-        throws Exception {
+            throws Exception {
 
         // 회원 번호 받아오기
         String user_no = request.getParameter("no");
@@ -319,7 +317,7 @@ public class UserController {
 
         // 결과가 없을 경우, 메시지와 함께 회원 목록으로 리다이렉트
         if (rDTO == null) {
-            model.addAttribute("msg", "일치하는 회원이 없습니다.");
+            model.addAttribute("msg", "삭제에 성공했습니다.");
             model.addAttribute("url", "/getUser.do");
             return "/redirect";
         }
@@ -330,9 +328,9 @@ public class UserController {
 
     /* 관리자 권한으로 회원 삭제 */
     @ResponseBody
-    @RequestMapping(value="/deleteForceUser", method=RequestMethod.POST)
+    @RequestMapping(value = "/deleteForceUser", method = RequestMethod.POST)
     public int deleteUser(HttpServletRequest request, ModelMap model) {
-        log.info("deleteUser Start!");
+        log.info("deleteForceUser Start!");
 
         String user_no = CmmUtil.nvl(request.getParameter("user_no"));
 
@@ -340,11 +338,56 @@ public class UserController {
 
         UserDTO pDTO = new UserDTO();
         pDTO.setUser_no(user_no);
-        
+        log.info("pDTO에 보낼 회원 번호 : " + pDTO.getUser_no());
+
         //구현 예정
-        int res = 0;
-        
+        int res = userService.deleteForceUser(pDTO);
+        log.info("res? : " + res);
+
+        if (res > 0) {
+            log.info("deleteForceUser 성공");
+        } else {
+            log.info("deleteForceUser 실패");
+        }
+
+        pDTO = null;
+
+        log.info(".deleteForceUser End!");
         return res;
+    }
+
+
+    @RequestMapping(value="/crawlingRes")
+    public String crawlingRes() {
+        log.info("crawlingRes 결과 페이지 Start!");
+        return "/crawlingRes";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getWeather")
+    public WeatherDTO getWeather(HttpSession session, HttpServletRequest request)
+        throws Exception {
+        log.info("getWeather 크롤링 Start!");
+
+        String addr2 = (String) session.getAttribute("SS_USER_ADDR2");
+        log.info("가져온 주소 세션 : " + addr2);
+
+        // 임시로 크롤링할 url을 제대로 받아오는지 확인
+        String url = "https://www.google.com/search?q=" + addr2 + "+날씨" ;
+        log.info("url test : " + url);
+
+        // 세션에서 가져온 상세주소 값을 서비스로 넘겨줌(크롤링 시 주소 사용)
+        WeatherDTO rDTO = userService.getWeather(addr2);
+        log.info("rDTO null? : " + (rDTO == null));
+        log.info("rDTO.weather : " + rDTO.getWeather());
+
+        // 값을 받아왔다면, model에 값을 넘겨줌
+        if (rDTO != null) {
+            //model.addAttribute("rDTO", rDTO);
+            log.info("크롤링한 DTO 전송 완료");
+        }
+
+        return rDTO;
     }
 
 

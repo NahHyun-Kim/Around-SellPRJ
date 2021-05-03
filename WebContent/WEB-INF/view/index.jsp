@@ -1,12 +1,14 @@
+<%@ page import="poly.util.CmmUtil" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ page import="poly.util.CmmUtil" %>
+
 <%
     //Controller에 저장된 세션으로 로그인할 때 생성됨
     String SS_USER_NO = ((String) session.getAttribute("SS_USER_NO"));
     String SS_USER_NAME = ((String) session.getAttribute("SS_USER_NAME"));
-    String addr = CmmUtil.nvl((String) request.getAttribute("addr"), "못 넘김");
-    String addr2 = CmmUtil.nvl((String) request.getAttribute("addr2"), "못 넘김");
+    String SS_USER_ADDR2 = ((String) session.getAttribute("SS_USER_ADDR2"));
+    String addr = (String) request.getAttribute("addr");
+
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -22,15 +24,40 @@
 <% if (SS_USER_NO == null) { %> <!--세션이 설정되지 않은 경우(=로그인되지 않은 경우) 로그인 표시-->
 <a href="/logIn.do">로그인</a>
 <% } else { %> <!--세션이 설정된 경우에는, 이름 + 로그아웃 표시-->
-<%=SS_USER_NO%>번 회원 <%=SS_USER_NAME %>님 환영합니다~ <br>
-<br/>
-<%=addr2%> <%=addr%>
+<%=SS_USER_NO%>번 회원 <%=SS_USER_NAME %>님 환영합니다~
+<span><%=SS_USER_ADDR2%></span>
+<br>
 <a href="/logOut.do">로그아웃</a>
 <% } %>
 <a href="/adminPage.do">관리자 페이지</a>
+<button type="button" id="addr2" value="<%=SS_USER_ADDR2%>" onclick="crawling();">날씨</button>
+<a href="/crawlingRes.do">크롤링 테스트</a>
 
-    <!-- bootstrap, css 파일 -->
-    <script src="/resources/js/bootstrap.js"></script>
-    <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+<!-- bootstrap, css 파일 -->
+<script src="/resources/js/bootstrap.js"></script>
+<link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+
+<script type="text/javascript">
+    function crawling() {
+        console.log("value : " + $("#addr2").val())
+        $.ajax({
+            url : "/getWeather.do",
+            type : "post",
+            dataType : "json",
+            data : {
+                "addr2" : $("#addr2").val()
+            },
+            success : function(data) {
+                if (data > 0) {
+                    alert("크롤링에 성공했습니다.");
+                    return false;
+                } else {
+                    alert("크롤링에 실패했습니다.");
+                    return true;
+                }
+            }
+        })
+    }
+</script>
 </body>
 </html>

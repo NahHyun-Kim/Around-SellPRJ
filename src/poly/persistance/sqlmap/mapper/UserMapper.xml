@@ -21,6 +21,7 @@
                 #{user_name},
                 #{addr},
                 #{addr2},
+                #{phone_no},
                 #{user_name},
                 #{user_name}
                   )
@@ -60,6 +61,13 @@
             FROM aroundsell.user_info
         WHERE USER_NO = #{user_no}
     </select>
+
+    <!-- 관리자 권한으로 회원 탈퇴 -->
+    <delete id="deleteForceUser" parameterType="UserDTO">
+        DELETE
+            FROM aroundsell.user_info
+        WHERE USER_NO = ${user_no}
+    </delete>
 
     <!-- 마이페이지 회원 정보 수정 -->
     <update id="update">

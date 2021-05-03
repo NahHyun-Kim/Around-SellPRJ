@@ -1,11 +1,14 @@
 package poly.service.impl;
 
 import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import poly.dto.UserDTO;
+import poly.dto.WeatherDTO;
 import poly.persistance.mapper.IUserMapper;
 import poly.service.IUserService;
-import poly.util.CmmUtil;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,20 +23,20 @@ public class UserService implements IUserService {
 
     // 회원가입
     @Override
-    public int insertUser(UserDTO pDTO) throws Exception {
+    public int insertUser(UserDTO pDTO) {
         log.info(this.getClass().getName() + ".insertUser Start!");
         return userMapper.insertUser(pDTO);
     }
 
     // 이메일 중복 확인
     @Override
-    public UserDTO emailCheck(String user_email) throws Exception {
+    public UserDTO emailCheck(String user_email) {
         return userMapper.emailCheck(user_email);
     }
 
     // 로그인하기
     @Override
-    public UserDTO getLogin(UserDTO pDTO) throws Exception {
+    public UserDTO getLogin(UserDTO pDTO) {
         return userMapper.getLogin(pDTO);
     }
 
@@ -43,9 +46,56 @@ public class UserService implements IUserService {
         return userMapper.getUser();
     }
 
+    // 관리자 회원 상세보기 조회
     @Override
     public UserDTO getUserDetail(UserDTO pDTO) {
         return userMapper.getUserDetail(pDTO);
+    }
+
+    // 관리자 회원 강제 삭제
+    @Override
+    public int deleteForceUser(UserDTO pDTO) {
+        return userMapper.deleteForceUser(pDTO);
+    }
+
+    // 위치기반 날씨정보 크롤링
+    @Override
+    public WeatherDTO getWeather(String addr2) throws Exception {
+
+        log.info(this.getClass().getName() + ".getWeather Start!");
+
+        WeatherDTO rDTO = new WeatherDTO();
+
+        // 날씨 정보를 가져올 사이트 주소
+        String url = "http://www.google.com/search?q=" + addr2 + "+날씨" ;
+        log.info("url : " + url);
+
+        // JSOUP 라이브러리를 통해 사이트가 접속되면, 그 사이트의 전체 HTML 소스를 저장할 변수
+        Document doc = null;
+
+        // 사이트 접속(http 프로토콜만 가능)
+        doc = Jsoup.connect(url).get();
+
+        Elements temperatures = doc.select("span#wob_tm");
+        Elements weathers = doc.select("span#wob_dc");
+
+        log.info("Elements temperatures : " + temperatures);
+        log.info("Elements weathers : " + weathers);
+
+        String temperature = temperatures.text();
+        String weather = weathers.text();
+
+        log.info("String temp : " + temperature);
+        log.info("String weather : " + weather);
+
+        rDTO.setWeather(weather);
+        rDTO.setTemperature(temperature);
+
+        log.info("rDTO.temp : " + rDTO.getTemperature());
+        log.info("rDTO.weather : " + rDTO.getWeather());
+        log.info(this.getClass().getName() + ".getWeather End!");
+
+        return rDTO;
     }
 
 

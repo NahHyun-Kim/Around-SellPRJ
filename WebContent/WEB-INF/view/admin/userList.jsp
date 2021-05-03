@@ -29,16 +29,17 @@
         <% int i=1;
         for(UserDTO r : rList) { %>
         <div class="row">
-            <div class="col-3 text-center"><input type="radio" id="<%=CmmUtil.nvl(r.getUser_no())%>"/><%=CmmUtil.nvl(r.getUser_no())%></div>
+            <div class="col-3 text-center"><%=CmmUtil.nvl(r.getUser_no())%></div>
             <div class="col-2 text-center"><a href="/getUserDetail.do?no=<%=r.getUser_no()%>"><%=CmmUtil.nvl(r.getUser_name()) %></a></div>
             <div class="col-3 text-center"><%=CmmUtil.nvl(r.getReg_dt()) %></div>
             <div class="col-2 text-center"><%=CmmUtil.nvl(r.getAddr2()) %></div>
         </div>
         <% i++;} %>
 
-    </div>
+   </div>
     <!-- bootstrap, css 파일 -->
     <script src="/resources/js/bootstrap.js"></script>
     <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+
 </body>
 </html>

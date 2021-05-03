@@ -19,7 +19,8 @@
         <input type="password" name="password2" id="password_2" placeholder="비밀번호 확인을 입력해 주세요." required="required" />
         <br/>
 
-
+        <input type="text" name="phone_no" id="phone_no" placeholder="-를 제외한 전화번호를 입력해 주세요." onfocusout="phoneCheck" required=""
+        <br/>
         <input type="text" name="addr" id="sample5_address" readonly="주소" placeholder="주소를 검색해 주세요"
                required="required"/>
         <input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"/><br>
@@ -31,6 +32,9 @@
 <input type="submit" value="회원가입">
 </form>
 </div>
+<script>
+    function
+</script>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <!-- 도로명주소 API js 파일-->

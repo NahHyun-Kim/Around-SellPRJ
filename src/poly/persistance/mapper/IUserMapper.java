@@ -9,16 +9,16 @@ import java.util.List;
 public interface IUserMapper {
 
     // 회원 가입하기(회원정보 등록)
-    int insertUser(UserDTO pDTO) throws Exception;
+    int insertUser(UserDTO pDTO);
 
     // 회원 가입 전, 중복 회원가입 방지
-    UserDTO emailCheck(String user_email) throws Exception;
+    UserDTO emailCheck(String user_email);
 
     //  로그인하기
-    UserDTO getLogin(UserDTO pDTO) throws Exception;
+    UserDTO getLogin(UserDTO pDTO);
 
     // 관리자 권한으로 회원 탈퇴
-    int deleteForceUser(UserDTO pDTO) throws Exception;
+    int deleteForceUser(UserDTO pDTO);
 
     // 관리자 회원 목록 조회
     List<UserDTO> getUser();
