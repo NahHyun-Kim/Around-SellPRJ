@@ -382,6 +382,7 @@ public class UserController {
     }
 
 
+    // 크롤링한 결과를 실시간으로 보여주는 페이지 임시 작성
     @RequestMapping(value="/crawlingRes")
     public String crawlingRes() {
         log.info("crawlingRes 결과 페이지 Start!");
@@ -415,5 +416,30 @@ public class UserController {
         return rDTO;
     }
 
+    // 회원 정보 조회, 수정을 위해 회원목록을 가져옴
+    @RequestMapping(value="/getUserInfo")
+    public String getUser(HttpSession session, HttpServletRequest request, HttpServletResponse response,
+                          ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".getUser Start!");
+        // 로그인한 세션의 회원 번호로 상세정보 조회를 위해 회원번호를 저장함
+        String user_no = (String) session.getAttribute("SS_USER_NO");
 
-}
+        UserDTO pDTO = new UserDTO();
+        pDTO.setUser_no(user_no);
+        log.info("회원 정보 조회를 위한 user_no : " + pDTO.getUser_no());
+
+        // 회원번호에 해당하는 회원 정보를 가져옴
+        UserDTO rDTO = userService.getUserDetail(pDTO);
+        log.info("rDTO null? : " + (rDTO == null));
+
+        if (rDTO == null) {
+            rDTO = new UserDTO();
+        }
+
+        model.addAttribute("rDTO", rDTO);
+        log.info("model에 rDTO값 전송 완료");
+        log.info(this.getClass().getName() + ".getUser End!");
+
+            return "/user/myInfo";
+        }
+    }

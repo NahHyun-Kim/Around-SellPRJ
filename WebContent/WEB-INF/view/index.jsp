@@ -32,32 +32,11 @@
 <a href="/adminPage.do">관리자 페이지</a>
 <button type="button" id="addr2" value="<%=SS_USER_ADDR2%>" onclick="crawling();">날씨</button>
 <a href="/crawlingRes.do">크롤링 테스트</a>
+<a href="/getUserInfo.do">마이페이지 정보 보기</a>
 
 <!-- bootstrap, css 파일 -->
 <script src="/resources/js/bootstrap.js"></script>
 <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
 
-<script type="text/javascript">
-    function crawling() {
-        console.log("value : " + $("#addr2").val())
-        $.ajax({
-            url : "/getWeather.do",
-            type : "post",
-            dataType : "json",
-            data : {
-                "addr2" : $("#addr2").val()
-            },
-            success : function(data) {
-                if (data > 0) {
-                    alert("크롤링에 성공했습니다.");
-                    return false;
-                } else {
-                    alert("크롤링에 실패했습니다.");
-                    return true;
-                }
-            }
-        })
-    }
-</script>
 </body>
 </html>

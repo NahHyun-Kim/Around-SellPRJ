@@ -104,5 +104,11 @@ public class UserService implements IUserService {
         return rDTO;
     }
 
+    // 회원 정보 수정을 위해 회원 정보 가져오기
+    @Override
+    public UserDTO getUserInfo(UserDTO pDTO) {
+        return userMapper.getUserDetail(pDTO);
+    }
+
 
 }
