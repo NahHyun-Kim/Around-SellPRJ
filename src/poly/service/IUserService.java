@@ -11,6 +11,8 @@ public interface IUserService {
     int insertUser(UserDTO pDTO);
     // 중복 회원가입 방지(이메일 중복확인)
     UserDTO emailCheck(String user_email);
+    // 핸드폰 번호 중복 등록 방지
+    UserDTO phoneCheck(String phone_no);
     // 로그인하기
     UserDTO getLogin(UserDTO pDTO);
     // 관리자 회원목록 조회

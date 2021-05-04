@@ -34,6 +34,12 @@ public class UserService implements IUserService {
         return userMapper.emailCheck(user_email);
     }
 
+    // 핸드폰번호 중복 등록 방지
+    @Override
+    public UserDTO phoneCheck(String phone_no) {
+        return userMapper.phoneCheck(phone_no);
+    }
+
     // 로그인하기
     @Override
     public UserDTO getLogin(UserDTO pDTO) {

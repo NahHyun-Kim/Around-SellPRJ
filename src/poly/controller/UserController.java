@@ -266,6 +266,31 @@ public class UserController {
         return res;
     }
 
+    // 폰번호 중복 확인
+    @ResponseBody
+    @RequestMapping(value="/signup/phoneCheck", method = RequestMethod.POST)
+    public int phoneCheck(HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".phoneCheck Start!");
+
+        String phone_no = CmmUtil.nvl(request.getParameter("phone_no"));
+        log.info("phone_no : " + phone_no);
+
+        log.info("userService.phoneCheck Start!");
+        UserDTO rDTO = userService.phoneCheck(phone_no);
+        log.info("userService.phoneCheck End!");
+
+        int res = 0;
+
+        //값이 있다면(=중복되는 값이 존재한다면) 1을 리턴
+        if (rDTO != null) {
+            res = 1;
+        }
+
+        log.info(this.getClass().getName() + ".phoneCheck End!");
+        //res를 리턴하여, ajax를 통해 유효성 체크
+        return res;
+    }
+
     /*
      * 관리자 화면
      * */
