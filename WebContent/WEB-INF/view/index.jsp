@@ -33,10 +33,27 @@
 <button type="button" id="addr2" value="<%=SS_USER_ADDR2%>" onclick="crawling();">날씨</button>
 <a href="/crawlingRes.do">크롤링 테스트</a>
 <a href="/getUserInfo.do">마이페이지 정보 보기</a>
+<button id="modaltest">모달 테스트</button>
+<div class="modal">
+    <div class="modal-content">
+        모달입니다.
+        <div class="close">클릭하면 모달이 닫힙니다.</div>
+    </div>
 
+</div>
 <!-- bootstrap, css 파일 -->
 <script src="/resources/js/bootstrap.js"></script>
 <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+
+<script type="text/javascript">
+    $("#modaltest").click(function() {
+        $(".modal").fadeIn();
+    });
+
+    $(".close").click(function() {
+        $(".modal").fadeOut();
+    });
+</script>
 
 </body>
 </html>

@@ -82,23 +82,17 @@ public class UserService implements IUserService {
         // 사이트 접속(http 프로토콜만 가능)
         doc = Jsoup.connect(url).get();
 
-        Elements temperatures = doc.select("span#wob_tm");
-        Elements weathers = doc.select("span#wob_dc");
-
-        log.info("Elements temperatures : " + temperatures);
-        log.info("Elements weathers : " + weathers);
-
-        String temperature = temperatures.text();
-        String weather = weathers.text();
-
-        log.info("String temp : " + temperature);
-        log.info("String weather : " + weather);
+        String temperature = doc.select("span#wob_tm").text();
+        String weather = doc.select("span#wob_dc").text();
+        String rainrate = doc.select("span#wob_pp").text();
 
         rDTO.setWeather(weather);
         rDTO.setTemperature(temperature);
+        rDTO.setRainrate(rainrate);
 
         log.info("rDTO.temp : " + rDTO.getTemperature());
         log.info("rDTO.weather : " + rDTO.getWeather());
+        log.info("rDTO.rainrate : " + rDTO.getRainrate());
         log.info(this.getClass().getName() + ".getWeather End!");
 
         return rDTO;

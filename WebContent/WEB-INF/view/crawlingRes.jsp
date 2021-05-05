@@ -13,6 +13,7 @@
         $(document).ready(function() {
             //페이지가 로드된 후, 크롤링을 실행하여 결과값을 가져옴
             crawling();
+
         })
         function crawling() {
             console.log('페이지 로딩 후, ajax 호출 시작');
@@ -31,13 +32,14 @@
                     console.log(result);
                     var resweather = "";
                     resweather += result.temperature + "도 ";
-                    resweather += result.weather;
-
+                    resweather += result.weather + "이며, 강수 확률은 ";
+                    resweather += result.rainrate + " 입니다.";
                     $('#weather').html(resweather);
                 }
 
             })
         }
+    </script>
     </script>
     </head>
 <body>
@@ -53,4 +55,7 @@
     <div id="weather"><%=SS_USER_ADDR2%> 날씨는?</div>
     <input type="hidden" id="getAddr2" value="<%=SS_USER_ADDR2%>"/>
 </body>
+<!-- bootstrap, css 파일 -->
+<script src="/resources/js/bootstrap.js"></script>
+<link rel="stylesheet" href="/resources/css/bootstrap.css"/>
 </html>

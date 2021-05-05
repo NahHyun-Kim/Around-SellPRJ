@@ -146,8 +146,78 @@ $(pwd2).on("change keyup paste", function() {
         $(pwchk2).text('비밀번호가 일치하지 않습니다.');
         $(pwchk2).css('color', 'red');
     } else { //비밀번호 확인이 일치한다면
-        $(pwchk2).text('비밀번호가 일치합니다.');
+        $(pwchk2).text('비밀번호가 일치합니다:)');
         $(pwchk2).css('color', 'green');
         console.log($(pwd1).val() == $(pwd2).val())
     }
 });
+
+function signupCheck() {
+    var valid_Arr = new Array(5).fill(false);
+    // 가입하기를 실행할 때, 유효성 검사
+    // 이메일 정규식
+    if (emailJ.test($(umail).val())) {
+        console.log(emailJ.test($(umail).val()));
+        // 이메일 정규식이 맞을 경우
+        valid_Arr[0] = true;
+    }
+    // 맞지 않을 경우
+    else {
+        valid_Arr[0] = false;
+    }
+
+    // 이름 정규식
+    if (nameJ.test($(uname).val())) {
+        console.log(nameJ.test($(uname).val()));
+        // 이름 정규식이 맞을 경우
+        valid_Arr[1] = true;
+    }
+    // 맞지 않을 경우
+    else {
+        valid_Arr[1] = false;
+    }
+
+    // 비밀번호 정규식
+    if (($(pwd1).val() == $(pwd2).val())
+        && pwJ.test($(pwd1).val())) {
+        valid_Arr[2] = true;
+    }
+    // 맞지 않을 경우
+    else {
+        valid_Arr[2] = false;
+    }
+
+    // 핸드폰 정규식
+    if (phoneJ.test($(phnum).val())) {
+        console.log(phoneJ.test($(phnum).val()));
+        valid_Arr[3] = true;
+    }
+    // 맞지 않을 경우
+    else {
+        valid_Arr[3] = false;
+    }
+
+    // 주소
+    // 주소란이 입력되지 않았을 경우
+    if ($(uaddr).val() == "") {
+        console.log($(uaddr).val());
+        valid_arr[4] = false;
+    }
+    // 주소란에 주소가 입력되었을 경우
+    else {
+        valie_arr[4] = true;
+    }
+
+    var validAll = true;
+    for (var i=0; i<valid_Arr.length; i++) {
+
+        if (valid_Arr[i] == false) {
+            validAll = false;
+        }
+    }
+
+    if (validAll == false) {
+        alert("입력한 정보를 다시 한번 확인해 주세요");
+    }
+
+}

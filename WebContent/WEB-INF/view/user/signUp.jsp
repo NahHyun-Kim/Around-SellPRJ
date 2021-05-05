@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="container">
-    <form action="/insertUser.do" method="POST">
+    <form action="/insertUser.do" method="POST" onsubmit="return signupCheck()">
         <!-- 이메일 입력 후, ajax를 통해 이메일 중복 여부 검사 -->
         <div>
             <label for="user_email">이메일</label>
@@ -44,7 +44,7 @@
                 <!-- 도로명주소 검색으로 선택한 거주 주소지를 표시하여 나타내는 지도(시각화 확인) -->
                 <div id="map"></div>
         </div>
-
+<input type="reset" value="다시 작성">
 <input type="submit" value="회원가입">
 </form>
 
