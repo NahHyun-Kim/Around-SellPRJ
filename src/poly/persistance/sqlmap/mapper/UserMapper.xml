@@ -80,6 +80,15 @@
         WHERE USER_NO = ${user_no}
     </delete>
 
+    <!-- 임시 비밀번호로 변경 -->
+    <update id="updatePw" parameterType="UserDTO">
+        UPDATE aroundsell.user_info
+        SET
+            PASSWORD = #{password}
+        WHERE
+            USER_EMAIL = #{user_email}
+    </update>
+
     <!-- 마이페이지 회원 정보 수정 -->
     <update id="update">
 

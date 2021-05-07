@@ -442,4 +442,12 @@ public class UserController {
 
             return "/user/myInfo";
         }
+
+        @RequestMapping(value="/userSearch")
+        public String userSearchPage(HttpServletRequest request, HttpServletResponse response, ModelMap model)
+            throws Exception {
+
+        log.info(".userSearch Page 시작!");
+        return "/user/userSearch";
+        }
     }

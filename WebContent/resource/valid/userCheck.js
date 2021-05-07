@@ -30,9 +30,6 @@ $(uaddr).blur(function () {
     if ($(uaddr).val() == "") {
         $(adchk).text('주소를 선택해 주세요.');
         $(adchk).css('color', 'red');
-        if ($(uaddr).val() != "") {
-            $(adchk).hide();
-        }
     } else {
         $(adchk).text('주소가 입력되었습니다 :)');
         $(adchk).css('color', 'green');
@@ -152,8 +149,109 @@ $(pwd2).on("change keyup paste", function() {
     }
 });
 
+$("#close").click(function() {
+    $(".modal").fadeOut();
+});
+
 function signupCheck() {
-    var valid_Arr = new Array(5).fill(false);
+
+    // 실시간으로 유효성 체크를 하기 때문에, 유효성이 잘못되었거나 값이 입력되지 않으면 다시 확인해 달라는 모달창을 띄움
+    if (emailJ.test($(umail).val()) == false || nameJ.test($(uname).val()) == false
+    || ($(pwd1).val() != $(pwd2).val()) || pwJ.test($(pwd1).val()) == false || phoneJ.test($(phnum).val()) == false ||
+    $(addr).val() == "") {
+        $(".modal-body").text("입력한 정보를 다시 한 번 확인해 주세요.");
+        $(".modal-title").text("Around-Sell 회원가입");
+        $(".modal").fadeIn();
+        return false;
+        /*
+        alert("입력한 정보를 다시 한 번 확인해 주세요.")
+        return false; */
+    }
+    /*
+    // 이메일 정규식에 맞지 않거나, 값이 입력되지 않은 경우
+    if (emailJ.test($(umail).val()) == false) {
+        if ($(umail).val() == "") {
+            $(emchk).text('이메일은 필수 입력 사항입니다.');
+            $(emchk).css('color','blue');
+            $(umail).focus();
+            return false;
+        } else {
+            console.log(emailJ.test($(umail).val()));
+            $(emchk).text('올바른 형식으로 이메일을 입력해 주세요.');
+            $(emchk).css('color', 'blue');
+            $(umail).focus();
+            return false;
+        }
+    }
+
+    else if (nameJ.test($(uname).val()) == false) {
+        if ($(uname).val() == "") {
+            $(nmchk).text('이름은 필수 입력 사항입니다.');
+            $(nmchk).css('color','blue');
+            $(uname).focus();
+            return false;
+        } else {
+            console.log(nameJ.test($(uname).val()));
+            $(nmchk).text('올바른 형식으로 이름을 입력해 주세요.');
+            $(nmchk).css('color', 'blue');
+            $(uname).focus();
+            return false;
+        }
+    }
+
+
+    else if (($(pwd1).val() != $(pwd2).val())) {
+        $(pwchk2).text('일치하는 비밀번호를 입력해 주세요.');
+        $(pwchk2).css('color', 'blue');
+        $(pwd2).focus();
+        return false;
+    }
+
+    else if  (pwJ.test($(pwd1).val()) == false) {
+        if ($(pwd1).val() == "") {
+            $(pwchk1).text('비밀번호는 필수 입력 사항입니다.');
+            $(pwchk1).css('color', 'blue');
+            $(pwd1).focus();
+            return false;
+        } else {
+            $(pwchk1).text('올바른 형식으로 비밀번호를 입력해 주세요.');
+            $(pwchk1).css('color', 'blue');
+            $(pwd1).focus();
+            return false;
+        }
+    }
+
+    else if ($(pwd2).val() == "") {
+        $(pwchk2).text('비밀번호 확인은 필수 입력 사항입니다.');
+        $(pwchk2).css('color', 'blue');
+        $(pwd2).focus();
+        return false;
+    }
+
+    else if (phoneJ.test($(phnum).val()) == false) {
+        if ($(phnum).val() == "") {
+            $(phchk).text('핸드폰 번호는 필수 입력 사항입니다.');
+            $(phchk).css('color', 'blue');
+            $(phnum).focus();
+            return false;
+        } else {
+            console.log(phoneJ.test($(phnum).val()));
+            $(phchk).text('올바른 형식의 핸드폰 번호를 입력해 주세요.');
+            $(phchk).css('color', 'blue');
+            $(phnum).focus();
+            return false;
+        }
+    }
+
+
+    else if ($(uaddr).val() == "") {
+        $(adchk).text('주소는 필수 입력 사항입니다.');
+        $(adchk).css('color', 'blue');
+        $(uaddr).focus();
+        return false;
+    }
+*/
+    /* var valid_Arr = new Array(5).fill(false);
     // 가입하기를 실행할 때, 유효성 검사
     // 이메일 정규식
     if (emailJ.test($(umail).val())) {
@@ -216,8 +314,13 @@ function signupCheck() {
         }
     }
 
-    if (validAll == false) {
-        alert("입력한 정보를 다시 한번 확인해 주세요");
+    if (validAll) {
+        console.log("유효성 모두 통과");
+    } else {
+        console.log("유효성 미 통과");
+        alert("입력한 정보를 다시 한 번 확인해 주세요:)");
     }
+
+    */
 
 }

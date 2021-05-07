@@ -216,3 +216,4 @@ buildNumber.properties
 # End of https://www.toptal.com/developers/gitignore/api/maven
 context-datasource.xml
 MailService
+privateUtil.java
