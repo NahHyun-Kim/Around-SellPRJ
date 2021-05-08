@@ -31,4 +31,7 @@ public interface IUserMapper {
 
     // 회원정보 수정
 
+    // 핸드폰 번호로 회원 이메일 찾기
+    UserDTO findEmail(String phone_no);
+
 }

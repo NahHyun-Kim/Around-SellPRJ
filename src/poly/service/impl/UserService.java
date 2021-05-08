@@ -104,5 +104,11 @@ public class UserService implements IUserService {
         return userMapper.getUserDetail(pDTO);
     }
 
+    // 핸드폰 번호로 회원 이메일 찾기
+    @Override
+    public UserDTO findEmail(String phone_no) {
+        return userMapper.findEmail(phone_no);
+    }
+
 
 }

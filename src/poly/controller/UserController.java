@@ -365,7 +365,6 @@ public class UserController {
         pDTO.setUser_no(user_no);
         log.info("pDTO에 보낼 회원 번호 : " + pDTO.getUser_no());
 
-        //구현 예정
         int res = userService.deleteForceUser(pDTO);
         log.info("res? : " + res);
 
@@ -443,11 +442,40 @@ public class UserController {
             return "/user/myInfo";
         }
 
-        @RequestMapping(value="/userSearch")
-        public String userSearchPage(HttpServletRequest request, HttpServletResponse response, ModelMap model)
+    @RequestMapping(value="/userSearch")
+    public String userSearchPage(HttpServletRequest request, HttpServletResponse response, ModelMap model)
             throws Exception {
 
         log.info(".userSearch Page 시작!");
         return "/user/userSearch";
         }
+
+    @ResponseBody
+    @RequestMapping(value="/findEmailUser")
+    public Object findEmailUser(HttpServletRequest request, HttpServletResponse response, ModelMap model)
+            throws Exception {
+
+        log.info(this.getClass().getName() + ".findEmailUser Start!");
+
+        // 회원이 입력한 핸드폰 번호 가져오기기
+        String phone_no = request.getParameter("inputPhone");
+
+        UserDTO pDTO = new UserDTO();
+        pDTO.setPhone_no(phone_no);
+
+        // 조회하여 받아온 이메일 결과를 rDTO에 저장
+        UserDTO rDTO = userService.findEmail(phone_no);
+        log.info("rDTO null? : " + (rDTO == null));
+
+        // 결과가 없을 경우, 메시지와 함께 회원 목록으로 리다이렉트
+        if (rDTO == null) {
+            model.addAttribute("msg", "일치하는 회원이 없습니다.");
+            model.addAttribute("url", "/userSearch.do");
+            return "/redirect";
+        }
+
+        return rDTO;
     }
+
+
+}

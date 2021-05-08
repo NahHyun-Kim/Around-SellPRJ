@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="poly.util.privateUtil" %>
 <html>
 <head>
     <title>Around-Sell 회원가입</title>
@@ -73,8 +72,7 @@
 
 <!-- 도로명주소 API js 파일-->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da
-&libraries=services></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services"></script>
 <script type="text/javascript" src="/resource/js/addrAPI2.js"></script>
 
 <!-- bootstrap, css 파일 -->
@@ -83,7 +81,6 @@
 <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
 <script type="text/javascript">
     //close 버튼을 클릭하면, modal창 사라짐
-    window.on
     $("#close").click(function() {
         $(".modal").fadeOut();
     });

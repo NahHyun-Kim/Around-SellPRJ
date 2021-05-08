@@ -25,4 +25,6 @@ public interface IUserService {
     WeatherDTO getWeather(String addr2) throws Exception;
     // 회원 정보 수정을 위한 회원정보 가져오기
     UserDTO getUserInfo(UserDTO pDTO);
+    // 핸드폰 번호로 회원 이메일 찾기
+    UserDTO findEmail(String phone_no);
 }

@@ -35,6 +35,7 @@
 
                     // 해당 주소에 대한 좌표를 받아서
                     var coords = new daum.maps.LatLng(result.y, result.x);
+
                     // 지도를 보여준다.
                     mapContainer.style.display = "block";
                     map.relayout();

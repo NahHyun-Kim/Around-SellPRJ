@@ -4,39 +4,76 @@
     <title>아이디 & 비밀번호 찾기</title>
     <!-- jquery -->
     <script src="/resource/js/jquery-3.4.1.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            document.getElementById("searchP").style.display = "none";
-            document.getElementById("searchE").style.display = "";
-        })
+    <script>
+
+    /* div 자체에서 style=display:none;을 주고, 필요할 때 show 또는 "" 해도 될듯 하다.
+    $(document).ready(function() {
+    document.getElementById("background_modal").style.display = "none";
+    }) */
+
+    $("#close").click(function() {
+        $(".modal").fadeOut();
+    });
     </script>
 </head>
 <body>
+    <div class="container">
     <div>
-    <div>
-        <input type="radio" id="search_1" name="search_total" onclick="search_check(1)"/>
+        <input type="radio" id="search_1" name="search_total" onclick="search_check(1)" checked="checked"/>
         <label for="search_1">이메일 찾기</label>
     </div>
     <div>
         <input type="radio" id="search_2" name="search_total" onclick="search_check(2)"/>
         <label for="search_2">비밀번호 찾기</label>
     </div>
+
+    <!-- 이메일 찾기 -->
+    <!-- 아직 진행중이라 임시로 action 주소를 userSearch.do로 설정, 추후 변경 예정 -->
+    <form>
     <div id="searchE">
-        <div>
-            <label for="inputPhone_1">핸드폰 번호</label>
+
+        <!-- 이메일을 찾기 위해 핸드폰 번호를 입력 -->
+        <div class="form-group">
+            <label for="inputPhone">핸드폰 번호</label>
+            <div>
+            <input type="text" id="inputPhone" name="inputPhone" placeholder="ex)01012345678"/>
+            </div>
         </div>
-            <input type="text" id="inputPhone_1" name="inputName_1" placeholder="ex)01012345678"/>
-    </div>
-    <div id="searchP">
-        <div>
-            <label for="inputEmail_1">이메일</label>
+
+        <!-- 입력 시 이메일 찾기 활성화, 입력하지 않은 경우/일치하지 않는 경우 모달 창 띄움 -->
+        <!--  onclick="location.href='/findEmailUser.do'" -->
+        <div class="form-group">
+            <button id="searchBtn" type="button" onclick="emailSearch_click() "/>이메일 찾기</button>
+            <input type="reset" value="다시 입력"/>
         </div>
-            <input type="email" id="inputEmail_1" name="inputEmail_1" placeholder="가입 시 이메일을 입력해 주세요."/>
     </div>
-        <button id="searchBtn2" type="button">확인</button>
-        <input type="reset"/>
+    </form>
+
+    <!-- 비밀번호 찾기 -->
+    <!-- 아직 진행중이라 임시로 action 주소를 /userSearch.do로 설정, 추후 변경 예정 -->
+    <form>
+        <!-- 로딩 시, default 값으로 이메일 찾기가 표시되기 때문에 기본 표시에서 숨겨 놓는다. -->
+    <div id="searchP" style="display: none;">
+
+        <!-- 비밀번호를 찾기 위해 이메일을 입력 -->
+        <div class="form-group">
+            <label for="inputEmail">이메일</label>
+            <div>
+                <input type="email" id="inputEmail" name="inputEmail" placeholder="가입 시 이메일을 입력해 주세요."/>
+            </div>
+        </div>
+
+        <!-- 입력 시 비밀번호 찾기 활성화, 입력하지 않은 경우/일치하지 않는 경우 모달 창 띄움 -->
+        <div class="form-group">
+            <button id="searchBtn2" type="button" onclick="location.href='/userSearch.do'">비밀번호 찾기</button>
+            <input type="reset" value="다시 입력"/>
+        </div>
+    </div>
+    </form>
+
     </div>
 
+    <!-- 이메일 찾기를 누르면, 이메일 정보를 보여줌
     <div id="background_modal">
         <div>
             <h4><b>회원님의 이메일은?</b> <span class="close"></span>
@@ -44,10 +81,31 @@
             <br>
             <h2 id="email_value"></h2>
             <br>
-            <button type="button" id="pw"
+            <button type="button" id="pwSearch_btn">비밀번호 찾기</button>
         </div>
     </div>
-    <!-- 회원가입 유효성 체크 js -->
+    -->
+
+    <!-- 값을 입력하지 않을 경우, 입력할 것을 알려주는 모달창 -->
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button id="close" type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- 이메일/비밀번호 찾기 js -->
     <script type="text/javascript" src="/resource/valid/searchUser.js"></script>
 
     <!-- bootstrap, css 파일 -->
