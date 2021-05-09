@@ -451,30 +451,28 @@ public class UserController {
         }
 
     @ResponseBody
-    @RequestMapping(value="/findEmailUser")
-    public Object findEmailUser(HttpServletRequest request, HttpServletResponse response, ModelMap model)
+    @RequestMapping(value="/findEmailUser", method = RequestMethod.POST)
+    public String findEmailUser(HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
         log.info(this.getClass().getName() + ".findEmailUser Start!");
 
-        // 회원이 입력한 핸드폰 번호 가져오기기
-        String phone_no = request.getParameter("inputPhone");
+        // 회원이 입력한 핸드폰 번호 가져오기
+        String phone_no = CmmUtil.nvl(request.getParameter("inputPhone"));
+        log.info("parameter 핸드폰 번호 : " + phone_no);
 
         UserDTO pDTO = new UserDTO();
         pDTO.setPhone_no(phone_no);
 
         // 조회하여 받아온 이메일 결과를 rDTO에 저장
         UserDTO rDTO = userService.findEmail(phone_no);
+
+        String email = EncryptUtil.decAES128CBC(rDTO.getUser_email());
+
+        log.info("email : " + email);
         log.info("rDTO null? : " + (rDTO == null));
 
-        // 결과가 없을 경우, 메시지와 함께 회원 목록으로 리다이렉트
-        if (rDTO == null) {
-            model.addAttribute("msg", "일치하는 회원이 없습니다.");
-            model.addAttribute("url", "/userSearch.do");
-            return "/redirect";
-        }
-
-        return rDTO;
+        return email;
     }
 
 

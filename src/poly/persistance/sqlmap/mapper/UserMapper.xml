@@ -105,7 +105,7 @@
     </select>
 
     <!-- 비밀번호 찾기 시, 임시 비밀번호로 변경 -->
-    <update id="update_pw" parameterType="MemberDTO">
+    <update id="update_pw" parameterType="UserDTO">
         UPDATE
             aroundsell.user_info
         SET

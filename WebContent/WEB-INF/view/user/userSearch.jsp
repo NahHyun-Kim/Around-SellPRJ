@@ -1,20 +1,10 @@
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>아이디 & 비밀번호 찾기</title>
     <!-- jquery -->
     <script src="/resource/js/jquery-3.4.1.min.js"></script>
-    <script>
-
-    /* div 자체에서 style=display:none;을 주고, 필요할 때 show 또는 "" 해도 될듯 하다.
-    $(document).ready(function() {
-    document.getElementById("background_modal").style.display = "none";
-    }) */
-
-    $("#close").click(function() {
-        $(".modal").fadeOut();
-    });
-    </script>
 </head>
 <body>
     <div class="container">
@@ -43,8 +33,7 @@
         <!-- 입력 시 이메일 찾기 활성화, 입력하지 않은 경우/일치하지 않는 경우 모달 창 띄움 -->
         <!--  onclick="location.href='/findEmailUser.do'" -->
         <div class="form-group">
-            <button id="searchBtn" type="button" onclick="emailSearch_click() "/>이메일 찾기</button>
-            <input type="reset" value="다시 입력"/>
+            <button id="searchBtn" type="button" onclick="emailSearch()">이메일 찾기</button>
         </div>
     </div>
     </form>
@@ -92,9 +81,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body">
                 </div>
@@ -105,6 +91,27 @@
         </div>
     </div>
     </div>
+    <script>
+
+        $(document).ready(function() {
+
+
+        /* div 자체에서 style=display:none;을 주고, 필요할 때 show 또는 "" 해도 될듯 하다.
+        $(document).ready(function() {
+        document.getElementById("background_modal").style.display = "none";
+        }) */
+
+        $("#close").click(function() {
+            $(".modal").fadeOut();
+        });
+
+        $(window).on('click', function() {
+            if (event.target == $('#background_modal').get(0)) {
+                $('#background_modal').hide();
+            }
+        });
+        });
+    </script>
     <!-- 이메일/비밀번호 찾기 js -->
     <script type="text/javascript" src="/resource/valid/searchUser.js"></script>
 

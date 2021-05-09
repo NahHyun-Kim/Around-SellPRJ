@@ -3,7 +3,6 @@ package poly.service.impl;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import poly.dto.UserDTO;
 import poly.dto.WeatherDTO;
