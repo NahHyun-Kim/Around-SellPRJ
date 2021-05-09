@@ -30,9 +30,9 @@
 <a href="/logOut.do">로그아웃</a>
 <% } %>
 <a href="/adminPage.do">관리자 페이지</a>
-<button type="button" id="addr2" value="<%=SS_USER_ADDR2%>" onclick="crawling();">날씨</button>
 <a href="/crawlingRes.do">크롤링 테스트</a>
 <a href="/getUserInfo.do">마이페이지 정보 보기</a>
+<a href="/userSearch.do">이메일/비밀번호 찾기</a>
 <button id="modaltest">모달 테스트</button>
 <div class="modal">
     <div class="modal-content">

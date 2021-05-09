@@ -103,11 +103,23 @@ public class UserService implements IUserService {
         return userMapper.getUserDetail(pDTO);
     }
 
-    // 핸드폰 번호로 회원 이메일 찾기
+    // 비밀번호 변경
     @Override
-    public UserDTO findEmail(String phone_no) {
-        return userMapper.findEmail(phone_no);
+    public int updatePw(UserDTO pDTO) {
+        return userMapper.updatePw(pDTO);
     }
+
+    @Override
+    public UserDTO findEmail(UserDTO pDTO) {
+        return userMapper.findEmail(pDTO);
+    }
+
+
+    // 핸드폰 번호로 회원 이메일 찾기
+    /* @Override
+    public String findEmail(String phone_no) {
+        return userMapper.findEmail(phone_no);
+    } */
 
 
 }

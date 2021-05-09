@@ -29,9 +29,12 @@ public interface IUserMapper {
     // 관리자 회원 상세정보 조회
     UserDTO getUserDetail(UserDTO pDTO);
 
+    // 비밀번호 변경
+    int updatePw(UserDTO pDTO);
+
     // 회원정보 수정
 
     // 핸드폰 번호로 회원 이메일 찾기
-    UserDTO findEmail(String phone_no);
+    UserDTO findEmail(UserDTO pDTO);
 
 }

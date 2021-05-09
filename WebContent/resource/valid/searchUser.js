@@ -10,8 +10,26 @@ function search_check(num) {
          }
 }
 
-var phoneNum = document.getElementById("inputPhone");
+    function emailSearch() {
+    if ($("#inputPhone").val() == "") {
+        $(".modal-body").text("핸드폰 번호를 입력해 주세요.");
+        $(".modal-title").text("Around-Sell 이메일 찾기");
+        $(".modal").fadeIn();
+        return false;
+    } /* else { // 값이 존재하는 경우
+        $(".modal-body").text("회원님의 이메일은 : " );
+        $(".modal-title").text("Around-Sell 이메일 찾기");
+        $(".modal").fadeIn();
+    } */
+    }
 
+// 비밀번호 변경 시(임시 비밀번호 -> 비밀번호 변경) 유효성 체크
+var pw1 = document.getElementById("password1");
+var pw2 = document.getElementById("password2");
+
+var pwJ = /^[a-zA-Z0-9]{4,20}$/;
+
+/*
 function emailSearch() {
     if ($(phoneNum).val() == "") {
         $(".modal-body").text("핸드폰 번호를 입력해 주세요.");
@@ -23,13 +41,18 @@ function emailSearch() {
             //function을 실행할 url
             url: "/findEmailUser.do",
             type: "post",
-            dataType: "json",
-            data: {
-                "phone_no": $(phoneNum).val()
+            data : {
+                inputPhone : $(phoneNum).val()
             },
-            success: function (result) {
+            dataType: "text",
+            success: function (data) {
 
-                console.log(result);
+                console.log(data);
+
+                if (data == 0) {
+                    $(".modal-body").text("회원 정보를 확인해 주세요");
+                } else {
+
 
                 var emailMsg = "";
                 emailMsg += "회원님의 이메일은 : " + result + " 입니다.";
@@ -38,8 +61,8 @@ function emailSearch() {
                 $(".modal-body").text(emailMsg);
                 $(".modal-title").text("Around-Sell 이메일 찾기");
                 $(".modal").fadeIn();
-
+                }
             }
         })
     }
-}
+} */

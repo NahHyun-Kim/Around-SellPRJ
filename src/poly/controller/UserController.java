@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import poly.dto.MailDTO;
 import poly.dto.UserDTO;
@@ -15,11 +16,19 @@ import poly.service.IMailService;
 import poly.service.IUserService;
 import poly.util.CmmUtil;
 import poly.util.EncryptUtil;
+import poly.util.TemppwdUtil;
 
 import javax.annotation.Resource;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -268,7 +277,7 @@ public class UserController {
 
     // 폰번호 중복 확인
     @ResponseBody
-    @RequestMapping(value="/signup/phoneCheck", method = RequestMethod.POST)
+    @RequestMapping(value = "/signup/phoneCheck", method = RequestMethod.POST)
     public int phoneCheck(HttpServletRequest request) throws Exception {
         log.info(this.getClass().getName() + ".phoneCheck Start!");
 
@@ -382,7 +391,7 @@ public class UserController {
 
 
     // 크롤링한 결과를 실시간으로 보여주는 페이지 임시 작성
-    @RequestMapping(value="/crawlingRes")
+    @RequestMapping(value = "/crawlingRes")
     public String crawlingRes() {
         log.info("crawlingRes 결과 페이지 Start!");
         return "/crawlingRes";
@@ -391,14 +400,14 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value = "/getWeather")
     public WeatherDTO getWeather(HttpSession session, HttpServletRequest request)
-        throws Exception {
+            throws Exception {
         log.info("getWeather 크롤링 Start!");
 
         String addr2 = (String) session.getAttribute("SS_USER_ADDR2");
         log.info("가져온 주소 세션 : " + addr2);
 
         // 임시로 크롤링할 url을 제대로 받아오는지 확인
-        String url = "https://www.google.com/search?q=" + addr2 + "+날씨" ;
+        String url = "https://www.google.com/search?q=" + addr2 + "+날씨";
         log.info("url test : " + url);
 
         // 세션에서 가져온 상세주소 값을 서비스로 넘겨줌(크롤링 시 주소 사용)
@@ -416,7 +425,7 @@ public class UserController {
     }
 
     // 회원 정보 조회, 수정을 위해 회원목록을 가져옴
-    @RequestMapping(value="/getUserInfo")
+    @RequestMapping(value = "/getUserInfo")
     public String getUser(HttpSession session, HttpServletRequest request, HttpServletResponse response,
                           ModelMap model) throws Exception {
         log.info(this.getClass().getName() + ".getUser Start!");
@@ -439,41 +448,240 @@ public class UserController {
         log.info("model에 rDTO값 전송 완료");
         log.info(this.getClass().getName() + ".getUser End!");
 
-            return "/user/myInfo";
-        }
+        return "/user/myInfo";
+    }
 
-    @RequestMapping(value="/userSearch")
+    // 이메일, 비밀번호 찾기 폼
+    @RequestMapping(value = "/userSearch")
     public String userSearchPage(HttpServletRequest request, HttpServletResponse response, ModelMap model)
             throws Exception {
 
         log.info(".userSearch Page 시작!");
         return "/user/userSearch";
-        }
+    }
 
-    @ResponseBody
-    @RequestMapping(value="/findEmailUser", method = RequestMethod.POST)
-    public String findEmailUser(HttpServletRequest request, HttpServletResponse response)
+    // 이메일 찾기
+    @RequestMapping(value = "/findEmailUser")
+    public String findEmailUser(HttpServletRequest request, HttpServletResponse response, ModelMap model)
             throws Exception {
-
         log.info(this.getClass().getName() + ".findEmailUser Start!");
-
-        // 회원이 입력한 핸드폰 번호 가져오기
         String phone_no = CmmUtil.nvl(request.getParameter("inputPhone"));
-        log.info("parameter 핸드폰 번호 : " + phone_no);
+        log.info("phone_no : " + phone_no);
 
         UserDTO pDTO = new UserDTO();
         pDTO.setPhone_no(phone_no);
 
-        // 조회하여 받아온 이메일 결과를 rDTO에 저장
-        UserDTO rDTO = userService.findEmail(phone_no);
+        UserDTO rDTO = userService.findEmail(pDTO);
+        log.info("res : " + rDTO.getUser_email());
 
-        String email = EncryptUtil.decAES128CBC(rDTO.getUser_email());
+        String email = CmmUtil.nvl(EncryptUtil.decAES128CBC(rDTO.getUser_email()));
+        log.info("복호화한 email : " + email);
+
+        // 이메일 복호화
+        rDTO.setUser_email(email);
+
+        String url = "";
+        String msg = "";
+
+        if (rDTO == null) {
+            msg = "일치하는 회원 정보가 없습니다.";
+            url = "/userSearch.do";
+        } else { //값이 존재한다면
+            msg = "회원님의 이메일은 : " + email + " 입니다.";
+            url = "/userSearch.do";
+        }
+        model.addAttribute("msg", msg);
+        model.addAttribute("url", url);
+
+        return "/redirect";
+    }
+
+    // 비밀번호 찾기 시, 인증번호 발송
+    @RequestMapping(value = "/findPassword")
+    public String findPassword(HttpServletRequest request, ModelMap model, HttpSession session)
+            throws InvalidAlgorithmParameterException, UnsupportedEncodingException, NoSuchPaddingException,
+            NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, IllegalBlockSizeException {
+        log.info("인증번호 발송 시작!");
+
+        String email = EncryptUtil.encAES128CBC(CmmUtil.nvl(request.getParameter("inputEmail")));
+        session.setAttribute("SS_EMAIL", email);
+
+        String auth = "";
+        String msg = "";
+        String url = "";
+
+        // 랜덤한 8자 인증번호값 담기
+        auth = TemppwdUtil.SendTemporaryMail();
+
+        log.info("인증번호 : " + auth);
+        MailDTO mDTO = new MailDTO();
+
+        try {
+            email = EncryptUtil.decAES128CBC(email);
+            log.info("디코딩한 이메일 : " + email);
+
+            // 인증번호 발송 관련 정보를 mailDTO 에 세팅
+            mDTO.setToMail(email);
+            mDTO.setTitle("AroundSell 인증 번호입니다.");
+            mDTO.setTitle("인증번호는 : " + auth + "입니다. 인증번호 입력 후, 비밀번호를 변경해 주세요.");
+
+            // 세팅한 정보로 메일 발송
+            mailService.doSendMail(mDTO);
+
+            msg = "이메일로 인증번호를 발송하였습니다. 인증번호 입력 후, 비밀번호를 변경해 주세요.";
+
+            model.addAttribute("msg", msg);
+            session.setAttribute("SS_AUTH", auth);
+
+            // 변수와 메모리 초기화
+            msg = "";
+            url = "";
+            mDTO = null;
+
+            log.info("인증번호 메일 발송 끝!");
+
+            return "/user/findPwChk";
+
+        } catch (Exception e) {
+            msg = "이메일 발송 실패 : " + e.toString();
+            url = "/";
+            log.info(email.toString());
+            e.printStackTrace();
+
+            model.addAttribute("msg", msg);
+            model.addAttribute("url", url);
+        } finally {
+            // 변수, 메모리 초기화
+            msg = "";
+            url = "";
+            mDTO = null;
+        }
+
+        log.info("인증번호 발송 끝!");
+        return "/redirect";
+    }
+
+    // 인증번호 검사
+    @RequestMapping(value="/findAuth", method=RequestMethod.POST)
+    public String findAuth(HttpServletRequest request, ModelMap model, HttpSession session)
+        throws Exception {
+        log.info("인증번호 검사 Start!");
+        String user_auth = CmmUtil.nvl(request.getParameter("user_auth"));
+        String auth = CmmUtil.nvl((String) session.getAttribute("SS_AUTH"));
+
+        log.info("사용자 입력 인증번호 : " + user_auth);
+        log.info("세션에 저장된 인증번호 : " + auth);
+
+        String msg = "";
+        String url = "";
+
+        // 이메일 인증번호와 사용자가 입력한 인증번호 비교
+        if (user_auth.equals(auth)) {
+            url = "/findPwUpdate.do";
+            msg = "인증에 성공했습니다.";
+        }
+        else {
+            url = "/index.do";
+            msg = "인증에 실패했습니다. 다시 시도해 주세요.";
+        }
+        model.addAttribute("msg", msg);
+        model.addAttribute("url", url);
+
+        // 인증번호 후 세션 비우기
+        session.removeAttribute("SS_AUTH");
+
+        log.info("인증번호 검사 End!");
+
+        return "/redirect";
+    }
+
+    // 인증번호가 일치할 경우, 비밀번호 변경 페이지로 이동
+    @RequestMapping("/findPwUpdate")
+    public String findPwUpdate() {
+        log.info(this.getClass().getName() + ".비밀번호 변경 페이지 Start!");
+        return "/user/findPwUpd";
+    }
+
+    // 비밀번호 변경하기
+    @RequestMapping(value = "updatePw")
+    public String updatePw(HttpServletRequest request, HttpSession session, ModelMap model) throws Exception {
+        log.info("updatePw start!");
+        String email = CmmUtil.nvl((String) session.getAttribute("SS_EMAIL"));
+        String member_pw = CmmUtil.nvl(EncryptUtil.encHashSHA256(request.getParameter("password1")));
 
         log.info("email : " + email);
-        log.info("rDTO null? : " + (rDTO == null));
+        log.info("member_pw : " + member_pw);
 
+        String msg = "";
+        String url = "";
+
+        UserDTO pDTO = null;
+
+        try {
+            pDTO = new UserDTO();
+
+            //where에 email을 사용, 수정할 비밀번호 전달
+            pDTO.setUser_email(email);
+            pDTO.setPassword(member_pw);
+
+            // 비밀번호 DB반영
+            userService.updatePw(pDTO);
+
+            msg = "비밀번호가 변경되었습니다.";
+            url = "/logIn.do";
+
+            model.addAttribute("msg", msg);
+            model.addAttribute("url", url);
+
+            // 변수와 메모리 초기화
+            msg = "";
+            url = "";
+            pDTO = null;
+            log.info("비밀번호 변경 종료");
+
+        } catch (Exception e) {
+            msg = "실패하였습니다. : " + e.toString();
+            url = "/";
+
+
+            log.info(e.toString());
+            e.printStackTrace();
+
+            model.addAttribute("msg", msg);
+            model.addAttribute("url", url);
+
+        } finally {
+            // 변수와 메모리 초기화
+            msg = "";
+            url = "";
+            pDTO = null;
+        }
+
+        // 세션 비워주기
+        session.removeAttribute("SS_EMAIL");
+        log.info("session deleted ? : " + session.getAttribute("SS_EMAIL"));
+
+        log.info("updatePw End!");
+        return "/redirect";
+    }
+        /*
+    @ResponseBody
+    @RequestMapping(value="/findEmailUser", method = RequestMethod.POST)
+    public String findEmailUser(@RequestParam("inputPhone") String phone_no, HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+
+        log.info(this.getClass().getName() + ".findEmailUser Start!");
+
+        String email = userService.findEmail(phone_no);
+        String result = EncryptUtil.decAES128CBC(email);
+
+        log.info("email : " + email);
+        log.info("result(복호화) : " + result);
+
+        log.info(this.getClass().getName() + ".findEmailUser End!");
         return email;
     }
 
+*/
 
 }

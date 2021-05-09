@@ -97,11 +97,11 @@
     <!-- 핸드폰 번호로 이메일 찾기 -->
     <select id="findEmail" parameterType="UserDTO" resultType="UserDTO">
         SELECT
-               USER_EMAIL
-            FROM
-                 aroundsell.user_info
+                USER_EMAIL
+        FROM
+                aroundsell.user_info
         WHERE
-              PHONE_NO = #{phone_no}
+                PHONE_NO = #{phone_no}
     </select>
 
     <!-- 비밀번호 찾기 시, 임시 비밀번호로 변경 -->

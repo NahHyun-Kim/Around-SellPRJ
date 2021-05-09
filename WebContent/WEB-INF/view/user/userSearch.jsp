@@ -1,5 +1,5 @@
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
     <title>아이디 & 비밀번호 찾기</title>
@@ -18,8 +18,7 @@
     </div>
 
     <!-- 이메일 찾기 -->
-    <!-- 아직 진행중이라 임시로 action 주소를 userSearch.do로 설정, 추후 변경 예정 -->
-    <form>
+    <form action="/findEmailUser.do", method="post", onsubmit="return emailSearch()">
     <div id="searchE">
 
         <!-- 이메일을 찾기 위해 핸드폰 번호를 입력 -->
@@ -30,17 +29,16 @@
             </div>
         </div>
 
-        <!-- 입력 시 이메일 찾기 활성화, 입력하지 않은 경우/일치하지 않는 경우 모달 창 띄움 -->
-        <!--  onclick="location.href='/findEmailUser.do'" -->
+        <!-- 입력 시 이메일 찾기 활성화-->
         <div class="form-group">
-            <button id="searchBtn" type="button" onclick="emailSearch()">이메일 찾기</button>
+            <input type="submit" value="이메일 찾기"/>
         </div>
     </div>
     </form>
 
     <!-- 비밀번호 찾기 -->
     <!-- 아직 진행중이라 임시로 action 주소를 /userSearch.do로 설정, 추후 변경 예정 -->
-    <form>
+    <form action="/findPassword.do", method="post", onsubmit="return emailSearch()">
         <!-- 로딩 시, default 값으로 이메일 찾기가 표시되기 때문에 기본 표시에서 숨겨 놓는다. -->
     <div id="searchP" style="display: none;">
 
@@ -52,17 +50,16 @@
             </div>
         </div>
 
-        <!-- 입력 시 비밀번호 찾기 활성화, 입력하지 않은 경우/일치하지 않는 경우 모달 창 띄움 -->
+        <!-- 입력 시 비밀번호 찾기 활성화(인증메일 발송), 입력하지 않은 경우/일치하지 않는 경우 모달 창 띄움 -->
         <div class="form-group">
-            <button id="searchBtn2" type="button" onclick="location.href='/userSearch.do'">비밀번호 찾기</button>
-            <input type="reset" value="다시 입력"/>
+            <input type="submit" value="비밀번호 찾기"/>
         </div>
     </div>
     </form>
 
     </div>
 
-    <!-- 이메일 찾기를 누르면, 이메일 정보를 보여줌
+    <!--
     <div id="background_modal">
         <div>
             <h4><b>회원님의 이메일은?</b> <span class="close"></span>
@@ -103,13 +100,6 @@
 
         $("#close").click(function() {
             $(".modal").fadeOut();
-        });
-
-        $(window).on('click', function() {
-            if (event.target == $('#background_modal').get(0)) {
-                $('#background_modal').hide();
-            }
-        });
         });
     </script>
     <!-- 이메일/비밀번호 찾기 js -->
