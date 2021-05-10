@@ -38,7 +38,7 @@
 
     <!-- 비밀번호 찾기 -->
     <!-- 아직 진행중이라 임시로 action 주소를 /userSearch.do로 설정, 추후 변경 예정 -->
-    <form action="/findPassword.do", method="post", onsubmit="return emailSearch()">
+    <form action="/findPassword.do", method="post">
         <!-- 로딩 시, default 값으로 이메일 찾기가 표시되기 때문에 기본 표시에서 숨겨 놓는다. -->
     <div id="searchP" style="display: none;">
 
@@ -93,14 +93,15 @@
         $(document).ready(function() {
 
 
-        /* div 자체에서 style=display:none;을 주고, 필요할 때 show 또는 "" 해도 될듯 하다.
-        $(document).ready(function() {
-        document.getElementById("background_modal").style.display = "none";
-        }) */
+            /* div 자체에서 style=display:none;을 주고, 필요할 때 show 또는 "" 해도 될듯 하다.
+            $(document).ready(function() {
+            document.getElementById("background_modal").style.display = "none";
+            }) */
 
-        $("#close").click(function() {
-            $(".modal").fadeOut();
-        });
+            $("#close").click(function () {
+                $(".modal").fadeOut()
+            })
+        })
     </script>
     <!-- 이메일/비밀번호 찾기 js -->
     <script type="text/javascript" src="/resource/valid/searchUser.js"></script>

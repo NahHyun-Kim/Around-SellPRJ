@@ -13,12 +13,14 @@
             <div>
                 <input type="password" id="password1" name="password1" placeholder="비밀번호를 입력해 주세요."/>
             </div>
+            <div className="check_font" id="pwd1_check"></div>
         </div>
         <div class="form-group">
             <label for="password2">비밀번호 확인 : </label>
             <div>
                 <input type="password" id="password2" name="password2" placeholder="비밀번호를 입력해 주세요."/>
             </div>
+            <div className="check_font" id="pwd2_check"></div>
         </div>
         <div class="form-group">
             <input type="submit" value="비밀번호 변경하기"/>

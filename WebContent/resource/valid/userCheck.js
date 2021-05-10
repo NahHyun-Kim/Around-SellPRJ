@@ -7,7 +7,7 @@ var uname = document.getElementById("user_name");
 
 // 이름에 특수문자가 들어가지 않도록 설정
 $(uname).on("propertychange change keyup paste input", function () {
-    if (nameJ.test($(uname).val())) {
+        if (nameJ.test($(uname).val())) {
         console.log(nameJ.test($(uname).val()));
         $(nmchk).text('이름이 입력되었습니다 :)');
         $(nmchk).css('color', 'green');

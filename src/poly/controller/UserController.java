@@ -523,7 +523,7 @@ public class UserController {
             // 인증번호 발송 관련 정보를 mailDTO 에 세팅
             mDTO.setToMail(email);
             mDTO.setTitle("AroundSell 인증 번호입니다.");
-            mDTO.setTitle("인증번호는 : " + auth + "입니다. 인증번호 입력 후, 비밀번호를 변경해 주세요.");
+            mDTO.setContents("인증번호는 : " + auth + "입니다. 인증번호 입력 후, 비밀번호를 변경해 주세요.");
 
             // 세팅한 정보로 메일 발송
             mailService.doSendMail(mDTO);
