@@ -7,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import poly.dto.MailDTO;
 import poly.dto.UserDTO;
@@ -394,7 +393,7 @@ public class UserController {
     @RequestMapping(value = "/crawlingRes")
     public String crawlingRes() {
         log.info("crawlingRes 결과 페이지 Start!");
-        return "/crawlingRes";
+        return "/weather/crawlingRes";
     }
 
     @ResponseBody

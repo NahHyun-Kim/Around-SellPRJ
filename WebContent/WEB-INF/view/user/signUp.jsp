@@ -37,8 +37,7 @@
         </div>
         <div>
             <label for="sample5_address">주소 입력</label>
-                <input type="text" name="addr" id="sample5_address" placeholder="주소를 검색해 주세요"
-               />
+                <input type="text" name="addr" id="sample5_address" placeholder="주소를 검색해 주세요"/>
                 <input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"/><br>
             <div class="check_font" id="addr_check"></div>
                 <!-- 도로명주소 검색으로 선택한 거주 주소지를 표시하여 나타내는 지도(시각화 확인) -->
@@ -68,6 +67,7 @@
 </div>
 
 <!-- 회원가입 유효성 체크 js -->
+
 <script type="text/javascript" src="/resource/valid/userCheck.js"></script>
 
 <!-- 도로명주소 API js 파일-->

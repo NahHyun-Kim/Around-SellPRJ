@@ -33,6 +33,8 @@
 <a href="/crawlingRes.do">크롤링 테스트</a>
 <a href="/getUserInfo.do">마이페이지 정보 보기</a>
 <a href="/userSearch.do">이메일/비밀번호 찾기</a>
+<br />
+<a href="/noticeForm.do">판매글 등록하기</a>
 <button id="modaltest">모달 테스트</button>
 <div class="modal">
     <div class="modal-content">

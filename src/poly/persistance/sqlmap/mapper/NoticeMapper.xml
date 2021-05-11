@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.INoticeMapper">
+
+    <!-- 판매글 리스트 -->
+    <select id="getNoticeList" resultType="NoticeDTO">
+        SELECT GOODS_NO, GOODS_TITLE, GOODS_PRICE, GOODS_ADDR
+        FROM aroundsell.product
+        ORDER BY GOODS_NO
+    </select>
+
+    <!-- 판매글 등록 -->
+    <insert id="InsertNoticeInfo" parameterType="NoticeDTO">
+        INSERT INTO
+            aroundsell.product
+            (
+             USER_NO,
+             GOODS_TITLE,
+             GOODS_DETAIL,
+             GOODS_PRICE,
+             GOODS_ADDR,
+             GOODS_ADDR2,
+             CATEGORY,
+             HIT,
+             REG_ID
+            )
+            VALUES
+            (
+             #{user_no},
+             #{goods_title},
+             #{goods_detail},
+             #{goods_price},
+             #{goods_addr},
+             #{goods_addr2},
+             #{category},
+             0,
+             #{reg_id}
+            )
+    </insert>
+
+    <!-- 게시판 상세보기 -->
+    <select id="getNoticeInfo" parameterType="NoticeDTO" resultType="NoticeDTO">
+        SELECT
+            N.GOODS_NO, N.GOODS_TITLE, N.HIT, N.GOODS_DETAIL, N.GOODS_PRICE,
+               N.GOODS_ADDR, N.GOODS_ADDR2, N.CATEGORY, U.USER_NAME
+        FROM aroundsell.product N, aroudsell.user_info U
+         WHERE N.USER_NO = U.USER_NO
+        AND N.GOODS_NO = #{goods_no}
+    </select>
+
+    <!-- 게시판 조회수 업데이트 -->
+    <update id="updateNoticeHit" parameterType="NoticeDTO">
+        UPDATE
+            aroundsell.product
+        SET
+            HIT = HIT + 1
+        WHERE
+            GOODS_NO = #{goods_no}
+    </update>
+
+    <!-- 게시판 글 수정 -->
+    <update id="updateNoticeInfo" parameterType="NoticeDTO">
+        UPDATE
+            aroundsell.product
+        SET
+            GOODS_TITLE = #{goods_title},
+            GOODS_DETAIL = #{goods_detail},
+            GOODS_PRICE = #{goods_price},
+            GOODS_ADDR = #{goods_addr},
+            GOODS_ADDR2 = #{goods_addr2},
+            CATEGORY = #{category}
+        WHERE
+            GOODS_NO = #{goods_no}
+    </update>
+
+    <!-- 게시판 글 삭제 -->
+    <delete id="deleteNoticeInfo" parameterType="NoticeDTO">
+        DELETE
+            FROM aroundsell.product
+        WHERE GOODS_NO = #{goods_no}
+    </delete>
+
+</mapper>
