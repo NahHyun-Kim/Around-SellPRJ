@@ -13,6 +13,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
 * Controller 선언해야만 Spring 프레임워크에서 Controller인지 인식 가능
@@ -40,6 +42,35 @@ public class NoticeController {
     }
 
     /*
+    * 판매글 리스트 보여주기(추후 이미지로 변경)
+    * */
+    @RequestMapping(value="/noticeList", method = RequestMethod.GET)
+    public String noticeList(HttpServletRequest request, HttpServletResponse response,
+                             ModelMap model) throws Exception {
+
+        log.info(this.getClass().getName() + ".noticeList(판매글 리스트) Start!");
+
+        // 판매글 리스트 가져오기
+        // 판매글 정보는 여러개이므로, DTO를 List 형태에 담아 반환한다.
+        List<NoticeDTO> rList = noticeService.getNoticeList();
+
+        if (rList == null) {
+            rList = new ArrayList<NoticeDTO>();
+
+        }
+
+        // 조회된 리스트 결과값을 model에 보냄
+        model.addAttribute("rList", rList);
+
+        // 메모리 효율화를 위한 변수 초기화
+        rList = null;
+
+        log.info(this.getClass().getName() + ".noticeList(판매글 리스트) End!");
+
+        return "/notice/noticeList";
+    }
+
+    /*
     * 판매글 등록
     * */
     @RequestMapping(value="noticeInsert", method=RequestMethod.POST)
@@ -49,7 +80,7 @@ public class NoticeController {
         log.info(this.getClass().getName() + ".noticeInsert(게시글 등록 실행) Start!");
 
         String msg = "";
-        String url = "";
+        // String url = "";
 
         try {
             //form태그의 name 값을 받아옴(request.getParameter)
@@ -102,9 +133,189 @@ public class NoticeController {
             // 결과 메세지를 model로 전달
             model.addAttribute("msg", msg);
             //아직 리스트 보기가 구현되지 않아, 임시로 url을 index.do로 보냄
-            model.addAttribute("url", "/index.do");
+            // model.addAttribute("url", "/index.do");
         }
 
-        return "/redirect";
+        return "/notice/MsgToList";
+    }
+
+    // 게시글 상세보기
+    @RequestMapping(value="noticeInfo", method=RequestMethod.GET)
+    public String noticeInfo(HttpServletRequest request, HttpServletResponse response,
+                             ModelMap model) throws Exception {
+
+        log.info(this.getClass().getName() + ".noticeInfo(게시판 상세보기) Start!");
+
+        // form 객체의 판매글 번호(pk)를 받아옴
+        String goods_no = CmmUtil.nvl(request.getParameter("nSeq"));
+
+        log.info("form으로부터 받아온 goods_no : " + goods_no);
+
+        // 값 전달은 DTO 객체를 이용하여 처리. pDTO를 통해 전달한다(특정 게시글 조회)
+        NoticeDTO pDTO = new NoticeDTO();
+
+        pDTO.setGoods_no(goods_no);
+
+        // 게시글을 조회했기 때문에, 조회수를 증가하는 로직 작성
+        // 판매글 번호에 해당하는 값을 pDTO에 담아 전달하여, 해당 판매글의 조회수가 증가
+        noticeService.updateNoticeHit(pDTO);
+
+        log.info("Hit(조회수) update Success!");
+
+        // 판매글 상세정보 가져오기
+        NoticeDTO rDTO = noticeService.getNoticeInfo(pDTO);
+
+        if (rDTO == null) {
+            rDTO = new NoticeDTO();
+        }
+
+        log.info("getNoticeInfo Success!");
+
+        // 조회된 리스트를 model에 결과값 넣어줌
+        model.addAttribute("rDTO", rDTO);
+
+        // 메모리의 효율화를 위해 사용한 변수를 초기화
+        rDTO = null;
+        pDTO = null;
+
+        log.info(this.getClass().getName() + ".noticeInfo(게시글 상세 조회 + 조회수 업데이트) End!");
+
+        return "/notice/noticeInfo";
+    }
+
+    //판매글 수정 화면 표시
+    @RequestMapping(value="noticeEditInfo", method = RequestMethod.GET)
+    public String noticeEditInfo(HttpServletRequest request, HttpServletResponse response,
+                                 ModelMap model) throws Exception {
+
+        log.info(this.getClass().getName() + ".noticeEditInfo(게시글 수정 페이지) Start!");
+
+        String goods_no = CmmUtil.nvl(request.getParameter("nSeq")); //게시글 번호 받아오기
+        
+        log.info("goods_no(받아온 게시글 번호) : " + goods_no);
+        
+        // pDTO로 update쿼리를 전달할 DTO 생성
+        NoticeDTO pDTO = new NoticeDTO();
+        pDTO.setGoods_no(goods_no);
+        
+        // 수정할 정보 가져오기(상세보기 쿼리를 통해 가져와서 수정 --> 이미 등록된 내용을 가져옴)
+        NoticeDTO rDTO = noticeService.getNoticeInfo(pDTO);
+        
+        if (rDTO == null) {
+            rDTO = new NoticeDTO();
+        }
+        
+        // 조회한 리스트 결과값 넣어주기
+        model.addAttribute("rDTO", rDTO);
+        
+        // 메모리 효율화를 위해 변수를 초기화
+        rDTO = null;
+        pDTO = null;
+        
+        log.info(this.getClass().getName() + ".noticeEditInfo(게시글 수정 페이지) End!");
+        
+        return "/notice/editPost";
+}
+
+    /*
+    * 판매글 수정 등록(update 쿼리 날리기)
+    * */
+    @RequestMapping(value="/noticeUpdate", method=RequestMethod.POST)
+    public String noticeUpdate(HttpSession session, HttpServletRequest request, 
+                               HttpServletResponse response, ModelMap model) throws Exception {
+        log.info(this.getClass().getName() + ".noticeUpdate(게시판 수정 등록) Start!");
+
+        String msg = "";
+        // String url = "";
+
+        try {
+            String user_no = CmmUtil.nvl((String) session.getAttribute("SS_USER_NO")); //회원 번호
+            String goods_no = CmmUtil.nvl(request.getParameter("nSeq")); //글번호
+            String goods_title = CmmUtil.nvl(request.getParameter("goods_title")); // 상품명(제목)
+            String goods_detail = CmmUtil.nvl(request.getParameter("goods_detail")); // 상품 설명(게시글 내용)
+            String goods_price = CmmUtil.nvl(request.getParameter("goods_price")); // 상품 가격
+            String goods_addr = CmmUtil.nvl(request.getParameter("goods_addr")); // 판매 간략한 주소(상호명)
+            String goods_addr2 = CmmUtil.nvl(request.getParameter("goods_addr2")); // 판매 상세주소
+            String category = CmmUtil.nvl(request.getParameter("category")); //카테고리
+
+            log.info("update할 user_no : " + user_no);
+            log.info("update할 글번호 : " + goods_no);
+            log.info("update할 상품명 : " + goods_title);
+            log.info("update할 상품설명 : " + goods_detail);
+            log.info("update할 상품 가격 : " + goods_price);
+            log.info("update할 상호명 : " + goods_addr);
+            log.info("update할 상세 주소 : " + goods_addr2);
+            log.info("update할 카테고리 : " + category);
+
+            // update할 값을 pDTO에 담기 위해 NoticeDTO 객체 생성
+            NoticeDTO pDTO = new NoticeDTO();
+
+            // DB로 update 쿼리를 보내, 게시글 수정
+            noticeService.updateNoticeInfo(pDTO);
+
+            msg = "수정되었습니다.";
+            // url = "/noticeList.do";
+
+            // 메모리 효율화를 위해 변수 초기화
+            pDTO = null;
+
+        } catch(Exception e) {
+            // 오류 발생 시, 오류 문구 출력
+            msg = "실패하였습니다." + e.toString();
+            // url = "/noticeList.do";
+            log.info(e.toString());
+            e.printStackTrace();
+
+        } finally {
+            log.info(this.getClass().getName() + ".noticeUpdate(게시판 수정 등록) End!");
+
+            // redirect로 결과 메시지 전달
+            model.addAttribute("msg", msg);
+            // model.addAttribute("url", url);
+        }
+        return "/notice/MsgToList";
+    }
+
+    /*
+    * 판매글 삭제
+    * */
+    @RequestMapping(value="noticeDelete", method = RequestMethod.GET)
+    public String noticeDelet(HttpSession session, HttpServletRequest request, HttpServletResponse response,
+                              ModelMap model) throws Exception {
+
+        log.info(this.getClass().getName() + ".noticeDelete(판매글 삭제) Start!");
+
+        String msg = "";
+
+        try {
+            String goods_no = CmmUtil.nvl(request.getParameter("nSeq")); //글번호
+
+            log.info("받아온 글 번호 : " + goods_no);
+
+            // 판매글 번호를 DTO에 담기 위해 pDTO 객체 생성
+            NoticeDTO pDTO = new NoticeDTO();
+            pDTO.setGoods_no(goods_no);
+
+            // 게시글 삭제하기 DB 쿼리 보내기
+            noticeService.deleteNoticeInfo(pDTO);
+
+            msg = "삭제가 완료되었습니다.";
+
+            // 메모리 효율화를 위한 변수 초기화
+            pDTO = null;
+        } catch (Exception e) {
+            msg = "실패하였습니다." + e.toString();
+            log.info("삭제 실패! : " + e.toString());
+            e.printStackTrace();
+
+        } finally {
+            log.info(this.getClass().getName() + ".noticeDelete End!");
+
+            // 결과 메시지 model에 전달
+            model.addAttribute("msg", msg);
+        }
+
+        return "/notice/MsgToList";
+
     }
 }

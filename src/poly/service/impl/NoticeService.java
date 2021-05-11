@@ -10,11 +10,12 @@ import java.util.List;
 
 @Service("NoticeService")
 public class NoticeService implements INoticeService {
-    
+
+    // NoticeMapper를 메모리에 올림
     @Resource(name="NoticeMapper")
     private INoticeMapper noticeMapper;
 
-    //  판매글 상세보기(List)
+    //  판매글 (List)
     @Override
     public List<NoticeDTO> getNoticeList() throws Exception {
         return noticeMapper.getNoticeList();
