@@ -255,19 +255,19 @@ public class UserController {
         log.info("user_email : " + user_email);
 
         log.info("userService.emailCheck Start!");
-        UserDTO pDTO = userService.emailCheck(user_email);
+        UserDTO rDTO = userService.emailCheck(user_email);
 
-        log.info("pDTO : " + pDTO);
+        log.info("rDTO : " + rDTO);
         log.info("userService.emailCheck End!");
 
         int res = 0;
 
         // 값이 있다면, res = 1
-        if (pDTO != null) {
+        if (rDTO != null) {
             res = 1;
         }
 
-        pDTO = null;
+        rDTO = null;
 
         log.info("res : " + res);
         log.info("Email Check End!");

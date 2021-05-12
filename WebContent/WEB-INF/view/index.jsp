@@ -35,14 +35,8 @@
 <a href="/userSearch.do">이메일/비밀번호 찾기</a>
 <br />
 <a href="/noticeForm.do">판매글 등록하기</a>
-<button id="modaltest">모달 테스트</button>
-<div class="modal">
-    <div class="modal-content">
-        모달입니다.
-        <div class="close">클릭하면 모달이 닫힙니다.</div>
-    </div>
+<a href="/noticeList.do">판매글 리스트</a>
 
-</div>
 <!-- bootstrap, css 파일 -->
 <script src="/resources/js/bootstrap.js"></script>
 <link rel="stylesheet" href="/resources/css/bootstrap.css"/>

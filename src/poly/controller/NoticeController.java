@@ -73,7 +73,7 @@ public class NoticeController {
     /*
     * 판매글 등록
     * */
-    @RequestMapping(value="noticeInsert", method=RequestMethod.POST)
+    @RequestMapping(value="/noticeInsert", method=RequestMethod.POST)
     public String noticeInsert(HttpSession session, HttpServletRequest request,
                                HttpServletResponse response, ModelMap model) throws Exception {
 
@@ -93,6 +93,10 @@ public class NoticeController {
             String category = CmmUtil.nvl(request.getParameter("category")); //카테고리
             String user_name = CmmUtil.nvl((String) session.getAttribute("SS_USER_NAME")); //세션으로부터 받은 회원 이름
 
+            // 판매 상세 주소지 입력에서, 지역구를 가져오기 위해 split 함수 사용
+            String[] addrsplit = CmmUtil.nvl(request.getParameter("goods_addr2")).split(" ", 3);
+            String addr2 = addrsplit[1].trim();
+
             // 제대로 값이 들어왔는지 로그를 찍어 확인
             log.info("user_no : " + user_no);
             log.info("goods_title : " + goods_title);
@@ -100,6 +104,7 @@ public class NoticeController {
             log.info("goods_price : " + goods_price);
             log.info("goods_addr(간략 주소) : " + goods_addr);
             log.info("goods_addr2(상세 주소) : " + goods_addr2);
+            log.info("addr2(지역구) : " + addr2);
             log.info("category : " + category);
             log.info("user_name : " + user_name);
 
@@ -112,6 +117,7 @@ public class NoticeController {
             pDTO.setGoods_price(goods_price);
             pDTO.setGoods_addr(goods_addr);
             pDTO.setGoods_addr2(goods_addr2);
+            pDTO.setAddr2(addr2);
             pDTO.setCategory(category);
             pDTO.setReg_id(user_name);
 
@@ -140,7 +146,7 @@ public class NoticeController {
     }
 
     // 게시글 상세보기
-    @RequestMapping(value="noticeInfo", method=RequestMethod.GET)
+    @RequestMapping(value="/noticeInfo", method=RequestMethod.GET)
     public String noticeInfo(HttpServletRequest request, HttpServletResponse response,
                              ModelMap model) throws Exception {
 
@@ -165,9 +171,13 @@ public class NoticeController {
         // 판매글 상세정보 가져오기
         NoticeDTO rDTO = noticeService.getNoticeInfo(pDTO);
 
-        if (rDTO == null) {
+        if (rDTO == null)
+        {
             rDTO = new NoticeDTO();
+            log.info("is null");
         }
+
+
 
         log.info("getNoticeInfo Success!");
 
@@ -226,7 +236,7 @@ public class NoticeController {
         log.info(this.getClass().getName() + ".noticeUpdate(게시판 수정 등록) Start!");
 
         String msg = "";
-        // String url = "";
+        String url = "";
 
         try {
             String user_no = CmmUtil.nvl((String) session.getAttribute("SS_USER_NO")); //회원 번호
@@ -238,6 +248,10 @@ public class NoticeController {
             String goods_addr2 = CmmUtil.nvl(request.getParameter("goods_addr2")); // 판매 상세주소
             String category = CmmUtil.nvl(request.getParameter("category")); //카테고리
 
+            // 판매 상세 주소지 입력에서, 지역구를 가져오기 위해 split 함수 사용
+            String[] addrsplit = CmmUtil.nvl(request.getParameter("goods_addr2")).split(" ", 3);
+            String addr2 = addrsplit[1].trim();
+
             log.info("update할 user_no : " + user_no);
             log.info("update할 글번호 : " + goods_no);
             log.info("update할 상품명 : " + goods_title);
@@ -245,16 +259,27 @@ public class NoticeController {
             log.info("update할 상품 가격 : " + goods_price);
             log.info("update할 상호명 : " + goods_addr);
             log.info("update할 상세 주소 : " + goods_addr2);
+            log.info("update할 지역구 : " + addr2);
             log.info("update할 카테고리 : " + category);
 
             // update할 값을 pDTO에 담기 위해 NoticeDTO 객체 생성
             NoticeDTO pDTO = new NoticeDTO();
 
+            pDTO.setUser_no(user_no);
+            pDTO.setGoods_no(goods_no);
+            pDTO.setGoods_title(goods_title);
+            pDTO.setGoods_detail(goods_detail);
+            pDTO.setGoods_price(goods_price);
+            pDTO.setGoods_addr(goods_addr);
+            pDTO.setGoods_addr2(goods_addr2); //상세 주소
+            pDTO.setAddr2(addr2); //지역구
+            pDTO.setCategory(category);
+
             // DB로 update 쿼리를 보내, 게시글 수정
             noticeService.updateNoticeInfo(pDTO);
 
             msg = "수정되었습니다.";
-            // url = "/noticeList.do";
+            url = "/noticeInfo.do?nSeq=" + user_no;
 
             // 메모리 효율화를 위해 변수 초기화
             pDTO = null;
@@ -262,6 +287,7 @@ public class NoticeController {
         } catch(Exception e) {
             // 오류 발생 시, 오류 문구 출력
             msg = "실패하였습니다." + e.toString();
+            url = "/noticeList.do";
             // url = "/noticeList.do";
             log.info(e.toString());
             e.printStackTrace();
@@ -271,15 +297,15 @@ public class NoticeController {
 
             // redirect로 결과 메시지 전달
             model.addAttribute("msg", msg);
-            // model.addAttribute("url", url);
+            model.addAttribute("url", url);
         }
-        return "/notice/MsgToList";
+        return "/redirect";
     }
 
     /*
     * 판매글 삭제
     * */
-    @RequestMapping(value="noticeDelete", method = RequestMethod.GET)
+    @RequestMapping(value="/noticeDelete", method = RequestMethod.GET)
     public String noticeDelet(HttpSession session, HttpServletRequest request, HttpServletResponse response,
                               ModelMap model) throws Exception {
 

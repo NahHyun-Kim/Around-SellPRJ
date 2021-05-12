@@ -1,0 +1,6 @@
+/* noticeInfo.do 판매글 상세보기 시, 지도 크기 지정 */
+#map {
+    width: 350px;
+    height: 200px;
+    margin-top: 10px;
+}

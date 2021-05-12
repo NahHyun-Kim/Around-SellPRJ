@@ -9,6 +9,7 @@ public class NoticeDTO {
     private String goods_price; //상품 가격
     private String goods_addr; //상품 판매 장소(간략)
     private String goods_addr2; //상품 판매 상세 주소
+    private String addr2; //상품 지역구
     private String category; //상품 분류(카테고리)
     private String hit; //조회수
     private String reg_dt; //등록일(default current_date)
@@ -34,6 +35,15 @@ public class NoticeDTO {
 
     public void setThumb(String thumb) {
         this.thumb = thumb;
+    }
+
+
+    public String getAddr2() {
+        return addr2;
+    }
+
+    public void setAddr2(String addr2) {
+        this.addr2 = addr2;
     }
 
     public String getGoods_no() {
