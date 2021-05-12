@@ -9,7 +9,7 @@
         rDTO = new NoticeDTO();
     }
     System.out.println("rDTO.getGoods_title() = " + rDTO.getGoods_title());
-
+    System.out.println("rDTO.getGoods_addr2() 주소값 꼭 받아와야 함 = " + rDTO.getGoods_addr2());
     // 게시글 수정, 삭제 시 로그인&본인 여부 확인을 위한 세션값 받아오기
     String SS_USER_NO = CmmUtil.nvl((String) session.getAttribute("SS_USER_NO"));
 
@@ -35,7 +35,6 @@
     <!-- jquery -->
     <script src="/resource/js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript">
-
         // 게시글 수정하기
         function doEdit() {
             // 본인이라면(2), 수정 페이지로 이동
@@ -49,7 +48,7 @@
             } else { // 본인이 아니라면(edit=1)
                 alert("본인이 작성한 글만 수정이 가능합니다.");
 
-                 }
+            }
         }
 
         // 삭제하기
@@ -74,70 +73,9 @@
             location.href="/noticeList.do";
 
         }
+
     </script>
-    <script type="text/javascript">
-        $(document).ready(function(data) {
 
-
-            var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-                mapOption = {
-                    center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
-                    level: 3 // 지도의 확대 레벨, 숫자가 작을수록 확대하여 보여준다.
-                };
-
-            //지도를 미리 생성
-            var map = new daum.maps.Map(mapContainer, mapOption);
-            //주소-좌표 변환 객체를 생성
-            var geocoder = new daum.maps.services.Geocoder();
-            //마커를 미리 생성
-            var marker = new daum.maps.Marker({
-                position: new daum.maps.LatLng(37.537187, 127.005476),
-                map: map
-            });
-
-            // console.log("위, 경도 : " + JSON.stringify(marker));
-
-            //function sample5_execDaumPostcode() {
-            //new daum.Postcode({
-            //oncomplete: function(data) {
-
-            // var addr = data.address; // 최종 주소 변수
-            new daum.Postcode;
-
-            var addr = data.address;
-            // 주소 정보를 해당 필드에 넣는다.
-            document.getElementById("goods_addr2").value = addr;
-
-            if ($(addr).val() != null) {
-                console.log("addr : " + addr);
-                console.log($(addr).val() == null);
-
-                // 주소로 상세 정보를 검색
-                geocoder.addressSearch(addr, function (results, status) {
-                    // 정상적으로 검색이 완료됐으면
-                    if (status === daum.maps.services.Status.OK) {
-
-                        var result = results[0]; //첫번째 결과의 값을 활용
-
-                        // 해당 주소에 대한 좌표를 받아서
-                        var coords = new daum.maps.LatLng(result.y, result.x);
-
-                        // 지도를 보여준다.
-                        mapContainer.style.display = "block";
-                        map.relayout();
-                        // 지도 중심을 변경한다.
-                        map.setCenter(coords);
-                        // 마커를 결과값으로 받은 위치로 옮긴다.
-                        marker.setPosition(coords);
-                    }
-                });
-            }
-                // }
-
-                // }).open();
-                //}
-                })
-    </script>
 </head>
 <body>
     <div class="container">
@@ -148,51 +86,49 @@
         <!-- 조회수 -->
         <div class="row">
             <div class="col">
-                <%=CmmUtil.nvl(rDTO.getHit())%>
+                <%=rDTO.getHit()%>
             </div>
         </div>
         <!-- 카테고리 -->
         <div class="row">
             <div class="col">
-                <%=CmmUtil.nvl(rDTO.getCategory())%>
+                <%=rDTO.getCategory()%>
             </div>
         </div>
 
         <!-- 상품명 -->
         <div class="row">
             <div class="col">
-                <%=CmmUtil.nvl(rDTO.getGoods_title())%>
+                <%=rDTO.getGoods_title()%>
             </div>
         </div>
 
         <!-- 상호명 -->
         <div class="row">
             <div class="col">
-                <%=CmmUtil.nvl(rDTO.getGoods_addr())%>
+                <%=rDTO.getGoods_addr()%>
             </div>
         </div>
 
         <!-- 상품 설명 -->
         <div class="row">
             <div class="col">
-                <%=CmmUtil.nvl(rDTO.getGoods_detail())%>
+                <%=rDTO.getGoods_detail()%>
             </div>
         </div>
 
         <!-- 지도, 상호명, 위치, 거리 표시 -->
         <div class="row">
-            <div class="col-6">
-                <div id="map">지도 예정</div>
-            </div>
+            <div class="col-6" id="map">지도 예정</div>
             <div class="col-6">
                 <div class="row">
-                    <div class="col">
-                        <%=CmmUtil.nvl(rDTO.getGoods_addr())%>
+                    <div class="col" id="goods_addr">
+                        <%=rDTO.getGoods_addr()%>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col" id="goods_addr2">
-                        <%=CmmUtil.nvl(rDTO.getGoods_addr2())%>
+                    <div class="col" id="goods_addr2" value="<%=rDTO.getGoods_addr2()%>">
+                        <%=rDTO.getGoods_addr2()%>
                     </div>
                 </div>
                 <div class="row">
@@ -202,19 +138,18 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <button type="button" onclick="doEdit();">수정</button>
-                        <button type="button" onclick="doDelete();">삭제</button>
-                        <a href="javascript:doList();">목록으로</a>
+                        <input type="button" onclick="return doEdit();" value="수정"/>
+                        <input type="button" onclick="return doDelete();" value="삭제"/>
+                        <input type="button" onclick="return doList();" value="목록으로"/>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 도로명주소 API js 파일-->
-    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services"></script>
-    <!-- <script type="text/javascript" src="/resource/js/mapAPI.js"></script> -->
+    <!-- 카카오지도 API js 파일-->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services,clusterer,drawing"></script>
+    <script type="text/javascript" src="/resource/js/mapAPI.js"></script>
 
     <!-- bootstrap, css 파일 -->
     <link rel="stylesheet" href="/resource/css/notice.css"/>

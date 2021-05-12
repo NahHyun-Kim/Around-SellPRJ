@@ -278,8 +278,10 @@ public class NoticeController {
             // DB로 update 쿼리를 보내, 게시글 수정
             noticeService.updateNoticeInfo(pDTO);
 
+            log.info("update 서비스 호출");
+
             msg = "수정되었습니다.";
-            url = "/noticeInfo.do?nSeq=" + user_no;
+            url = "/noticeInfo.do?nSeq=" + goods_no;
 
             // 메모리 효율화를 위해 변수 초기화
             pDTO = null;

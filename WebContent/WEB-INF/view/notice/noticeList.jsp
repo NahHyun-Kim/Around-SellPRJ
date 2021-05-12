@@ -63,10 +63,5 @@
 <!-- 판매글 등록 시, 유효성 체크 js -->
 <script type="text/javascript" src="/resource/valid/noticeCheck.js"></script>
 
-<!-- 도로명주소 API js 파일-->
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services"></script>
-<script type="text/javascript" src="/resource/js/mapAPI.js"></script>
-
 </body>
 </html>
