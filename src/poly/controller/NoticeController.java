@@ -33,7 +33,7 @@ public class NoticeController {
     private INoticeService noticeService;
 
     // 판매글 작성 페이지 이동
-    @RequestMapping(value="noticeForm", method = RequestMethod.GET)
+    @RequestMapping(value="/noticeForm", method = RequestMethod.GET)
     public String noticeForm(HttpServletRequest request, HttpServletResponse response,
                              ModelMap model) throws Exception {
         log.info(this.getClass().getName() + "noticeForm(판매글 작성 페이지) Start!");

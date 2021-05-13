@@ -8,10 +8,13 @@
     if (rDTO == null) {
         rDTO = new NoticeDTO();
     }
-    System.out.println("rDTO.getGoods_title() = " + rDTO.getGoods_title());
-    System.out.println("rDTO.getGoods_addr2() 주소값 꼭 받아와야 함 = " + rDTO.getGoods_addr2());
+
     // 게시글 수정, 삭제 시 로그인&본인 여부 확인을 위한 세션값 받아오기
     String SS_USER_NO = CmmUtil.nvl((String) session.getAttribute("SS_USER_NO"));
+    String SS_USER_ADDR = CmmUtil.nvl((String) session.getAttribute("SS_USER_ADDR"));
+
+    System.out.println("세션에서 받아온 회원 주소 = " + SS_USER_ADDR);
+    System.out.println("rDTO.getGoods_addr2() 주소값 꼭 받아와야 함 = " + rDTO.getGoods_addr2());
 
     // 로그인 여부&본인 여부를 판단하는 edit 변수 선언
     int edit = 1; // 1(작성자 아님), 2(본인이 작성), 3(로그인 안 함)
@@ -103,6 +106,13 @@
             </div>
         </div>
 
+        <!-- 상품 가격 -->
+        <div class="row">
+            <div class="col">
+                <%=rDTO.getGoods_price()%>원
+            </div>
+        </div>
+
         <!-- 상호명 -->
         <div class="row">
             <div class="col">
@@ -127,14 +137,19 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col" id="goods_addr2" value="<%=rDTO.getGoods_addr2()%>">
-                        <%=rDTO.getGoods_addr2()%>
-                    </div>
+                    <!-- 거리 계산, 지도에 장소 표시를 위해 선언 -->
+                    <div class="col" id="goods_addr2"><%=rDTO.getGoods_addr2()%></div>
+                    <div class="col" style="display: none" id="user_addr"><%=SS_USER_ADDR%></div>
+                    <div class="col" style="display: none"id="lat1"></div>
+                    <div class="col" style="display: none" id="lon1"></div>
+                    <div class="col" style="display: none" id="lat2"></div>
+                    <div class="col" style="display: none" id="lon2"></div>
                 </div>
                 <div class="row">
-                    <div class="col">
-                        우리집으로부터 m(예정)
+                    <div class="col" id="distance">
+                        <input type="button" id="searchD" onclick="return search()" value="거리 검색"/>
                     </div>
+                    <div class="col" id="findpath"></div>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -147,6 +162,87 @@
         </div>
     </div>
 
+    <script type="text/javascript">
+        function search() {
+        var lat1 = document.getElementById("lat1").innerText;
+        var lon1 = document.getElementById("lon1").innerText;
+        var lat2 = document.getElementById("lat2").innerText;
+        var lon2 = document.getElementById("lon2").innerText;
+
+        console.log("동작 확인(판매 위도) : " + lat1);
+        console.log("동작 확인(유저 위도) : " + lat2);
+        console.log("바뀜");
+
+        var res = Math.ceil(calcDistance(lat1, lon1, lat2, lon2));
+
+        console.log("우리집-판매 장소와의 거리 : " + res + "m");
+        $("#distance").text("우리집으로부터의 거리는 : " + res + "m 입니다.");
+
+        // 위, 경도 좌표값을 받아와 거리를 계산하는 함수
+        function calcDistance(lat1, lon1, lat2, lon2)
+            {
+                var theta = lon1 - lon2;
+                dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1))
+                    * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+                dist = Math.acos(dist);
+                dist = rad2deg(dist);
+                dist = dist * 60 * 1.1515;
+                dist = dist * 1.609344;
+                return Number(dist*1000).toFixed(2);
+            }
+
+            function deg2rad(deg) {
+                return (deg * Math.PI / 180);
+            }
+            function rad2deg(rad) {
+                return (rad * 180 / Math.PI);
+            }
+
+            function getTimeHTML(res) {
+
+            // 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
+            var walkkTime = res / 67 | 0;
+            var walkHour = '', walkMin = '';
+
+            // 계산한 도보 시간이 60분 보다 크면 시간으로 표시합니다
+            if (walkkTime > 60) {
+                walkHour = '<span class="number">' + Math.floor(walkkTime / 60) + '</span>시간 '
+            }
+            walkMin = '<span class="number">' + walkkTime % 60 + '</span>분'
+
+            // 자전거의 평균 시속은 16km/h 이고 이것을 기준으로 자전거의 분속은 267m/min입니다
+            var bycicleTime = res / 227 | 0;
+            var bycicleHour = '', bycicleMin = '';
+
+            // 계산한 자전거 시간이 60분 보다 크면 시간으로 표출합니다
+            if (bycicleTime > 60) {
+                bycicleHour = '<span class="number">' + Math.floor(bycicleTime / 60) + '</span>시간 '
+            }
+            bycicleMin = '<span class="number">' + bycicleTime % 60 + '</span>분'
+
+            // 거리와 도보 시간, 자전거 시간을 가지고 HTML Content를 만들어 리턴
+            var content = '<ul class="dotOverlay distanceInfo">';
+            content += '    <li>';
+            content += '        <span class="label">총거리</span><span class="number">' + res + '</span>m';
+            content += '    </li>';
+            content += '    <li>';
+            content += '        <span class="label">도보</span>' + walkHour + walkMin;
+            content += '    </li>';
+            content += '    <li>';
+            content += '        <span class="label">자전거</span>' + bycicleHour + bycicleMin;
+            content += '    </li>';
+            content += '</ul>'
+
+                return content;
+        }
+
+        var content = getTimeHTML(res);
+        console.log("content : " + content);
+
+        $("#findpath").html(content);
+
+        }
+    </script>
     <!-- 카카오지도 API js 파일-->
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services,clusterer,drawing"></script>
     <script type="text/javascript" src="/resource/js/mapAPI.js"></script>

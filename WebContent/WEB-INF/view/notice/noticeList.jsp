@@ -23,6 +23,7 @@
             location.href="/noticeInfo.do?nSeq=" + seq;
         }
     </script>
+
 </head>
 <body>
 <div class="container">

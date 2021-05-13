@@ -92,18 +92,22 @@ public class UserController {
         else {
             log.info("rDTO.user_name: " + rDTO.getUser_name());
             log.info("rDTO.user_no : " + rDTO.getUser_no());
+            log.info("rDTO.addr : " + rDTO.getAddr());
             log.info("rDTO.addr2 : " + rDTO.getAddr2());
             msg = "환영합니다!";
 
             String user_no = rDTO.getUser_no();
             String user_name = rDTO.getUser_name();
+            String addr = rDTO.getAddr();
             String addr2 = rDTO.getAddr2();
 
+            log.info("addr : " + addr);
             log.info("addr2 : " + addr2);
 
             // 회원 번호로 세션 올림, "ㅇㅇㅇ님, 환영합니다" 같은 문구 표시를 위해 user_name도 세션에 올림
             session.setAttribute("SS_USER_NO", user_no);
             session.setAttribute("SS_USER_NAME", user_name);
+            session.setAttribute("SS_USER_ADDR", addr);
             session.setAttribute("SS_USER_ADDR2", addr2);
             log.info("session.setAttribute 완료");
 
@@ -140,6 +144,8 @@ public class UserController {
         // 세션 삭제(user_name, user_no) - invalidate() 또는 removeAttribute 함수 사용
         session.removeAttribute("SS_USER_NAME");
         session.removeAttribute("SS_USER_NO");
+        session.removeAttribute("SS_USER_ADDR");
+        session.removeAttribute("SS_USER_ADDR2");
 
         // 세션이 정상적으로 삭제되었는지 로그를 통해 확인
         log.info("session deleted ? : " + session.getAttribute("SS_USER_NO"));

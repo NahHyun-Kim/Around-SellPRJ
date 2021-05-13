@@ -36,6 +36,9 @@
     <!-- 판매글 수정 폼 -->
     <form action="/noticeUpdate.do" method="post" onsubmit="return doSubmit();">
 
+        <!-- 업데이트할 판매글 번호 받아오기 -->
+        <input type="hidden" name="nSeq" value="<%=rDTO.getGoods_no()%>"/>
+
         <!-- 상품명 등록(추후 제목으로 표시된다) -->
         <div class="form-control">
             <label for="goods_title">상품명</label>
