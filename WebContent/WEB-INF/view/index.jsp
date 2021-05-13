@@ -7,7 +7,6 @@
     String SS_USER_NO = ((String) session.getAttribute("SS_USER_NO"));
     String SS_USER_NAME = ((String) session.getAttribute("SS_USER_NAME"));
     String SS_USER_ADDR2 = ((String) session.getAttribute("SS_USER_ADDR2"));
-    String addr = (String) request.getAttribute("addr");
 
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -27,6 +26,10 @@
 <%=SS_USER_NO%>번 회원 <%=SS_USER_NAME %>님 환영합니다~
 <span><%=SS_USER_ADDR2%></span>
 <br>
+<div id="weather"><%=SS_USER_ADDR2%> 날씨는?</div>
+<button class="btn-info" value="내일">내일 날씨</button>
+<button class="btn-info" value="모레">모레 날씨</button>
+<input type="hidden" id="getAddr2" value="<%=SS_USER_ADDR2%>"/>
 <a href="/logOut.do">로그아웃</a>
 <% } %>
 <a href="/adminPage.do">관리자 페이지</a>
@@ -36,20 +39,13 @@
 <br />
 <a href="/noticeForm.do">판매글 등록하기</a>
 <a href="/noticeList.do">판매글 리스트</a>
+<a href="/myPage.do">마이페이지</a>
 
+<!-- 크롤링 -->
+<script type="text/javascript" src="/resource/js/Weather.js"></script>
 <!-- bootstrap, css 파일 -->
 <script src="/resources/js/bootstrap.js"></script>
-<link rel="stylesheet" href="/resources/css/bootstrap.css"/>
-
-<script type="text/javascript">
-    $("#modaltest").click(function() {
-        $(".modal").fadeIn();
-    });
-
-    $(".close").click(function() {
-        $(".modal").fadeOut();
-    });
-</script>
+<link rel="stylesheet" href="/resource/css/bootstrap.css"/>
 
 </body>
 </html>

@@ -6,8 +6,26 @@ public class WeatherDTO {
     private String temperature;
     private String weather;
     private String rainrate;
+    private String day;
+    private String addr2;
 
-        public String getRainrate() {
+    public String getAddr2() {
+        return addr2;
+    }
+
+    public void setAddr2(String addr2) {
+        this.addr2 = addr2;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public String getRainrate() {
         return rainrate;
     }
 

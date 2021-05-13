@@ -24,4 +24,6 @@ public interface INoticeService {
     // 게시판 글 삭제
     void deleteNoticeInfo(NoticeDTO pDTO) throws Exception;
 
+    // 나의 게시판 리스트
+    List<NoticeDTO> getMyList(NoticeDTO pDTO) throws Exception;
 }

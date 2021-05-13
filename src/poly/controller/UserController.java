@@ -12,6 +12,7 @@ import poly.dto.MailDTO;
 import poly.dto.UserDTO;
 import poly.dto.WeatherDTO;
 import poly.service.IMailService;
+import poly.service.INoticeService;
 import poly.service.IUserService;
 import poly.util.CmmUtil;
 import poly.util.EncryptUtil;
@@ -43,6 +44,9 @@ public class UserController {
 
     @Resource(name = "UserService")
     private IUserService userService;
+
+    @Resource(name = "NoticeService")
+    private INoticeService noticeService;
 
     private Logger log = Logger.getLogger(this.getClass());
 
@@ -395,40 +399,6 @@ public class UserController {
     }
 
 
-    // 크롤링한 결과를 실시간으로 보여주는 페이지 임시 작성
-    @RequestMapping(value = "/crawlingRes")
-    public String crawlingRes() {
-        log.info("crawlingRes 결과 페이지 Start!");
-        return "/weather/crawlingRes";
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/getWeather")
-    public WeatherDTO getWeather(HttpSession session, HttpServletRequest request)
-            throws Exception {
-        log.info("getWeather 크롤링 Start!");
-
-        String addr2 = (String) session.getAttribute("SS_USER_ADDR2");
-        log.info("가져온 주소 세션 : " + addr2);
-
-        // 임시로 크롤링할 url을 제대로 받아오는지 확인
-        String url = "https://www.google.com/search?q=" + addr2 + "+날씨";
-        log.info("url test : " + url);
-
-        // 세션에서 가져온 상세주소 값을 서비스로 넘겨줌(크롤링 시 주소 사용)
-        WeatherDTO rDTO = userService.getWeather(addr2);
-        log.info("rDTO null? : " + (rDTO == null));
-        log.info("rDTO.weather : " + rDTO.getWeather());
-
-        // 값을 받아왔다면, model에 값을 넘겨줌
-        if (rDTO != null) {
-            //model.addAttribute("rDTO", rDTO);
-            log.info("크롤링한 DTO 전송 완료");
-        }
-
-        return rDTO;
-    }
-
     // 회원 정보 조회, 수정을 위해 회원목록을 가져옴
     @RequestMapping(value = "/getUserInfo")
     public String getUser(HttpSession session, HttpServletRequest request, HttpServletResponse response,
@@ -669,6 +639,8 @@ public class UserController {
         log.info("updatePw End!");
         return "/redirect";
     }
+
+    
         /*
     @ResponseBody
     @RequestMapping(value="/findEmailUser", method = RequestMethod.POST)

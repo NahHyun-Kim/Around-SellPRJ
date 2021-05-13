@@ -50,4 +50,10 @@ public class NoticeService implements INoticeService {
     public void deleteNoticeInfo(NoticeDTO pDTO) throws Exception {
         noticeMapper.deleteNoticeInfo(pDTO);
     }
+
+    // 나의 판매글 조회하기
+    @Override
+    public List<NoticeDTO> getMyList(NoticeDTO pDTO) throws Exception {
+        return noticeMapper.getMyList(pDTO);
+    }
 }

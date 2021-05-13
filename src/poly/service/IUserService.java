@@ -21,8 +21,6 @@ public interface IUserService {
     UserDTO getUserDetail(UserDTO pDTO);
     // 관리자 권한으로 회원 탈퇴
     int deleteForceUser(UserDTO pDTO);
-    // 날씨 정보 크롤링
-    WeatherDTO getWeather(String addr2) throws Exception;
     // 회원 정보 수정을 위한 회원정보 가져오기
     UserDTO getUserInfo(UserDTO pDTO);
     // 비밀번호 변경
