@@ -65,8 +65,9 @@ $(document).ready(function() {
             // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
             map.setCenter(coords);
         }
-    })
 
+        return result;
+    })
 
     /*
     * 회원 주소 변환(맵에는 표시하지 않고, 거리 계산 및 길찾기 용도로 사용)

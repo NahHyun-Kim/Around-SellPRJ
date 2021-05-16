@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import poly.dto.MailDTO;
+import poly.dto.NoticeDTO;
 import poly.dto.UserDTO;
 import poly.dto.WeatherDTO;
 import poly.service.IMailService;
@@ -350,13 +351,24 @@ public class UserController {
     public String getUserDetail(HttpServletRequest request, ModelMap model)
             throws Exception {
 
+        log.info(this.getClass().getName() + ".getUserDetail Start!");
         // 회원 번호 받아오기
         String user_no = request.getParameter("no");
 
         UserDTO pDTO = new UserDTO();
+        NoticeDTO nDTO = new NoticeDTO();
+
         pDTO.setUser_no(user_no);
+        nDTO.setUser_no(user_no);
+
+        log.info("회원 번호 pDTO : " + pDTO.getUser_no());
+        log.info("회원의 판매글을 보여주기위한 pDTO : " + nDTO.getUser_no());
 
         UserDTO rDTO = userService.getUserDetail(pDTO);
+        // 회원의 판매글 정보를 함께 가져오기 위해 List형태로 가져옴
+        List<NoticeDTO> nList = noticeService.getMyList(nDTO);
+
+        log.info("nList null? " + (nList == null));
 
         // 결과가 없을 경우, 메시지와 함께 회원 목록으로 리다이렉트
         if (rDTO == null) {
@@ -366,13 +378,16 @@ public class UserController {
         }
 
         model.addAttribute("rDTO", rDTO);
+        model.addAttribute("nList", nList);
+
+        log.info(this.getClass().getName() + ".getUserDetail End!");
         return "/admin/userDetail";
     }
 
     /* 관리자 권한으로 회원 삭제 */
     @ResponseBody
     @RequestMapping(value = "/deleteForceUser", method = RequestMethod.POST)
-    public int deleteUser(HttpServletRequest request, ModelMap model) {
+    public int deleteUser(HttpServletRequest request, ModelMap model) throws Exception {
         log.info("deleteForceUser Start!");
 
         String user_no = CmmUtil.nvl(request.getParameter("user_no"));
@@ -380,14 +395,39 @@ public class UserController {
         log.info("삭제할 회원 번호 : " + user_no);
 
         UserDTO pDTO = new UserDTO();
+        NoticeDTO nDTO = new NoticeDTO();
+
         pDTO.setUser_no(user_no);
+        nDTO.setUser_no(user_no);
+
         log.info("pDTO에 보낼 회원 번호 : " + pDTO.getUser_no());
+        log.info("판매글 삭제에 사용될 회원 번호 : " + nDTO.getUser_no());
+
+        // 회원 탈퇴 시 알림 메일 전송을 위해 DTO 생성
+        UserDTO rDTO = userService.getUserInfo(pDTO);
+        String email = EncryptUtil.decAES128CBC(rDTO.getUser_email());
+        log.info("이메일 발송을 위해 복호화한 이메일 : " + email);
 
         int res = userService.deleteForceUser(pDTO);
-        log.info("res? : " + res);
+        // 회원이 등록한 판매글도 함께 삭제
+        int success = noticeService.deleteNoticeAll(nDTO);
 
-        if (res > 0) {
+        log.info("res? : " + res);
+        log.info("판매글 delete success? : " + success);
+
+        if (res > 0) { // 회원 탈퇴에 성공했다면,
             log.info("deleteForceUser 성공");
+            MailDTO mDTO = new MailDTO();
+
+            // 발송할 이메일을 복호화하여 가져옴
+            mDTO.setToMail(email);
+            mDTO.setTitle("Around-Sell 회원이 탈퇴되었습니다.");
+            mDTO.setContents(CmmUtil.nvl(rDTO.getUser_name()) + "님이 탈퇴되었습니다.");
+
+            // mDTO에 세팅한 내용으로, 메일 발송
+            mailService.doSendMail(mDTO);
+            mDTO = null;
+            log.info("회원가입 이메일 발송 완료");
         } else {
             log.info("deleteForceUser 실패");
         }

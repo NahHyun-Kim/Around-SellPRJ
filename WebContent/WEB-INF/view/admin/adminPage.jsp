@@ -13,7 +13,7 @@
 
     <a href="/getUser.do">회원 관리</a>
     <!-- 클릭 시, 회원 상세정보를 모달로 구현 예정 -->
-    <a href="/newPost.do">판매글 작성</a>
+    <a href="/noticeForm.do">판매글 작성</a>
 
 
 </body>

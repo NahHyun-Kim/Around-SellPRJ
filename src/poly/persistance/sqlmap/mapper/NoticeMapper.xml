@@ -84,6 +84,13 @@
         WHERE GOODS_NO = #{goods_no}
     </delete>
 
+    <!-- 게시판 회원의 모든 글 삭제 -->
+    <delete id="deleteNoticeAll" parameterType="NoticeDTO">
+        DELETE
+            FROM aroundsell.product
+        WHERE USER_NO = #{user_no}
+    </delete>
+
     <!-- 나의 판매글 리스트(마이페이지) -->
     <select id="getMyList" parameterType="NoticeDTO" resultType="NoticeDTO">
         SELECT GOODS_NO, GOODS_TITLE, GOODS_PRICE, GOODS_ADDR, HIT

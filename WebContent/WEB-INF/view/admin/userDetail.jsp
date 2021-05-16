@@ -3,7 +3,16 @@
 <%@ page import="poly.dto.UserDTO" %>
 <%@ page import="poly.util.EncryptUtil" %>
 <%@ page import="poly.util.CmmUtil" %>
-<% UserDTO rDTO = (UserDTO) request.getAttribute("rDTO");%>
+<%@ page import="poly.dto.NoticeDTO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<% UserDTO rDTO = (UserDTO) request.getAttribute("rDTO");
+    List<NoticeDTO> nList = (List<NoticeDTO>) request.getAttribute("nList");
+
+    if (nList == null) {
+        nList = new ArrayList<NoticeDTO>();
+    }
+%>
 <html>
 <head>
     <title>AroundSell- 회원 상세정보 조회</title>
@@ -44,6 +53,37 @@
     </div>
     <a href="javascript:window.history.back();"><i class="bx bx-server"></i>뒤로가기</a>
     <button type="button" id="user_no" value="<%=CmmUtil.nvl(rDTO.getUser_no())%>" onclick="deleteUser();">회원 삭제</button>
+
+    <div class="row">
+        <%
+            for(int i=0; i<nList.size(); i++) {
+                NoticeDTO nDTO = nList.get(i);
+
+                if (nDTO == null) {
+                    nDTO = new NoticeDTO();
+                }
+        %>
+        <div class="col">
+            <a href="/noticeInfo.do?nSeq=<%=nDTO.getGoods_no()%>">
+                이미지</a>
+        </div>
+        <div class="col">
+            <a href="/noticeInfo.do?nSeq=<%=nDTO.getGoods_no()%>">
+                <%=CmmUtil.nvl(nDTO.getGoods_title())%></a>
+        </div>
+        <div class="col">
+            <a href="/noticeInfo.do?nSeq=<%=nDTO.getGoods_no()%>">
+                <%=CmmUtil.nvl(nDTO.getGoods_addr())%></a>
+        </div>
+        <div class="col">
+            <%=CmmUtil.nvl(nDTO.getGoods_price())%>
+        </div>
+        <% } %>
+    </div>
+    <a href="javascript:history.back()">뒤로가기</a>
+    <a href="/index.do">메인으로</a>
+</div>
+
 </div>
 
 <script type="text/javascript">

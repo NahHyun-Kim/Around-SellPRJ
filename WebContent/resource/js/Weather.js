@@ -1,7 +1,10 @@
  $(document).ready(function() {
     //페이지가 로드된 후, 크롤링을 실행하여 결과값을 가져옴
+     var user_no = document.getElementById("userno").innerText;
+     // 로그인 되지 않은 상태에서 불필요한 크롤링이 되는 것을 방지하기 위해, 로그인 한 경우에만 크롤링 진행
+     if (user_no != null) {
     crawling();
-
+     }
 })
     function crawling() {
     console.log('페이지 로딩 후, ajax 호출 시작');

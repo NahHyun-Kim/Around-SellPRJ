@@ -40,7 +40,7 @@
 <a href="/noticeForm.do">판매글 등록하기</a>
 <a href="/noticeList.do">판매글 리스트</a>
 <a href="/myPage.do">마이페이지</a>
-
+<div style="display: none" id="userno"><%=SS_USER_NO%></div>
 <!-- 크롤링 -->
 <script type="text/javascript" src="/resource/js/Weather.js"></script>
 <!-- bootstrap, css 파일 -->

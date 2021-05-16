@@ -77,7 +77,7 @@
     <delete id="deleteForceUser" parameterType="UserDTO">
         DELETE
             FROM aroundsell.user_info
-        WHERE USER_NO = ${user_no}
+        WHERE USER_NO = #{user_no}
     </delete>
 
     <!-- 임시 비밀번호로 변경 -->
