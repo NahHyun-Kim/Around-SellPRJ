@@ -38,8 +38,9 @@
     %>
             <div class="col">
                 <a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');">
-                    이미지</a>
+                    <img src="/resource/images/<%=rDTO.getImg_f()%>/<%=rDTO.getImg_n()%>" style="width:150px; height:200px; object-fit:cover" alt="이미지 불러오기 실패"></a>
             </div>
+
             <div class="col">
                 <a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');">
                 <%=CmmUtil.nvl(rDTO.getGoods_title())%></a>
@@ -58,6 +59,7 @@
 </div>
 </div>
 <!-- bootstrap, css 파일 -->
+<link rel="stylesheet" href="/resource/css/notice.css"/>
 <script src="/resources/js/bootstrap.js"></script>
 <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
 

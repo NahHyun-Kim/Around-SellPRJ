@@ -5,16 +5,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import poly.dto.NoticeDTO;
 import poly.service.INoticeService;
 import poly.util.CmmUtil;
+import poly.util.DateUtil;
+import poly.util.FileUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /*
 * Controller 선언해야만 Spring 프레임워크에서 Controller인지 인식 가능
@@ -31,6 +38,9 @@ public class NoticeController {
     * */
     @Resource(name="NoticeService")
     private INoticeService noticeService;
+
+    // 업로드되는 파일이 저장되는 기본 폴더 설정
+    final private String FILE_UPLOAD_SAVE_PATH = "C:/PersonalProject/WebContent/resource//images";
 
     // 판매글 작성 페이지 이동
     @RequestMapping(value="/noticeForm", method = RequestMethod.GET)
@@ -74,15 +84,24 @@ public class NoticeController {
     * 판매글 등록
     * */
     @RequestMapping(value="/noticeInsert", method=RequestMethod.POST)
-    public String noticeInsert(HttpSession session, HttpServletRequest request,
-                               HttpServletResponse response, ModelMap model) throws Exception {
+    public String noticeInsert(HttpSession session, MultipartHttpServletRequest request,
+                               HttpServletResponse response, ModelMap model, @RequestParam(value="fileUpload") MultipartFile mf) throws Exception {
 
         log.info(this.getClass().getName() + ".noticeInsert(게시글 등록 실행) Start!");
+
+
 
         String msg = "";
         // String url = "";
 
         try {
+
+            // 업로드하는 실제 파일명
+            String org_file_name = mf.getOriginalFilename();
+
+            // 파일의 확장자를 가져와, 이미지 파일만 실행되도록 함
+            String ext = org_file_name.substring(org_file_name.lastIndexOf(".") + 1, org_file_name.length()).toLowerCase();
+
             //form태그의 name 값을 받아옴(request.getParameter)
             String user_no = CmmUtil.nvl((String) session.getAttribute("SS_USER_NO")); //세션으로부터 받아온 회원 번호
             String goods_title = CmmUtil.nvl(request.getParameter("goods_title")); //상품명
@@ -111,6 +130,27 @@ public class NoticeController {
             // insert를 위해 전달할 pDTO에 값을 세팅
             NoticeDTO pDTO = new NoticeDTO();
 
+            if (ext.equals("jpeg") || ext.equals("jpg") || ext.equals("gif") || ext.equals("png")) {
+
+
+                String save_file_name = DateUtil.getDateTime("24hhmmss") + "." + ext;
+
+                // 웹서버에 업로드한 파일 저장하는 물리적 경로
+                String save_file_path = FileUtil.mkdirForDate(FILE_UPLOAD_SAVE_PATH);
+                // 이미지가 저장되는 폴더 경로
+                //이미지가 저장되는 폴더경로
+                String save_folder_name = save_file_path.substring(save_file_path.length()-10);
+
+                log.info("폴더경로 제대로 되었는지 확인 : " + save_folder_name);
+
+                // 업로드되는 파일을 서버에 저장(전체경로+파일명.확장자 형태로 저장)
+                mf.transferTo(new File(save_file_path + "/" + save_file_name));
+
+                pDTO.setImg_f(save_folder_name); // 폴더명 지정
+                pDTO.setImg_n(save_file_name); // 파일명 지정
+                log.info("img(폴더 경로) : " + pDTO.getImg_f());
+                log.info("img(이미지 이름) : " + pDTO.getImg_n());
+            }
             pDTO.setUser_no(user_no);
             pDTO.setGoods_title(goods_title);
             pDTO.setGoods_detail(goods_detail);
@@ -232,13 +272,20 @@ public class NoticeController {
     * */
     @RequestMapping(value="/noticeUpdate", method=RequestMethod.POST)
     public String noticeUpdate(HttpSession session, HttpServletRequest request, 
-                               HttpServletResponse response, ModelMap model) throws Exception {
+                               HttpServletResponse response, ModelMap model, @RequestParam(value="fileUpload") MultipartFile mf)
+            throws Exception {
         log.info(this.getClass().getName() + ".noticeUpdate(게시판 수정 등록) Start!");
 
         String msg = "";
         String url = "";
 
         try {
+            // 업로드하는 실제 파일명
+            String org_file_name = mf.getOriginalFilename();
+
+            // 파일의 확장자를 가져와, 이미지 파일만 실행되도록 함
+            String ext = org_file_name.substring(org_file_name.lastIndexOf(".") + 1, org_file_name.length()).toLowerCase();
+
             String user_no = CmmUtil.nvl((String) session.getAttribute("SS_USER_NO")); //회원 번호
             String goods_no = CmmUtil.nvl(request.getParameter("nSeq")); //글번호
             String goods_title = CmmUtil.nvl(request.getParameter("goods_title")); // 상품명(제목)
@@ -261,9 +308,34 @@ public class NoticeController {
             log.info("update할 상세 주소 : " + goods_addr2);
             log.info("update할 지역구 : " + addr2);
             log.info("update할 카테고리 : " + category);
+            log.info("확장자가 이미지와 일치하는지 : " + ext);
 
             // update할 값을 pDTO에 담기 위해 NoticeDTO 객체 생성
             NoticeDTO pDTO = new NoticeDTO();
+
+            if (ext.equals("jpeg") || ext.equals("jpg") || ext.equals("gif") || ext.equals("png")) {
+
+
+                String save_file_name = DateUtil.getDateTime("24hhmmss") + "." + ext;
+
+                // 웹서버에 업로드한 파일 저장하는 물리적 경로
+                String save_file_path = FileUtil.mkdirForDate(FILE_UPLOAD_SAVE_PATH);
+                // 이미지가 저장되는 폴더 경로
+                //이미지가 저장되는 폴더경로
+                String save_folder_name = save_file_path.substring(save_file_path.length()-10);
+
+                log.info("폴더경로 제대로 되었는지 확인 : " + save_folder_name);
+
+                // 업로드되는 파일을 서버에 저장(전체경로+파일명.확장자 형태로 저장)
+                mf.transferTo(new File(save_file_path + "/" + save_file_name));
+
+                pDTO.setImg_f(save_folder_name); // 폴더명 지정
+                pDTO.setImg_n(save_file_name); // 파일명 지정
+                log.info("img(폴더 경로) : " + pDTO.getImg_f());
+                log.info("img(이미지 이름) : " + pDTO.getImg_n());
+            } else {
+                log.info("이미지 확장자 받아오기 실패");
+            }
 
             pDTO.setUser_no(user_no);
             pDTO.setGoods_no(goods_no);

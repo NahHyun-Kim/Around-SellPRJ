@@ -34,10 +34,32 @@
 
 <div class="container">
     <!-- 판매글 수정 폼 -->
-    <form action="/noticeUpdate.do" method="post" onsubmit="return doSubmit();">
+    <form action="/noticeUpdate.do" method="post" onsubmit="return doSubmit();" enctype="multipart/form-data">
 
         <!-- 업데이트할 판매글 번호 받아오기 -->
         <input type="hidden" name="nSeq" value="<%=rDTO.getGoods_no()%>"/>
+
+        <!-- 이미지 -->
+        <!-- 상품명 등록(추후 제목으로 표시된다) -->
+        <div class="form-control" style="height: 200px;">
+            <label for="img">상품 사진 등록</label>
+            <input type="file" id="img" name="fileUpload"/>
+            <div class="select_img"><img src="/resource/images/<%=rDTO.getImg_f()%>/<%=rDTO.getImg_n()%>" width="100"/></div>
+        </div>
+
+        <!-- 수정할 파일을 첨부하면, 판매글 작성 화면에서 이미지인지 보여줌 -->
+        <script>
+            $("#img").change(function() {
+                if(this.files && this.files[0]) {
+                    var reader = new FileReader;
+                    reader.onload = function(data) {
+                        $(".select_img img").attr("src",data.target.result).width(100);
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        </script>
+        <%=request.getRealPath("/")%>
 
         <!-- 상품명 등록(추후 제목으로 표시된다) -->
         <div class="form-control">

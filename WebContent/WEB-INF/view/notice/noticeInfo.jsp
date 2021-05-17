@@ -84,7 +84,12 @@
     <div class="container">
 
         <!-- 판매글 상세조회 -->
-        <!-- 추후 이미지 등록 예정 -->
+        <!-- 이미지 -->
+        <div class="row">
+            <div class="col">
+        <img class="thumb" src="/resource/images/<%=rDTO.getImg_f()%>/<%=rDTO.getImg_n()%>" style="width:350px;" alt="이미지 불러오기 실패">
+            </div>
+        </div>
 
         <!-- 조회수 -->
         <div class="row">
@@ -248,7 +253,13 @@
     <script type="text/javascript" src="/resource/js/mapAPI.js"></script>
 
     <!-- bootstrap, css 파일 -->
-    <link rel="stylesheet" href="/resource/css/notice.css"/>
+    <style>
+        #map {
+            width: 350px;
+            height: 200px;
+            margin-top: 10px;
+        }
+    </style>
     <script src="/resources/js/bootstrap.js"></script>
     <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
 

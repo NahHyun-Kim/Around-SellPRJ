@@ -26,15 +26,29 @@
 <body onload="doOnload();">
     <div class="container">
     <!-- 판매글 등록 폼 -->
-    <form action="/noticeInsert.do" method="post" onsubmit="return doSubmit();">
+    <form action="/noticeInsert.do" method="post" onsubmit="return doSubmit();" enctype="multipart/form-data">
 
         <!-- 상품 이미지 등록 -->
         <!-- 상품명 등록(추후 제목으로 표시된다) -->
-        <div class="form-control">
-            <label for="imgUp">상품 사진 등록</label>
-            <input type="file" id="imgUp" name="fileUpload"/>
+        <div class="form-control" style="height: 200px;">
+            <label for="img">상품 사진 등록</label>
+            <input type="file" id="img" name="fileUpload"/>
+            <div class="select_img"><img src=""/></div>
         </div>
 
+        <!-- 파일을 첨부하면, 판매글 작성 화면에서 이미지인지 보여줌 -->
+        <script>
+            $("#img").change(function() {
+                if(this.files && this.files[0]) {
+                var reader = new FileReader;
+                reader.onload = function(data) {
+                    $(".select_img img").attr("src",data.target.result).width(100);
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+            });
+        </script>
+        <%=request.getRealPath("/")%>
 
         <!-- 상품명 등록(추후 제목으로 표시된다) -->
         <div class="form-control">
@@ -87,7 +101,7 @@
     <script type="text/javascript" src="/resource/js/addrAPI2.js"></script>
 
     <!-- bootstrap, css 파일 -->
-    <link rel="stylesheet" href="/resource/css/user.css"/>
+    <link rel="stylesheet" href="/resource/css/notice.css"/>
     <script src="/resources/js/bootstrap.js"></script>
     <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
 

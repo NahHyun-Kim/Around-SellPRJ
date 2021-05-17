@@ -5,7 +5,7 @@
 
     <!-- 판매글 리스트(전체) -->
     <select id="getNoticeList" resultType="NoticeDTO">
-        SELECT GOODS_NO, GOODS_TITLE, GOODS_PRICE, GOODS_ADDR, HIT
+        SELECT GOODS_NO, GOODS_TITLE, GOODS_PRICE, GOODS_ADDR, IMG_N, IMG_F, HIT
         FROM aroundsell.product
         ORDER BY GOODS_NO DESC
     </select>
@@ -23,6 +23,8 @@
              GOODS_ADDR2,
              ADDR2,
              CATEGORY,
+             IMG_N,
+             IMG_F,
              HIT,
              REG_ID
             )
@@ -36,6 +38,8 @@
              #{goods_addr2},
              #{addr2},
              #{category},
+             #{img_n},
+             #{img_f},
              0,
              #{reg_id}
             )
@@ -45,7 +49,7 @@
     <select id="getNoticeInfo" parameterType="NoticeDTO" resultType="NoticeDTO">
         SELECT
                N.GOODS_NO, N.GOODS_TITLE, N.HIT, N.GOODS_DETAIL, N.GOODS_PRICE,
-               N.GOODS_ADDR, N.GOODS_ADDR2, N.ADDR2, N.CATEGORY, U.USER_NAME, U.USER_NO
+               N.GOODS_ADDR, N.GOODS_ADDR2, N.ADDR2, N.CATEGORY, N.IMG_N, N.IMG_F, U.USER_NAME, U.USER_NO
         FROM   aroundsell.product N, aroundsell.user_info U
         WHERE  N.USER_NO = U.USER_NO
         AND    N.GOODS_NO = #{goods_no}
@@ -72,7 +76,9 @@
             GOODS_ADDR = #{goods_addr},
             GOODS_ADDR2 = #{goods_addr2},
             ADDR2 = #{addr2},
-            CATEGORY = #{category}
+            CATEGORY = #{category},
+            IMG_N = #{img_n},
+            IMG_F = #{img_f}
         WHERE
             GOODS_NO = #{goods_no}
     </update>
