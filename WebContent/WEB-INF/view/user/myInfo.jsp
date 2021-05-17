@@ -15,6 +15,6 @@
     전화번호 : <%=CmmUtil.nvl(rDTO.getPhone_no())%>
     주소 : <%=CmmUtil.nvl(rDTO.getAddr())%>
     가입일 : <%=CmmUtil.nvl(rDTO.getReg_dt())%>
-    <a href="/editUser.do">회원정보 수정하기</a>
+    <a href="/updateUserForm.do">회원정보 수정하기</a>
 </body>
 </html>

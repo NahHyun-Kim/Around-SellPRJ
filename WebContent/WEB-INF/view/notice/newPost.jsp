@@ -28,6 +28,14 @@
     <!-- 판매글 등록 폼 -->
     <form action="/noticeInsert.do" method="post" onsubmit="return doSubmit();">
 
+        <!-- 상품 이미지 등록 -->
+        <!-- 상품명 등록(추후 제목으로 표시된다) -->
+        <div class="form-control">
+            <label for="imgUp">상품 사진 등록</label>
+            <input type="file" id="imgUp" name="fileUpload"/>
+        </div>
+
+
         <!-- 상품명 등록(추후 제목으로 표시된다) -->
         <div class="form-control">
             <label for="goods_title">상품명</label>
@@ -79,6 +87,7 @@
     <script type="text/javascript" src="/resource/js/addrAPI2.js"></script>
 
     <!-- bootstrap, css 파일 -->
+    <link rel="stylesheet" href="/resource/css/user.css"/>
     <script src="/resources/js/bootstrap.js"></script>
     <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
 

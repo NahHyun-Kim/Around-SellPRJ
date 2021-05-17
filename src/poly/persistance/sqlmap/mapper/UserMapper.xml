@@ -90,8 +90,20 @@
     </update>
 
     <!-- 마이페이지 회원 정보 수정 -->
-    <update id="update">
-
+    <update id="updateUser" parameterType="UserDTO">
+        UPDATE aroundsell.user_info
+        SET
+            USER_EMAIL = #{user_email},
+            PASSWORD = #{password},
+            USER_NAME = #{user_name},
+            ADDR = #{addr},
+            ADDR2 = #{addr2},
+            PHONE_NO = #{phone_no},
+            REG_ID = #{user_name},
+            CHG_ID = #{user_name},
+            CHG_DT = CURRENT_DATE()
+        WHERE USER_NO = #{user_no}
+        AND PASSWORD = #{password}
     </update>
 
     <!-- 핸드폰 번호로 이메일 찾기 -->
@@ -114,4 +126,12 @@
             USER_EMAIL = #{user_email}
     </update>
 
+    <!-- 비밀번호 변경 시, 기존 비밀번호와 일치하는지 확인 후 넘김 -->
+    <select id="pwdCheck" parameterType="UserDTO" resultType="UserDTO">
+        SELECT *
+            FROM
+            aroundsell.user_info
+            WHERE PASSWORD = #{password}
+            AND USER_NO = #{user_no}
+    </select>
 </mapper>

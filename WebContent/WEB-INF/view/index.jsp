@@ -7,6 +7,7 @@
     String SS_USER_NO = ((String) session.getAttribute("SS_USER_NO"));
     String SS_USER_NAME = ((String) session.getAttribute("SS_USER_NAME"));
     String SS_USER_ADDR2 = ((String) session.getAttribute("SS_USER_ADDR2"));
+    System.out.println(SS_USER_NO);
 
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -40,12 +41,12 @@
 <a href="/noticeForm.do">판매글 등록하기</a>
 <a href="/noticeList.do">판매글 리스트</a>
 <a href="/myPage.do">마이페이지</a>
-<div style="display: none" id="userno"><%=SS_USER_NO%></div>
+<input type="hidden" id="ss_no" value="<%=SS_USER_NO%>">
 <!-- 크롤링 -->
 <script type="text/javascript" src="/resource/js/Weather.js"></script>
 <!-- bootstrap, css 파일 -->
 <script src="/resources/js/bootstrap.js"></script>
-<link rel="stylesheet" href="/resource/css/bootstrap.css"/>
+<link rel="stylesheet" href="/resources/css/bootstrap.css"/>
 
 </body>
 </html>

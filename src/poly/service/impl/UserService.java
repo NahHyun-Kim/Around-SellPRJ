@@ -63,7 +63,7 @@ public class UserService implements IUserService {
         return userMapper.deleteForceUser(pDTO);
     }
 
-    // 회원 정보 수정을 위해 회원 정보 가져오기
+    // 회원정보 수정을 위한 회원정보 가져오기
     @Override
     public UserDTO getUserInfo(UserDTO pDTO) {
         return userMapper.getUserDetail(pDTO);
@@ -75,9 +75,22 @@ public class UserService implements IUserService {
         return userMapper.updatePw(pDTO);
     }
 
+    // 회원정보 수정
+    @Override
+    public void updateUser(UserDTO pDTO) {
+        userMapper.updateUser(pDTO);
+    }
+
+    // 이메일 찾기
     @Override
     public UserDTO findEmail(UserDTO pDTO) {
         return userMapper.findEmail(pDTO);
+    }
+
+    // 비밀번호 변경 시, 유효성 체크를 위함
+    @Override
+    public UserDTO pwdCheck(UserDTO pDTO) {
+        return userMapper.pwdCheck(pDTO);
     }
 
 

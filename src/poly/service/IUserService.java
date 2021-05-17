@@ -22,7 +22,7 @@ public interface IUserService {
     // 관리자 회원목록 조회
     List<UserDTO> getUser();
 
-    // 관리자 회원 상세정보 조회
+    // 관리자 회원 상세정보 조회(회원정보 조회, 수정을 위해서도 사용된다.)
     UserDTO getUserDetail(UserDTO pDTO);
 
     // 관리자 권한으로 회원 탈퇴
@@ -34,6 +34,12 @@ public interface IUserService {
     // 비밀번호 변경
     int updatePw(UserDTO pDTO);
 
+    // 회원정보 수정
+    void updateUser(UserDTO pDTO);
+
     // 핸드폰 번호로 회원 이메일 찾기
     UserDTO findEmail(UserDTO pDTO);
+
+    // 비밀번호 변경 시, 유효성 체크를 위함
+    UserDTO pwdCheck(UserDTO pDTO);
 }

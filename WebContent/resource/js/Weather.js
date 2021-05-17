@@ -1,8 +1,11 @@
  $(document).ready(function() {
     //페이지가 로드된 후, 크롤링을 실행하여 결과값을 가져옴
-     var user_no = document.getElementById("userno").innerText;
+     // 값을 가져올 때 .val()로는 가져오지 못함, value;를 사용해서 가져오기 성공
+     var user_no = document.getElementById("ss_no").value;
+     console.log("user_no(value) : " + user_no);
      // 로그인 되지 않은 상태에서 불필요한 크롤링이 되는 것을 방지하기 위해, 로그인 한 경우에만 크롤링 진행
-     if (user_no != null) {
+     // null값이면 크롤링이 진행되지 않음(null로 입력하면 인식이 안되어, 문자열 null로 입력)
+     if (user_no != "null") {
     crawling();
      }
 })

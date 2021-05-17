@@ -33,8 +33,12 @@ public interface IUserMapper {
     int updatePw(UserDTO pDTO);
 
     // 회원정보 수정
+    void updateUser(UserDTO pDTO);
 
     // 핸드폰 번호로 회원 이메일 찾기
     UserDTO findEmail(UserDTO pDTO);
+
+    // 비밀번호 변경 시, 유효성 체크를 위함
+    UserDTO pwdCheck(UserDTO pDTO);
 
 }

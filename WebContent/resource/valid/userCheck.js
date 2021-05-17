@@ -128,7 +128,7 @@ $(pwd1).on("change keyup paste", function() {
             $(pwchk1).text('비밀번호를 입력해 주세요.');
             $(pwchk1).css('color', 'red');
         } else { //빈 값도 false로 인식되어, if문 안에서 조건을 따로 줌.
-            $(pwchk1).text('비밀번호는 영문, 숫자를 포함한 8~20자로 입력해 주세요.');
+            $(pwchk1).text('비밀번호는 영문, 숫자를 포함한 4~20자로 입력해 주세요.');
             $(pwchk1).css('color', 'red');
             console.log(pwJ.test($(pwd1).val()));
         }
@@ -167,6 +167,8 @@ function signupCheck() {
         alert("입력한 정보를 다시 한 번 확인해 주세요.")
         return false; */
     }
+
+
     /*
     // 이메일 정규식에 맞지 않거나, 값이 입력되지 않은 경우
     if (emailJ.test($(umail).val()) == false) {
@@ -323,4 +325,18 @@ function signupCheck() {
 
     */
 
+}
+
+function doEditUser() {
+
+    console.log("이메일 : " + $(umail).val());
+    console.log("이름 : " + $(uname).val());
+
+    if (emailJ.test($(umail).val()) == false || nameJ.test($(uname).val()) == false || phoneJ.test($(phnum).val()) == false ||
+        ($(pwd1).val() != $(pwd2).val())) {
+        console.log(emailJ.test($(umail).val()));
+        console.log($(pwd1).val() != $(pwd2).val());
+        alert("입력한 정보를 다시 한 번 확인해 주세요.");
+        return false;
+    }
 }
