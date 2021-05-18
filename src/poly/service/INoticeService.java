@@ -29,4 +29,7 @@ public interface INoticeService {
 
     // 나의 게시판 리스트
     List<NoticeDTO> getMyList(NoticeDTO pDTO) throws Exception;
+
+    // 나의 게시물 삭제(마이페이지)
+    int delMySell(NoticeDTO pDTO) throws Exception;
 }

@@ -24,6 +24,7 @@
 </head>
 <body>
 <div class="container">
+    <button type="button" id="del" value="삭제하기" class="btn-danger">삭제하기</button>
     <div class="row">
         <%
             for(int i=0; i<rList.size(); i++) {
@@ -34,8 +35,14 @@
                 }
         %>
         <div class="col">
+            <div class="row">
+                <input type="radio" name="del_num" id="del_num" value="<%=rDTO.getGoods_no()%>"/>
+            </div>
+        </div>
+
+        <div class="col">
             <a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');">
-                <img src="/resource/images/<%=rDTO.getImgs()%>" style="width:150px; height:200px; object-fit:cover" alt="이미지 불러오기 실패"></a>
+                <img src="/resource/images/<%=rDTO.getImgs()%>" style="width:150px; height:200px; object-fit:contain" alt="이미지 불러오기 실패"></a>
         </div>
 
         <div class="col">
@@ -55,6 +62,44 @@
     <a href="/index.do">메인으로</a>
 </div>
 </div>
+
+<script type="text/javascript">
+    // 삭제 버튼을 눌렀을때, 판매글 번호를 받아오고 confirm을 통해 재확인
+    $("#del").on("click", function() {
+        var num = document.getElementById("del_num").value;
+        console.log("가져온 판매글 번호 : " + num);
+
+        confirm("정말 삭제하시겠습니까?");
+
+        // 예(=true)를 누른 경우, ajax 호출로 해당 판매글 삭제 실행
+        if (confirm) {
+            var sendData = "del_num="+num;
+
+            // 판매글 번호를 넘겨 ajax 호출
+            $.ajax({
+                url : "/delMySell.do",
+                type : "post",
+                data : sendData,
+                dataType : "JSON",
+                success : function(res) {
+                    console.log("res : " + res);
+                    if (res == 1) {
+                        alert("삭제에 성공했습니다.");
+                        window.location.reload();
+                    }
+                },
+                error : function(jqXHR, textStatus, errorThrown) {
+                    alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                    console.log(errorThrown);
+                }
+
+            })
+        } else {
+            return false;
+        }
+    })
+</script>
+
 <!-- bootstrap, css 파일 -->
 <script src="/resources/js/bootstrap.js"></script>
 <link rel="stylesheet" href="/resources/css/bootstrap.css"/>

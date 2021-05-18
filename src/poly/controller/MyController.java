@@ -1,6 +1,8 @@
 package poly.controller;
 
+import com.mysql.cj.protocol.x.Notice;
 import org.apache.log4j.Logger;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +42,7 @@ public class MyController {
     }
 
     // 나의 판매글 조회 시, 리스트 페이지로 이동
-    @RequestMapping(value="/myList", method = RequestMethod.GET)
+    @RequestMapping(value="/myList")
     public String myList(HttpServletRequest request, HttpServletResponse response, ModelMap model,
                          HttpSession session)
         throws Exception {
@@ -57,6 +59,15 @@ public class MyController {
         // 판매글 정보는 여러개이므로, DTO를 List 형태에 담아 반환한다.
         List<NoticeDTO> rList = noticeService.getMyList(pDTO);
 
+        for(int i=0; i<rList.size(); i++) {
+            NoticeDTO rDTO = rList.get(i);
+
+            log.info(i + "번째 img 경로 : " + rDTO.getImgs());
+
+            if (rDTO == null) {
+                rDTO = new NoticeDTO();
+            }
+        }
         log.info("rList null ? : " + (rList == null));
 
         if (rList == null) {
@@ -74,6 +85,33 @@ public class MyController {
 
         return "/user/mySell";
 
+    }
+
+    // ajax로 마이페이지 회원 판매글 삭제(다중 삭제 구현 예정)
+    @ResponseBody
+    @RequestMapping(value="delMySell")
+    public int delMySell(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="del_num") String del_num)
+        throws Exception {
+
+        log.info(this.getClass().getName() + ".delMySell(ajax 판매글 삭제) Start");
+        log.info("받아온 회원 번호 : " + del_num);
+
+        NoticeDTO pDTO = new NoticeDTO();
+        pDTO.setGoods_no(del_num);
+
+        // 지정한 회원번호로 판매글 삭제
+        int res = noticeService.delMySell(pDTO);
+
+        // 삭제에 성공했다면
+        if (res > 0) {
+            log.info("회원 판매글 삭제 성공!");
+        } else {
+            log.info("삭제 실패!");
+        }
+
+        pDTO = null;
+
+        return res;
     }
 
     // 회원정보 수정 폼

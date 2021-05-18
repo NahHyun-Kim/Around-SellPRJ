@@ -39,6 +39,9 @@ public class Criteria {
 
     // DB 쿼리에서 사용할 start, end값 계산
     public void calcStartEnd(int nowPage, int cntPerPage) {
+        // 끝값은 현재 페이지(1,2,3페이지... * 최대 페이지 수) -> 2페이지, 9라 할때 마지막 값은 2*9 = 18
+        // 9개씩 페이징된다 가정할 때, 시작은 마지막값(18)-9 + 1인 10번부터 시작한다.
+        // rowNum between #{start} and #{end}로, 페이지별 해당되는 게시물을 가져온다.
         setEnd(nowPage * cntPerPage);
         setStart(getEnd() - cntPerPage + 1);
     }

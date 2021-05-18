@@ -96,7 +96,7 @@
 
     <!-- 나의 판매글 리스트(마이페이지) -->
     <select id="getMyList" parameterType="NoticeDTO" resultType="NoticeDTO">
-        SELECT GOODS_NO, GOODS_TITLE, GOODS_PRICE, GOODS_ADDR, HIT
+        SELECT GOODS_NO, GOODS_TITLE, GOODS_PRICE, GOODS_ADDR, HIT, IMGS
         FROM aroundsell.product
         WHERE USER_NO = #{user_no}
         ORDER BY GOODS_NO DESC

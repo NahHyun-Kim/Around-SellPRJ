@@ -62,4 +62,10 @@ public class NoticeService implements INoticeService {
     public List<NoticeDTO> getMyList(NoticeDTO pDTO) throws Exception {
         return noticeMapper.getMyList(pDTO);
     }
+
+    // 나의 게시물 삭제(마이페이지)
+    @Override
+    public int delMySell(NoticeDTO pDTO) throws Exception {
+        return noticeMapper.delMySell(pDTO);
+    }
 }

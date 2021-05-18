@@ -32,4 +32,7 @@ public interface INoticeMapper {
     // 나의 게시판 리스트
     List<NoticeDTO> getMyList(NoticeDTO pDTO) throws Exception;
 
+    // 나의 게시물 삭제
+    int delMySell(NoticeDTO pDTO) throws Exception;
+
 }
