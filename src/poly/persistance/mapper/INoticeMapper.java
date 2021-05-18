@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper("NoticeMapper")
 public interface INoticeMapper {
 
-    // 게시판 리스트
+    // 게시판 리스트 불러오기(일반)
     List<NoticeDTO> getNoticeList() throws Exception;
 
     // 게시판 등록하기
@@ -31,4 +31,5 @@ public interface INoticeMapper {
 
     // 나의 게시판 리스트
     List<NoticeDTO> getMyList(NoticeDTO pDTO) throws Exception;
+
 }

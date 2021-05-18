@@ -1,6 +1,7 @@
 package poly.service.impl;
 
 import org.springframework.stereotype.Service;
+import poly.dto.Criteria;
 import poly.dto.NoticeDTO;
 import poly.persistance.mapper.INoticeMapper;
 import poly.service.INoticeService;

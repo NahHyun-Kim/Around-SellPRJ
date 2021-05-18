@@ -2,350 +2,106 @@ package poly.dto;
 
 public class Criteria {
 
-        // DB에서 페이지 처리된 데이터를 가져오는데 필요한 정보
-
-        private int page, perPageNum, startRow, endRow;
-
-
-
-        // JSP에서 하단 부분의 페이지 표시 부분에 필요한 정보
-
-        private int totalCount, totalPage, displayPageNum, startPage, endPage;
-
-
-
-        // 페이지 처리를 할 때 앞,뒤에 페이지가 있는지 아닌지 확인
-
-        private boolean prev, next;
-
-
-
-        // 검색을 위한 멤버 변수 추가
-
-        private String searchType; // 검색 항목
-
-        private String keyword; // 검색하는 문자열
-
-
-
-        // 맨처음 시작할 때 list.do로 시작하므로 페이지는 1. 한 페이지에 표시할 데이터의 갯수는 10으로 정한다.
-
-        // 기본 생성자(파라메터가 없는 생성자)를 이용해서 정해줘야 한다.
-
-        public Criteria() {
-
-            // 초기값을 넣는다.
-
-            // 나중에 전달되는 값으로 바뀐다. 전달되는 값이 없으면 유지된다.
-
-            page = 1;
-
-            perPageNum = 10;
-
-            startRow = 1;
-
-            endRow = 10;
-
-
-
-            displayPageNum = 10;
-
-
-
-            prev = false;
-
-            next = false;
-
-        }// end of Const.
-
-
-
-        // 데이터가 들어오면 페이지 정보를 계산한다.
-
-        // startRow, endRow를 계산한다.
-
-        public void calc() {
-
-            // 처음 시작 데이터 = (페이지-1)*한 페이지에 보여줄 데이터의 갯수 + 1
-
-            // (페이지-1)*한 페이지에 보여줄 데이터의 갯수 + 1 : 이전 페이지까지의 데이터를 넘긴다.
-
-            startRow = (page - 1) * perPageNum + 1;
-
-            endRow = startRow + perPageNum - 1;
-
-
-
-            // 하단 부분에 표시한 페이지 처리에 필요한 데이터 계산
-
-            // totalPage 구한다. -> startPage, endPage -> prev, next를 구한다.
-
-            // prev는 startPage가 1이 아니면 True, 1이면 False
-
-            // next endPage != totalPage 이면 True
-
-            // 1. totalPage
-
-            totalPage = (totalCount - 1) / perPageNum + 1;
-
-            // 2. startPage, endPage
-
-            startPage = (page - 1) / displayPageNum * displayPageNum + 1;
-
-            endPage = startPage + displayPageNum - 1;
-
-            // endPage는 totalPage를 넘을 수 없다.
-
-            // 그런데 계산에 의해 endPage가 totalPage보다 크면 endPage에다 totalPage를 넣는다.
-
-            if (endPage > totalPage) {
-
-                endPage = totalPage;
-
-            } // end of if;
-
-            // 3. prev, next를 구한다.
-
-            if (startPage != 1) {
-
-                prev = true;
-
-            } // end of if;
-
-            if (endPage != totalPage) {
-
-                next = true;
-
-            } // end of if;
-
-
-
-        }// end of calc()
-
-
-
-        public int getPage() {
-
-            return page;
-
+    // 현재페이지, 시작페이지, 끝페이지, 게시글 총 갯수, 페이지당 글 갯수(12 또는 15), 마지막 페이지, start, end
+    private int nowPage, startPage, endPage, total, cntPerPage, lastPage, start, end;
+    // 한 번에 표시할 페이징 번호의 갯수
+    private int cntPage = 5;
+
+    public Criteria() {
+
+    }
+
+    public Criteria(int total, int nowPage, int cntPerPage) {
+        setNowPage(nowPage);
+        setCntPerPage(cntPerPage);
+        setTotal(total);
+        calcLastPage(getTotal(), getCntPerPage());
+        calcStartEndPage(getNowPage(), cntPage);
+        calcStartEnd(getNowPage(), getCntPerPage());
+    }
+
+    // 마지막 페이지 계산(전체 게시글수/페이지당 게시글수-> 올림 ex) 102개/20개 -> 6개의 페이지 필요)
+    public void calcLastPage(int total, int cntPerPage) {
+        setLastPage((int) Math.ceil((double)total / (double)cntPerPage));
+    }
+
+    // 시작, 끝 페이지 계산
+    public void calcStartEndPage(int nowPage, int cntPage) {
+        setEndPage(((int)Math.ceil((double)nowPage / (double)cntPage)) * cntPage);
+        if (getLastPage() < getEndPage()) {
+            setEndPage(getLastPage());
         }
-
-
-
-        public void setPage(int page) {
-
-            this.page = page;
-
+        setStartPage(getEndPage() - cntPage + 1);
+        if (getStartPage() < 1) {
+            setStartPage(1);
         }
-
-
-
-        public int getPerPageNum() {
-
-            return perPageNum;
-
-        }
-
-
-
-        public void setPerPageNum(int perPageNum) {
-
-            this.perPageNum = perPageNum;
-
-        }
-
-
-
-        public int getStartRow() {
-
-            return startRow;
-
-        }
-
-
-
-        public void setStartRow(int startRow) {
-
-            this.startRow = startRow;
-
-        }
-
-
-
-        public int getEndRow() {
-
-            return endRow;
-
-        }
-
-
-
-        public void setEndRow(int endRow) {
-
-            this.endRow = endRow;
-
-        }
-
-
-
-        public int getTotalCount() {
-
-            return totalCount;
-
-        }
-
-
-
-        public void setTotalCount(int totalCount) {
-
-            this.totalCount = totalCount;
-
-        }
-
-
-
-        public int getTotalPage() {
-
-            return totalPage;
-
-        }
-
-
-
-        public void setTotalPage(int totalPage) {
-
-            this.totalPage = totalPage;
-
-        }
-
-
-
-        public int getDisplayPageNum() {
-
-            return displayPageNum;
-
-        }
-
-
-
-        public void setDisplayPageNum(int displayPageNum) {
-
-            this.displayPageNum = displayPageNum;
-
-        }
-
-
-
-        public int getStartPage() {
-
-            return startPage;
-
-        }
-
-
-
-        public void setStartPage(int startPage) {
-
-            this.startPage = startPage;
-
-        }
-
-
-
-        public int getEndPage() {
-
-            return endPage;
-
-        }
-
-
-
-        public void setEndPage(int endPage) {
-
-            this.endPage = endPage;
-
-        }
-
-
-
-        public boolean isPrev() {
-
-            return prev;
-
-        }
-
-
-
-        public void setPrev(boolean prev) {
-
-            this.prev = prev;
-
-        }
-
-
-
-        public boolean isNext() {
-
-            return next;
-
-        }
-
-
-
-        public void setNext(boolean next) {
-
-            this.next = next;
-
-        }
-
-
-
-        public String getSearchType() {
-
-            return searchType;
-
-        }
-
-
-
-        public void setSearchType(String searchType) {
-
-            this.searchType = searchType;
-
-        }
-
-
-
-        public String getKeyword() {
-
-            return keyword;
-
-        }
-
-
-
-        public void setKeyword(String keyword) {
-
-            this.keyword = keyword;
-
-        }
-
-
-
-        @Override
-
-        public String toString() {
-
-            return "Criteria [page=" + page + ", perPageNum=" + perPageNum + ", startRow=" + startRow + ", endRow=" + endRow
-
-                    + ", totalCount=" + totalCount + ", totalPage=" + totalPage + ", displayPageNum=" + displayPageNum
-
-                    + ", startPage=" + startPage + ", endPage=" + endPage + ", prev=" + prev + ", next=" + next
-
-                    + ", searchType=" + searchType + ", keyword=" + keyword + "]";
-
-        }
-
-
+    }
+
+    // DB 쿼리에서 사용할 start, end값 계산
+    public void calcStartEnd(int nowPage, int cntPerPage) {
+        setEnd(nowPage * cntPerPage);
+        setStart(getEnd() - cntPerPage + 1);
+    }
+
+    public int getNowPage() {
+        return nowPage;
+    }
+    public void setNowPage(int nowPage) {
+        this.nowPage = nowPage;
+    }
+    public int getStartPage() {
+        return startPage;
+    }
+    public void setStartPage(int startPage) {
+        this.startPage = startPage;
+    }
+    public int getEndPage() {
+        return endPage;
+    }
+    public void setEndPage(int endPage) {
+        this.endPage = endPage;
+    }
+    public int getTotal() {
+        return total;
+    }
+    public void setTotal(int total) {
+        this.total = total;
+    }
+    public int getCntPerPage() {
+        return cntPerPage;
+    }
+    public void setCntPerPage(int cntPerPage) {
+        this.cntPerPage = cntPerPage;
+    }
+    public int getLastPage() {
+        return lastPage;
+    }
+    public void setLastPage(int lastPage) {
+        this.lastPage = lastPage;
+    }
+    public int getStart() {
+        return start;
+    }
+    public void setStart(int start) {
+        this.start = start;
+    }
+    public int getEnd() {
+        return end;
+    }
+    public void setEnd(int end) {
+        this.end = end;
+    }
+    public int setCntPage() {
+        return cntPage;
+    }
+    public void getCntPage(int cntPage) {
+        this.cntPage = cntPage;
+    }
+    @Override
+    public String toString() {
+        return "Criteria [nowPage=" + nowPage + ", startPage=" + startPage + ", endPage=" + endPage + ", total=" + total
+                + ", cntPerPage=" + cntPerPage + ", lastPage=" + lastPage + ", start=" + start + ", end=" + end
+                + ", cntPage=" + cntPage + "]";
+    }
 
     }

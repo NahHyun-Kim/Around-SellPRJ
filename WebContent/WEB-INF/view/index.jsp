@@ -39,7 +39,8 @@
 <a href="/userSearch.do">이메일/비밀번호 찾기</a>
 <br />
 <a href="/noticeForm.do">판매글 등록하기</a>
-<a href="/noticeList.do">판매글 리스트</a>
+<a href="/noticeList.do">판매글 리스트(일반)</a>
+<a href="/">페이징 리스트 테스트</a>
 <a href="/myPage.do">마이페이지</a>
 <input type="hidden" id="ss_no" value="<%=SS_USER_NO%>">
 <!-- 크롤링 -->

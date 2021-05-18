@@ -52,7 +52,7 @@ public class NoticeController {
     }
 
     /*
-    * 판매글 리스트 보여주기(추후 이미지로 변경)
+    * 판매글 리스트 보여주기(이미지 등록 완료, 페이징 구현중)
     * */
     @RequestMapping(value="/noticeList", method = RequestMethod.GET)
     public String noticeList(HttpServletRequest request, HttpServletResponse response,
