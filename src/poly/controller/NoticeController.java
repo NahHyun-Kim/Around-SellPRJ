@@ -143,13 +143,14 @@ public class NoticeController {
 
                 log.info("폴더경로 제대로 되었는지 확인 : " + save_folder_name);
 
+                String full_img = save_folder_name + "/" + save_file_name;
+                log.info("이미지 풀 경로 : " + full_img);
+
                 // 업로드되는 파일을 서버에 저장(전체경로+파일명.확장자 형태로 저장)
                 mf.transferTo(new File(save_file_path + "/" + save_file_name));
 
-                pDTO.setImg_f(save_folder_name); // 폴더명 지정
-                pDTO.setImg_n(save_file_name); // 파일명 지정
-                log.info("img(폴더 경로) : " + pDTO.getImg_f());
-                log.info("img(이미지 이름) : " + pDTO.getImg_n());
+                pDTO.setImgs(full_img);
+                log.info("img(폴더 경로) : " + pDTO.getImgs());
             }
             pDTO.setUser_no(user_no);
             pDTO.setGoods_title(goods_title);
@@ -279,6 +280,9 @@ public class NoticeController {
         String msg = "";
         String url = "";
 
+        // update할 값을 pDTO에 담기 위해 NoticeDTO 객체 생성
+        NoticeDTO pDTO = new NoticeDTO();
+
         try {
             // 업로드하는 실제 파일명
             String org_file_name = mf.getOriginalFilename();
@@ -308,10 +312,6 @@ public class NoticeController {
             log.info("update할 상세 주소 : " + goods_addr2);
             log.info("update할 지역구 : " + addr2);
             log.info("update할 카테고리 : " + category);
-            log.info("확장자가 이미지와 일치하는지 : " + ext);
-
-            // update할 값을 pDTO에 담기 위해 NoticeDTO 객체 생성
-            NoticeDTO pDTO = new NoticeDTO();
 
             if (ext.equals("jpeg") || ext.equals("jpg") || ext.equals("gif") || ext.equals("png")) {
 
@@ -326,15 +326,28 @@ public class NoticeController {
 
                 log.info("폴더경로 제대로 되었는지 확인 : " + save_folder_name);
 
+                String full_img = save_folder_name + "/" + save_file_name;
+                log.info("이미지 풀 경로 : " + full_img);
+
                 // 업로드되는 파일을 서버에 저장(전체경로+파일명.확장자 형태로 저장)
                 mf.transferTo(new File(save_file_path + "/" + save_file_name));
 
-                pDTO.setImg_f(save_folder_name); // 폴더명 지정
-                pDTO.setImg_n(save_file_name); // 파일명 지정
-                log.info("img(폴더 경로) : " + pDTO.getImg_f());
-                log.info("img(이미지 이름) : " + pDTO.getImg_n());
-            } else {
-                log.info("이미지 확장자 받아오기 실패");
+                pDTO.setImgs(full_img);
+                log.info("img(폴더 경로) : " + pDTO.getImgs());
+            } else { // 기존 파일이 그대로인 경우(새로운 파일업로드로부터 이미지를 받아오지 못함)
+                log.info("새로운 이미지 파일 들어오지 않음(기존 이미지 사용)");
+                NoticeDTO nDTO = new NoticeDTO();
+                nDTO.setGoods_no(goods_no);
+                log.info("goods_no : " + goods_no);
+                NoticeDTO rDTO = noticeService.getNoticeInfo(nDTO);
+
+                nDTO = null;
+                log.info("rDTO에서 가져온 이미지 주소값 : " + rDTO.getImgs());
+
+                String def_img = CmmUtil.nvl(rDTO.getImgs());
+                log.info("실패한 경우 받아온 이미지 경로(nvl) : " + def_img);
+                pDTO.setImgs(def_img);
+                log.info("setting 되었는지?" + pDTO.getImgs());
             }
 
             pDTO.setUser_no(user_no);
@@ -347,10 +360,10 @@ public class NoticeController {
             pDTO.setAddr2(addr2); //지역구
             pDTO.setCategory(category);
 
-            // DB로 update 쿼리를 보내, 게시글 수정
-            noticeService.updateNoticeInfo(pDTO);
+            log.info("pDTO 세팅 여부 : " + pDTO.getAddr2());
 
-            log.info("update 서비스 호출");
+            noticeService.updateNoticeInfo(pDTO);
+            log.info("update 완료!");
 
             msg = "수정되었습니다.";
             url = "/noticeInfo.do?nSeq=" + goods_no;
@@ -359,13 +372,12 @@ public class NoticeController {
             pDTO = null;
 
         } catch(Exception e) {
-            // 오류 발생 시, 오류 문구 출력
             msg = "실패하였습니다." + e.toString();
             url = "/noticeList.do";
             // url = "/noticeList.do";
             log.info(e.toString());
             e.printStackTrace();
-
+            return "/redirect";
         } finally {
             log.info(this.getClass().getName() + ".noticeUpdate(게시판 수정 등록) End!");
 

@@ -43,8 +43,8 @@
         <!-- 상품명 등록(추후 제목으로 표시된다) -->
         <div class="form-control" style="height: 200px;">
             <label for="img">상품 사진 등록</label>
-            <input type="file" id="img" name="fileUpload"/>
-            <div class="select_img"><img src="/resource/images/<%=rDTO.getImg_f()%>/<%=rDTO.getImg_n()%>" width="100"/></div>
+            <input type="file" id="img" name="fileUpload" value="/resource/images/<%=rDTO.getImgs()%>"/>
+            <div class="select_img"><img src="/resource/images/<%=rDTO.getImgs()%>" width="100"/></div>
         </div>
 
         <!-- 수정할 파일을 첨부하면, 판매글 작성 화면에서 이미지인지 보여줌 -->

@@ -36,14 +36,17 @@ public class WeatherService implements IWeatherService {
         String temperature = doc.select("span#wob_tm").text();
         String weather = doc.select("span#wob_dc").text();
         String rainrate = doc.select("span#wob_pp").text();
+        String imgs = doc.select("img.wob_tci").attr("src");
 
         rDTO.setWeather(weather);
         rDTO.setTemperature(temperature);
         rDTO.setRainrate(rainrate);
+        rDTO.setImgs(imgs);
 
         log.info("rDTO.temp : " + rDTO.getTemperature());
         log.info("rDTO.weather : " + rDTO.getWeather());
         log.info("rDTO.rainrate : " + rDTO.getRainrate());
+        log.info("rDTO.Img주소 : " + rDTO.getImgs());
         log.info(this.getClass().getName() + ".getWeather End!");
 
         return rDTO;
@@ -68,14 +71,17 @@ public class WeatherService implements IWeatherService {
         String temperature = doc.select("span#wob_tm").text();
         String weather = doc.select("span#wob_dc").text();
         String rainrate = doc.select("span#wob_pp").text();
+        String imgs = doc.select("img.wob_tci").attr("src");
 
         rDTO.setWeather(weather);
         rDTO.setTemperature(temperature);
         rDTO.setRainrate(rainrate);
+        rDTO.setImgs(imgs);
 
         log.info("rDTO.temp : " + rDTO.getTemperature());
         log.info("rDTO.weather : " + rDTO.getWeather());
         log.info("rDTO.rainrate : " + rDTO.getRainrate());
+        log.info("rDTO.Img주소 : " + rDTO.getImgs());
         log.info(this.getClass().getName() + ".getWeather End!");
 
         return rDTO;

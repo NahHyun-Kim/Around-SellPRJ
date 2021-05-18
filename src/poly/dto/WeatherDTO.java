@@ -8,6 +8,15 @@ public class WeatherDTO {
     private String rainrate;
     private String day;
     private String addr2;
+    private String imgs;
+
+    public String getImgs() {
+        return imgs;
+    }
+
+    public void setImgs(String imgs) {
+        this.imgs = imgs;
+    }
 
     public String getAddr2() {
         return addr2;

@@ -26,8 +26,10 @@
     console.log(result);
     var resweather = "";
     resweather += result.temperature + "도 ";
-    resweather += result.weather + "이며, 강수 확률은 ";
+    resweather += result.weather + '<img src="' + result.imgs + '" alt="이미지 불러오기 실패" style="width:45px"/>' + "이며, 강수 확률은 ";
     resweather += result.rainrate + " 입니다.";
+
+    //resweather += <img src={result.imgs} alt="이미지 불러오기 실패"/>;
     $('#weather').html(resweather);
 }
 
@@ -61,22 +63,17 @@
              console.log(res);
              var resweather = "";
              resweather += res.temperature + "도 ";
-             resweather += res.weather + "이며, 강수 확률은 ";
+             resweather += res.weather + '<img src="' + res.imgs + '" alt="이미지 불러오기 실패" style="width:45px"/>' + "이며, 강수 확률은 ";
              resweather += res.rainrate + " 입니다.";
              $('#weather').html(resweather);
+
+             console.log("이미지 주소 : " + res.imgs);
+             console.log("resweather : " + resweather);
  },
+         //"<img src=\"" + res.imgs + "alt=\"이미지 불러오기 실패\"/>";
          error:function(jqXHR, textStatus, errorThrown) {
              alert("에러 발생! \n" + textStatus + ":" + errorThrown);
              console.log(errorThrown);
          }
      })
  })
-/*
-     $("#modaltest").click(function() {
-         $(".modal").fadeIn();
-     });
-
- $(".close").click(function() {
-     $(".modal").fadeOut();
- });
-*/

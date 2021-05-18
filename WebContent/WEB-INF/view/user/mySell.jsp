@@ -35,8 +35,9 @@
         %>
         <div class="col">
             <a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');">
-                이미지</a>
+                <img src="/resource/images/<%=rDTO.getImgs()%>" style="width:150px; height:200px; object-fit:cover" alt="이미지 불러오기 실패"></a>
         </div>
+
         <div class="col">
             <a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');">
                 <%=CmmUtil.nvl(rDTO.getGoods_title())%></a>

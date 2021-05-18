@@ -14,27 +14,18 @@ public class NoticeDTO {
     private String hit; //조회수
     private String reg_dt; //등록일(default current_date)
 
-    private String img_n; //이미지 이름
-    private String img_f; //이미지 폴더 경로
+    private String imgs; //이미지 경로(경로+이름)
 
     // 회원 관련
     private String user_no; //회원 번호
     private String reg_id; //등록자(user_name)
 
-    public String getImg_n() {
-        return img_n;
+    public String getImgs() {
+        return imgs;
     }
 
-    public void setImg_n(String img_n) {
-        this.img_n = img_n;
-    }
-
-    public String getImg_f() {
-        return img_f;
-    }
-
-    public void setImg_f(String img_f) {
-        this.img_f = img_f;
+    public void setImgs(String imgs) {
+        this.imgs = imgs;
     }
 
     public String getAddr2() {

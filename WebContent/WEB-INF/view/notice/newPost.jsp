@@ -32,7 +32,7 @@
         <!-- 상품명 등록(추후 제목으로 표시된다) -->
         <div class="form-control" style="height: 200px;">
             <label for="img">상품 사진 등록</label>
-            <input type="file" id="img" name="fileUpload"/>
+            <input type="file" id="img" name="fileUpload" required/>
             <div class="select_img"><img src=""/></div>
         </div>
 
@@ -53,31 +53,31 @@
         <!-- 상품명 등록(추후 제목으로 표시된다) -->
         <div class="form-control">
             <label for="goods_title">상품명</label>
-            <input type="text" name="goods_title" id="goods_title" />
+            <input type="text" name="goods_title" id="goods_title" required/>
         </div>
 
         <!-- 상품 설명(추후 게시글 내용으로 표시된다) -->
         <div class="form-control">
             <label for="goods_detail">상품 설명</label>
-            <input type="textarea" name="goods_detail" id="goods_detail" />
+            <input type="textarea" name="goods_detail" id="goods_detail" required/>
         </div>
 
         <!-- 상품 가격 -->
         <div class="form-control">
             <label for="goods_price">상품 가격</label>
-            <input type="text" name="goods_price" id="goods_price" />
+            <input type="text" name="goods_price" id="goods_price" required/>
         </div>
 
         <!-- 상품이 판매되는 상호명 또는 간략한 주소 입력(간략 ex) 아리따움 강서구청점) -->
         <div class="form-control">
             <label for="goods_addr">판매 상호명</label>
-            <input type="text" name="goods_addr" id="goods_addr" placeholder="판매하는 상호명을 입력해 주세요." />
+            <input type="text" name="goods_addr" id="goods_addr" placeholder="판매하는 상호명을 입력해 주세요." required/>
         </div>
 
         <!-- 상품이 판매되는 상세 주소 입력(도로명주소 api 사용, 실시간으로 위치 확인이 가능하다.) -->
         <div class="form-group">
             <label for="sample5_address">주소 입력</label>
-            <input type="text" name="goods_addr2" id="sample5_address" placeholder="주소를 검색해 주세요" />
+            <input type="text" name="goods_addr2" id="sample5_address" placeholder="주소를 검색해 주세요" required/>
             <input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"/><br>
 
         </div>
@@ -86,7 +86,14 @@
         <!-- 등록되는 상품의 카테고리를 지정 -->
         <div class="form-group">
             <label for="category">카테고리</label>
-            <input type="text" name="category" id="category" placeholder="카테고리를 지정해 주세요."/>
+            <select name="category" id="category">
+                <option value="" selected disabled hidden>==카테고리를 선택하세요==</option>
+                <option value="화장품">화장품</option>
+                <option value="패션">패션</option>
+                <option value="잡화">잡화</option>
+                <option value="식품">식품</option>
+                <option value="가전">가전</option>
+            </select>
         </div>
 
         <input type="submit" value="등록하기" />

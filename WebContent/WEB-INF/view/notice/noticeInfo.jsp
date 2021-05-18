@@ -87,7 +87,7 @@
         <!-- 이미지 -->
         <div class="row">
             <div class="col">
-        <img class="thumb" src="/resource/images/<%=rDTO.getImg_f()%>/<%=rDTO.getImg_n()%>" style="width:350px;" alt="이미지 불러오기 실패">
+        <img class="thumb" src="/resource/images/<%=rDTO.getImgs()%>" style="width:350px;" alt="이미지 불러오기 실패">
             </div>
         </div>
 

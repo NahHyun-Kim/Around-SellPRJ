@@ -149,6 +149,11 @@ public class MyController {
 
             log.info("update 서비스 호출");
 
+            // 세션 초기화(개인정보 수정 시, 날씨 정보와 거리계산에 사용되는 주소값을 다시 생성)
+            session.removeAttribute("SS_USER_ADDR");
+            session.removeAttribute("SS_USER_ADDR2");
+            session.setAttribute("SS_USER_ADDR", addr);
+            session.setAttribute("SS_USER_ADDR2", addr2);
             msg = "회원정보가 수정되었습니다.";
             url = "/myPage.do";
 

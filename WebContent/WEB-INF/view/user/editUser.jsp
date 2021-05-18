@@ -72,6 +72,7 @@
         <div class="form-control">
             <label for="password_1">비밀번호</label>
             <input type="password" name="password" id="password_1" placeholder="기존 비밀번호를 입력해 주세요." required/>
+            <div class="check_font" id="pw_check1"></div>
         </div>
         <!-- 비밀번호 변경 이용 시, 비밀번호 변경 페이지로 이동(기존 비밀번호와 일치 시에만 이동하도록 구현 예정) -->
         <!-- button에 함수를 주어, 일치할 경우에만 이동되도록 함 -->
@@ -111,6 +112,7 @@
         <div class="form-control">
             <label for="password_2">비밀번호 확인</label>
             <input type="password" name="password_2" id="password_2" placeholder="비밀번호 확인을 입력해 주세요." required/>
+            <div class="check_font" id="pw_check2"></div>
         </div>
 
         <!-- 회원 주소지 입력(변경) -->

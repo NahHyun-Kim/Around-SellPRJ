@@ -38,7 +38,7 @@
     %>
             <div class="col">
                 <a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');">
-                    <img src="/resource/images/<%=rDTO.getImg_f()%>/<%=rDTO.getImg_n()%>" style="width:150px; height:200px; object-fit:cover" alt="이미지 불러오기 실패"></a>
+                    <img src="/resource/images/<%=rDTO.getImgs()%>" style="width:150px; height:200px; object-fit:contain" alt="이미지 불러오기 실패"></a>
             </div>
 
             <div class="col">
@@ -55,7 +55,9 @@
     <% } %>
     </div>
         <button class="btn btn-info" type="button" onclick="location.href='/noticeForm.do'">글쓰기</button>
-        <a href="/noticeForm.do">글쓰기</a>
+        <a href="/index.do">홈으로</a>
+        <a href="javascript:history.back()">뒤로가기</a>
+        <hr/>
 </div>
 </div>
 <!-- bootstrap, css 파일 -->

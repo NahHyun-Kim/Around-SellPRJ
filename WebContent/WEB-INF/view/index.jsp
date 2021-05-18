@@ -43,7 +43,7 @@
 <a href="/myPage.do">마이페이지</a>
 <input type="hidden" id="ss_no" value="<%=SS_USER_NO%>">
 <!-- 크롤링 -->
-<script type="text/javascript" src="/resource/js/Weather.js"></script>
+<script type="text/javascript" src="/resource/js/Weather.js?ver=1"></script>
 <!-- bootstrap, css 파일 -->
 <script src="/resources/js/bootstrap.js"></script>
 <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
