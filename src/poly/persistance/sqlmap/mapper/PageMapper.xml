@@ -3,15 +3,112 @@
 <!-- JAVA와 연결할 Mapper 파일 설정 -->
 <mapper namespace="poly.persistance.mapper.IPageMapper">
 
-    <!-- 페이징 처리 후 게시글 리스트 불러오기 -->
+    <!-- 검색에 사용되는 동적 SQL, 필요한 경우에만 include 하여 사용 가능하다. -->
+    <sql id="searchCriteria">
+        <trim prefix="(" suffix=") AND " prefixOverrides="OR">
+            <foreach item='searchType' collection="typeArr">
+                <trim prefix="OR">
+                    <choose>
+                        <when test="searchType == 'T'.toString()">
+                            GOODS_TITLE LIKE '%'||#{keyword}||'%'
+                        </when>
+                        <when test="searchType == 'C'.toString()">
+                            GOODS_DETAIL LIKE '%'||#{keyword}||'%'
+                        </when>
+                        <when test="searchType == 'L'.toString()">
+                            GOODS_ADDR LIKE '%'||#{keyword}||'%'
+                        </when>
+                    </choose>
+                </trim>
+            </foreach>
+        </trim>
+    </sql>
+
+    <!-- 페이징 처리 후 게시글 리스트 불러오기
+    choose에 when test="조건문" / otherwise(아닐 경우) 에 따라 쿼리를 다르게 함 -->
     <select id="selectPaging" resultType="NoticeDTO">
         SELECT * FROM (SELECT @rownum:=@rownum+1 rowNum,
-        N.* FROM (SELECT * FROM aroundsell.product) N, (SELECT @ROWNUM:=0) R  ORDER BY GOODS_NO DESC) A WHERE rowNum BETWEEN #{start} AND #{end}
+        N.* FROM (SELECT * FROM aroundsell.product) N, (SELECT @ROWNUM:=0) R
+        <choose>
+            <when test="addr2 != null">
+                WHERE ADDR2 = #{addr2} ORDER BY GOODS_NO DESC
+            </when>
+            <otherwise>
+                ORDER BY GOODS_NO DESC
+            </otherwise>
+        </choose>
+        ) A
+        WHERE rowNum BETWEEN #{start} AND #{end}
     </select>
 
     <!-- 페이징 -->
     <select id="cntNotice" resultType="int">
         SELECT COUNT(*) FROM aroundsell.product
+    </select>
+
+    <!-- 로그인 되었을때 해당 지역구에 해당하는 게시물 수에 맞는 페이징을 위한 게시글 수 카운팅 -->
+    <select id="cntAddrNotice" resultType="int">
+        SELECT COUNT(*) FROM aroundsell.product WHERE ADDR2 = #{addr2}
+    </select>
+
+    <!-- 검색한 결과에 해당하는 건수 가져오기 -->
+    <select id="cntSearchType" resultType="int">
+        SELECT COUNT(*) FROM aroundsell.product
+        <choose>
+              <!-- 로그인한 상태라면 주소지 + 검색어에 해당하는 검색 건수 가져옴 -->
+            <when test="addr2 != null">
+                WHERE ADDR2 = #{addr2}
+                  <!-- 현재 이 부분에서 오류 발생(SyntaxError..) 우선 includ는 검색 조건이 있을 때만 해 보겠다. 추후 수정 예정 -->
+                  <if test="searchType != null">ㅐ
+                      AND
+                  </if>
+                  <if test="keyword != null">
+                      AND
+                  </if>
+                <include refid="searchCriteria"></include>
+            </when>
+              <!-- 로그인하지 않은 상태라면 전체 목록에서 검색어에 해당하는 검색 건수를 가져옴 -->
+            <otherwise>
+                <!-- 현재 이 부분에서 오류 발생(SyntaxError..) 우선 includ는 검색 조건이 있을 때만 해 보겠다. 추후 수정 예정 -->
+                <if test="searchType != null">ㅐ
+                    AND
+                </if>
+                <if test="keyword != null">
+                    AND
+                </if>
+
+                <include refid="searchCriteria"></include>
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 페이징 처리 + 검색한 결과 가져오기 : 구현되면 합쳐볼 예정-->
+    <select id="searchList" resultType="NoticeDTO">
+        SELECT * FROM (SELECT @rownum:=@rownum+1 rowNum,
+        N.* FROM (SELECT * FROM aroundsell.product) N, (SELECT @ROWNUM:=0) R
+        <choose>
+            <!-- 로그인한 상태라면, 해당 주소지 + 검색한 결과를 가져옴 -->
+            <!-- 검색어가 전달된 경우에 쿼리를 실행하나, 기본 로드 시에는 searchType과 keyword 가 null임.  -->
+            <when test="addr2 != null">
+                WHERE
+                <include refid="searchCriteria"></include>
+                <!-- 검색어가 존재할 경우에만 include한 sql문 + AND 를 넣어 조건문을 연결함 -->
+                <if test="searchType != null">
+                AND ADDR2 = #{addr2} ORDER BY GOODS_NO DESC
+                </if>
+                <if test="keyword != null">
+                AND ADDR2 = #{addr2} ORDER BY GOODS_NO DESC
+                </if>
+            </when>
+
+            <!-- 로그인을 하지 않은 상태라면, 전체 목록에서 검색한 결과를 가져옴 -->
+            <otherwise>
+                <include refid="searchCriteria"></include>
+                ORDER BY GOODS_NO DESC
+            </otherwise>
+        </choose>
+        ) A
+        WHERE rowNum BETWEEN #{start} AND #{end}
     </select>
 
 </mapper>

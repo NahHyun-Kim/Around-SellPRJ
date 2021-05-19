@@ -373,8 +373,8 @@ public class NoticeController {
 
         } catch(Exception e) {
             msg = "실패하였습니다." + e.toString();
-            url = "/noticeList.do";
-            // url = "/noticeList.do";
+            url = "/pagingList.do";
+
             log.info(e.toString());
             e.printStackTrace();
             return "/redirect";

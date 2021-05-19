@@ -20,6 +20,37 @@ public class NoticeDTO {
     private String user_no; //회원 번호
     private String reg_id; //등록자(user_name)
 
+    /*
+    * org.apache.ibatis.reflection.ReflectionException: There is no getter for property named 'typeArr' in 'class poly.dto.NoticeDTO'
+    * 부분의 오류 캐치를 위해 작성
+    * */
+
+    // 검색어 관련
+    private String searchType; //검색 종류
+    private String keyword; //검색어
+
+    public String getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(String searchType) {
+        this.searchType = searchType;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    // getTypeArr()는 검색 조건을 한 글자로 하고, 배열로 만들어서 처리한다.
+    // mybatis의 동적 태그를 활용함
+    public String[] getTypeArr() {
+        return searchType == null? new String[] {}: searchType.split("");
+    }
+
     public String getImgs() {
         return imgs;
     }

@@ -55,6 +55,13 @@
     <button type="button" id="user_no" value="<%=CmmUtil.nvl(rDTO.getUser_no())%>" onclick="deleteUser();">회원 삭제</button>
 
     <div class="row">
+        <div class="col-3">상품 사진</div>
+        <div class="col-3">상품명</div>
+        <div class="col-3">상호명</div>
+        <div class="col-3">가격</div>
+    </div>
+
+    <div class="row">
         <%
             for(int i=0; i<nList.size(); i++) {
                 NoticeDTO nDTO = nList.get(i);
@@ -63,19 +70,20 @@
                     nDTO = new NoticeDTO();
                 }
         %>
-        <div class="col">
+        <div class="col-3">
             <a href="/noticeInfo.do?nSeq=<%=nDTO.getGoods_no()%>">
-                이미지</a>
+                <img src="/resource/images/<%=nDTO.getImgs()%>" alt="이미지 불러오기 실패" style="width:150px; object-fit: contain"/>
+            </a>
         </div>
-        <div class="col">
+        <div class="col-3">
             <a href="/noticeInfo.do?nSeq=<%=nDTO.getGoods_no()%>">
                 <%=CmmUtil.nvl(nDTO.getGoods_title())%></a>
         </div>
-        <div class="col">
+        <div class="col-3">
             <a href="/noticeInfo.do?nSeq=<%=nDTO.getGoods_no()%>">
                 <%=CmmUtil.nvl(nDTO.getGoods_addr())%></a>
         </div>
-        <div class="col">
+        <div class="col-3">
             <%=CmmUtil.nvl(nDTO.getGoods_price())%>
         </div>
         <% } %>

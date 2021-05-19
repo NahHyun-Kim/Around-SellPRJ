@@ -12,7 +12,7 @@
     <title>완료!</title>
     <script type="text/javascript">
         alert("<%=msg%>");
-        top.location.href="/noticeList.do";
+        top.location.href="/pagingList.do";
     </script>
 </head>
 <body>

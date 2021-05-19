@@ -19,7 +19,8 @@
         }
 
         function selChange() {
-            // 한 페이지당 게시물 보기 개수를 세팅하여 전달
+            // 한 페이지당 게시물 보기 개수를
+            // 세팅하여 전달
             var sel = document.getElementById('cntPerPage').value;
             location.href = "/pagingList.do?nowPage=${paging.nowPage}&cntPerPage="+sel;
         }
@@ -35,7 +36,6 @@
         int num = 1;
 
         List<NoticeDTO> sellList = (List<NoticeDTO>) request.getAttribute("sellList");
-        System.out.println("sellList 받아왔나 ? : " + (sellList == null));
 
         if (sellList == null) {
             sellList = new ArrayList<NoticeDTO>();
@@ -86,6 +86,16 @@
         </div>
         <% } %>
     </div>
+        <div>
+            <select id="searchType" name="searchType">
+                <option value="" selected disabled hidden>==카테고리를 선택하세요==</option>
+                <option value="title">상품명</option>
+                <option value="content">상품 설명</option>
+                <option value="gaddr">상호명</option>
+            </select>
+            <input type="text" name="keyword" id="keyword"/>
+            <button type="button" id="searchProduct" class="btn btn-info">검색하기</button>
+        </div>
     <button class="btn btn-info" type="button" onclick="location.href='/noticeForm.do'">글쓰기</button>
     <a href="/index.do">홈으로</a>
     <a href="javascript:history.back()">뒤로가기</a>
@@ -133,6 +143,28 @@
         </div>
     </div>
 
+<script type="text/javascript">
+    $("#searchProduct").on("click", function() {
+        var keyword = document.getElementById("keyword").value;
+        console.log("가져온 키워드 : " + keyword);
+
+        var searchType = document.getElementById('searchType').value;
+        console.log("가져온 검색 타입 : " + searchType);
+
+        if (keyword == "") {
+            alert("검색어를 입력해 주세요.");
+            document.getElementById("keyword").focus();
+            return false;
+        } else if (searchType = "") {
+            alert("검색 타입을 지정해 주세요.");
+            document.getElementById("searchType").focus();
+            return false;
+        } else { // 검색어, 타입이 모두 지정되어 검색을 눌렀을 때, 검색 실행
+            location.href = "/pagingList.do?nowPage=1&cntPerPage=9&searchType="+searchType + "&keyword=" + keyword;
+        }
+
+    })
+</script>
 
 <!-- bootstrap, css 파일 -->
 <link rel="stylesheet" href="/resource/css/notice.css"/>

@@ -41,6 +41,8 @@
 <a href="/noticeForm.do">판매글 등록하기</a>
 <a href="/noticeList.do">판매글 리스트(일반)</a>
 <a href="/pagingList.do">페이징 리스트 테스트</a>
+<br/>
+<a href="/searchList.do">페이징+검색 판매글 페이지</a>
 <a href="/myPage.do">마이페이지</a>
 <input type="hidden" id="ss_no" value="<%=SS_USER_NO%>">
 <!-- 크롤링 -->

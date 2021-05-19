@@ -93,6 +93,7 @@
                 <option value="잡화">잡화</option>
                 <option value="식품">식품</option>
                 <option value="가전">가전</option>
+                <option value="건강의료">건강/의료</option>
             </select>
         </div>
 
