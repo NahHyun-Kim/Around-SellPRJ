@@ -14,6 +14,7 @@ import poly.service.IPageService;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class PageController {
@@ -101,7 +102,7 @@ public class PageController {
 
     // 판매글 리스트를 페이징 처리하여 불러오기
     @RequestMapping(value="/searchList")
-    public String searchList(SearchCriteria pDTO, ModelMap model, HttpSession session,
+    public String searchList(SearchCriteria pDTO, HttpServletRequest request, ModelMap model, HttpSession session,
                              @RequestParam(value="nowPage", required = false) String nowPage,
                              @RequestParam(value="cntPerPage", required = false) String cntPerPage,
                              @RequestParam(value="searchType", required = false) String searchType,
@@ -155,6 +156,8 @@ public class PageController {
             } else { // 비 로그인 상태로, 검색했다면
                 log.info("비 로그인 + 검색 진행");
                 NoticeDTO nDTO = new NoticeDTO();
+                nDTO.setCategory(searchType); // 임시로 searchType 사용
+                nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
 
                 // 로그인 안한 상태의 검색어에 해당하는 게시물 수를 가져옴
                 // addr2에 세팅된 값이 없기 때문에, null 값 전달(아마도! 추후 검사 예정)
@@ -193,6 +196,8 @@ public class PageController {
                 log.info("로그인 + 검색 진행");
 
                 NoticeDTO nDTO = new NoticeDTO();
+                nDTO.setCategory(searchType); // 임시로 searchType 사용
+                nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
                 nDTO.setAddr2(addr2);
 
                 log.info("로그인 상태로 검색 진행 예정 -> addr2 세팅? : " + nDTO.getAddr2());
@@ -201,10 +206,11 @@ public class PageController {
                 total = pageService.cntSearchType(nDTO);
                 log.info("가져온 지역구(로그인 O) + 검색된 게시물 수 : " + total);
 
+                nDTO = null;
                 // @RequestParam과 db쿼리를 통해 가져온 값을 pDTO에 세팅
                 pDTO = new SearchCriteria(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage), addr2, searchType, keyword);
 
-                nDTO = null;
+                //nDTO = null;
                 log.info("로그인 + 검색 진행 pDTO 세팅 끝!");
             }
         }
@@ -216,8 +222,17 @@ public class PageController {
             e.printStackTrace();
         }
 
+        NoticeDTO rDTO = new NoticeDTO();
+        List<NoticeDTO> rList = pageService.searchList(pDTO);
+
+        for(int i=0; i<rList.size(); i++) {
+            NoticeDTO nDTO = rList.get(i);
+            System.out.println("검색 결과 가져온 값들(상품명) : " + nDTO.getGoods_title());
+            System.out.println("검색 결과 가져온 값들(주소-비로그인시 null) : " + rDTO.getAddr2());
+        }
+
         model.addAttribute("paging",pDTO);
-        model.addAttribute("searchList", pageService.searchList(pDTO));
+        model.addAttribute("searchList", rList);
 
         pDTO = null;
 

@@ -5,23 +5,41 @@
 
     <!-- 검색에 사용되는 동적 SQL, 필요한 경우에만 include 하여 사용 가능하다. -->
     <sql id="searchCriteria">
-        <trim prefix="(" suffix=") AND " prefixOverrides="OR">
             <foreach item='searchType' collection="typeArr">
-                <trim prefix="OR">
                     <choose>
-                        <when test="searchType == 'T'.toString()">
-                            GOODS_TITLE LIKE '%'||#{keyword}||'%'
+                        <when test='searchType == "T".toString()'>
+                            GOODS_TITLE LIKE CONCAT('%',#{keyword},'%')
                         </when>
-                        <when test="searchType == 'C'.toString()">
-                            GOODS_DETAIL LIKE '%'||#{keyword}||'%'
+                        <when test='searchType == "C".toString()'>
+                            GOODS_DETAIL LIKE CONCAT('%',#{keyword},'%')
                         </when>
-                        <when test="searchType == 'L'.toString()">
-                            GOODS_ADDR LIKE '%'||#{keyword}||'%'
+                        <when test='searchType == "L".toString()'>
+                            GOODS_ADDR LIKE CONCAT('%',#{keyword},'%')
+                        </when>
+                        <!--
+                        <when test='searchType == "TC".toString()'>
+                            GOODS_TITLE LIKE CONCAT('%',#{keyword},'%') OR
+                            GOODS_DETAIL LIKE CONCAT('%',#{keyword},'%')
+                        </when> -->
+                        <when test='searchType == "W".toString()'>
+                            REG_ID LIKE CONCAT('%',#{keyword},'%')
                         </when>
                     </choose>
-                </trim>
             </foreach>
-        </trim>
+    </sql>
+
+    <sql id="searchCnt">
+            <choose>
+                <when test='category == "T".toString()'>
+                    WHERE GOODS_TITLE LIKE CONCAT('%',#{goods_title},'%')
+                </when>
+                <when test='category == "C".toString()'>
+                    WHERE GOODS_DETAIL LIKE CONCAT('%',#{goods_title},'%')
+                </when>
+                <when test='category == "L".toString()'>
+                    WHERE GOODS_ADDR LIKE CONCAT('%',#{goods_title},'%')
+                </when>
+            </choose>
     </sql>
 
     <!-- 페이징 처리 후 게시글 리스트 불러오기
@@ -54,32 +72,7 @@
     <!-- 검색한 결과에 해당하는 건수 가져오기 -->
     <select id="cntSearchType" resultType="int">
         SELECT COUNT(*) FROM aroundsell.product
-        <choose>
-              <!-- 로그인한 상태라면 주소지 + 검색어에 해당하는 검색 건수 가져옴 -->
-            <when test="addr2 != null">
-                WHERE ADDR2 = #{addr2}
-                  <!-- 현재 이 부분에서 오류 발생(SyntaxError..) 우선 includ는 검색 조건이 있을 때만 해 보겠다. 추후 수정 예정 -->
-                  <if test="searchType != null">ㅐ
-                      AND
-                  </if>
-                  <if test="keyword != null">
-                      AND
-                  </if>
-                <include refid="searchCriteria"></include>
-            </when>
-              <!-- 로그인하지 않은 상태라면 전체 목록에서 검색어에 해당하는 검색 건수를 가져옴 -->
-            <otherwise>
-                <!-- 현재 이 부분에서 오류 발생(SyntaxError..) 우선 includ는 검색 조건이 있을 때만 해 보겠다. 추후 수정 예정 -->
-                <if test="searchType != null">ㅐ
-                    AND
-                </if>
-                <if test="keyword != null">
-                    AND
-                </if>
-
-                <include refid="searchCriteria"></include>
-            </otherwise>
-        </choose>
+        <include refid="searchCnt"></include>
     </select>
 
     <!-- 페이징 처리 + 검색한 결과 가져오기 : 구현되면 합쳐볼 예정-->
@@ -87,27 +80,26 @@
         SELECT * FROM (SELECT @rownum:=@rownum+1 rowNum,
         N.* FROM (SELECT * FROM aroundsell.product) N, (SELECT @ROWNUM:=0) R
         <choose>
-            <!-- 로그인한 상태라면, 해당 주소지 + 검색한 결과를 가져옴 -->
-            <!-- 검색어가 전달된 경우에 쿼리를 실행하나, 기본 로드 시에는 searchType과 keyword 가 null임.  -->
-            <when test="addr2 != null">
+            <!-- 로그인 상태에서 검색한 경우 -->
+            <when test="searchType != null and keyword != null and addr2 != null">
                 WHERE
                 <include refid="searchCriteria"></include>
-                <!-- 검색어가 존재할 경우에만 include한 sql문 + AND 를 넣어 조건문을 연결함 -->
-                <if test="searchType != null">
-                AND ADDR2 = #{addr2} ORDER BY GOODS_NO DESC
-                </if>
-                <if test="keyword != null">
-                AND ADDR2 = #{addr2} ORDER BY GOODS_NO DESC
-                </if>
+                AND ADDR2 = #{addr2}
             </when>
-
-            <!-- 로그인을 하지 않은 상태라면, 전체 목록에서 검색한 결과를 가져옴 -->
-            <otherwise>
+            <!-- 비 로그인 상태에서 검색한 경우 -->
+            <when test="searchType != null and keyword != null and addr2 == null">
+                WHERE
                 <include refid="searchCriteria"></include>
-                ORDER BY GOODS_NO DESC
-            </otherwise>
+            </when>
+            <!-- 로그인 상태에서 전체 로딩한 경우 -->
+            <when test="searchType == null and keyword == null and addr2 != null">
+                WHERE ADDR2 = #{addr2}
+            </when>
+            <when test="searchType == null and keyword == null and addr2 != null">
+
+            </when>
         </choose>
-        ) A
+        ORDER BY GOODS_NO DESC) A
         WHERE rowNum BETWEEN #{start} AND #{end}
     </select>
 
