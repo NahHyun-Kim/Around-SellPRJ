@@ -16,11 +16,9 @@
                         <when test='searchType == "L".toString()'>
                             GOODS_ADDR LIKE CONCAT('%',#{keyword},'%')
                         </when>
-                        <!--
                         <when test='searchType == "TC".toString()'>
-                            GOODS_TITLE LIKE CONCAT('%',#{keyword},'%') OR
-                            GOODS_DETAIL LIKE CONCAT('%',#{keyword},'%')
-                        </when> -->
+                            GOODS_TITLE OR GOODS_DETAIL LIKE CONCAT('%',#{keyword},'%')
+                        </when>
                         <when test='searchType == "W".toString()'>
                             REG_ID LIKE CONCAT('%',#{keyword},'%')
                         </when>
@@ -73,6 +71,15 @@
     <select id="cntSearchType" resultType="int">
         SELECT COUNT(*) FROM aroundsell.product
         <include refid="searchCnt"></include>
+        <choose>
+            <!-- include 검색결과를 카운팅하는 sql문 + 로그인 비로그인에 따라 건수를 다르게 카운팅 -->
+            <when test="addr2 == null">
+            </when>
+            <!-- 로그인 시 해당 지역구+검색 조건에 해당하는 데이터만 카운팅함 -->
+            <when test="addr2 != null">
+                AND ADDR2 = #{addr2}
+            </when>
+        </choose>
     </select>
 
     <!-- 페이징 처리 + 검색한 결과 가져오기 : 구현되면 합쳐볼 예정-->

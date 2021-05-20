@@ -29,8 +29,9 @@
             // 선택한 option 값 받아오기
             var s = document.getElementById("searchType");
             var searchType = s.options[s.selectedIndex].value;
+            //var searchType = document.getElementById("st").value;
 
-            console.log("searchType(선택한 옵션 값 : " + searchType);
+            console.log("searchType(선택한 옵션 값) : " + searchType);
 
             var keyword = document.getElementById("keyword").value;
             console.log("가져온 키워드(Controller 검색 결과 또는 검색결과에서 페이징용) : " + keyword);
@@ -40,8 +41,8 @@
                 location.href = "/searchList.do?nowPage=${paging.nowPage}&cntPerPage="+sel;
             }
             // 검색어가 있는 상태로 페이징 변경을 요청했다면, 검색타입과 검색어를 함께 요청하여 새로 페이징함
-            else {
-                location.href= "/searchList.do?nowPage=${paging.nowPage}&cntPerPage="+sel+"&searchType="+searchType+"&keyword="+keyword;
+            else if (searchType != "" || keyword != ""){
+                location.href= "/searchList.do?nowPage=${paging.nowPage}&cntPerPage="+sel+"&searchType="+ searchType+"&keyword="+keyword;
             }
 
         }
@@ -121,15 +122,14 @@
         <div>
             <select id="searchType" name="searchType">
                 <option value="" selected disabled hidden>==카테고리를 선택하세요==</option>
-                <option value="T">상품명</option>
-                <option value="C">상품 설명</option>
-                <option value="L">상호명</option>
-                <!--추후 쿼리 수정 예정-->
-                <!--<option value="TC">제목+내용</option>-->
-                <option value="W">작성자</option>
+                <option value="T" <%=CmmUtil.nvl(searchType).equals("T")?"selected":""%>>상품명</option>
+                <option value="C" <%=CmmUtil.nvl(searchType).equals("C")?"selected":""%>>상품 설명</option>
+                <option value="L" <%=CmmUtil.nvl(searchType).equals("L")?"selected":""%>>상호명</option>
+                <option value="TC">제목+내용</option>
+                <option value="W" <%=CmmUtil.nvl(searchType).equals("W")?"selected":""%>>작성자</option>
             </select>
-            <input type="text" name="keyword" id="keyword"/>
-            <input type="hidden" name="searchType" value="${paging.searchType}"/>
+            <input type="text" name="keyword" id="keyword" value="${paging.keyword}"/>
+            <input type="hidden" id="st" name="searchType" value="${paging.searchType}"/>
             <button type="button" id="searchProduct" class="btn btn-info">검색하기</button>
 
         </div>
@@ -176,16 +176,19 @@
         var res = document.getElementById("searchResult");
 
         var keyword = "<%=keyword%>";
+        var total = "<%=total%>";
+
+        console.log("총 결과 건수 : " + total);
         console.log("키워드 : " + keyword);
         console.log("keyword null? : " + (keyword == "null"));
 
-        // 검색어가 없는 상태라면, 전체 건수를 보여줌(페이징하면 그 개수에 따라 변하는거 추후에 수정하기)
-        //if ((SS_USER_ADDR2%>) == null) {
+
+        // 검색어가 있는 상태라면, 검색 결과 건수를 보여줌
         if (keyword != "null") {
 
-            console.log("num(검색된 게시물 수) : " + <%=num-1%>);
+            console.log("검색된 게시물 수 : " + total);
 
-            var resultMent = "<span style='color:red'>" + keyword + "</span>에 대한 " + "총 <span style='color:blue'><%=num-1%></span> 건의 검색 결과";
+            var resultMent = "<span style='color:red'>" + keyword + "</span>에 대한 " + "총 <span style='color:blue'>" + total + "</span> 건의 검색 결과";
             console.log("검색결과 멘트 : " + resultMent);
 
             res.innerHTML = resultMent;
@@ -193,21 +196,22 @@
             // 검색어가 존재하지 않으면, 전체 게시물 건수를 보여줌.
         } else if (keyword == "null") {
 
-            console.log("전체 게시물 수 : " + <%=num-1%>);
+            console.log("전체 게시물 수 : " + total);
 
-            var totalMent = "전체 <span style='color:blue'><%=num-1%></span> 건의 상품";
+            var totalMent = "전체 <span style='color:blue'>" + total + "</span> 건의 상품";
 
             res.innerHTML = totalMent;
         }
-        //}
+
     })
 
+    // 검색 버튼 클릭 시, 값을 받아와 검색 실행
     $("#searchProduct").on("click", function() {
         // 키워드 값 받아오기
         var keyword = document.getElementById("keyword").value;
         console.log("가져온 키워드 : " + keyword);
 
-        // 검색 종류 받아오기
+        // 검색 종류(selectBox) 받아오기 -> 선택한 값을 받아와야 함(s.selectedIndex.value)
         var searchType = document.getElementById('searchType').value;
         console.log("가져온 검색 타입 : " + searchType);
 
@@ -215,7 +219,7 @@
         var s = document.getElementById("searchType");
         var searchType = s.options[s.selectedIndex].value;
 
-        console.log("searchType(선택한 옵션 값 : " + searchType);
+        console.log("searchType(선택한 옵션 값) : " + searchType);
 
         // 화면에서 키워드나 타입이 선택되지 않았다면, 검색을 하지 않도록 제어함
         /*
@@ -230,8 +234,8 @@
 
             // 검색어나 타입이 존재하지 않으면, 검색이 실행되지 않고 입력하기를 알림 띄움
         } else if (searchType == "" && keyword == "") {
-            console.log("검색 타입과 검색어를을 입력해 주세요.");
-            alert("검색 타입과 검색어를을 입력해 주세요.");
+            console.log("검색 타입과 검색어를 입력해 주세요.");
+            alert("검색 타입과 검색어를 입력해 주세요.");
             document.getElementsByName("searchType")[0].focus();
             return false;
 

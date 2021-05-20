@@ -221,7 +221,7 @@ public class PageController {
             log.info("받아오기 실패!" + e.toString());
             e.printStackTrace();
         }
-
+        /*
         NoticeDTO rDTO = new NoticeDTO();
         List<NoticeDTO> rList = pageService.searchList(pDTO);
 
@@ -229,10 +229,10 @@ public class PageController {
             NoticeDTO nDTO = rList.get(i);
             System.out.println("검색 결과 가져온 값들(상품명) : " + nDTO.getGoods_title());
             System.out.println("검색 결과 가져온 값들(주소-비로그인시 null) : " + rDTO.getAddr2());
-        }
+        } */
 
         model.addAttribute("paging",pDTO);
-        model.addAttribute("searchList", rList);
+        model.addAttribute("searchList", pageService.searchList(pDTO));
 
         pDTO = null;
 
