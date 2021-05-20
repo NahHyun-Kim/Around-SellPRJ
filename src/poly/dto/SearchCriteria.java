@@ -9,7 +9,17 @@ public class SearchCriteria extends Criteria {
     private String addr2; //주소(로그인 or 비 로그인)
 
     private String searchType; //검색할 타입
-    private String keyword; //변수 추가
+    private String keyword; //검색어
+
+    private String odType; //정렬 기준(검색 시 제공)
+
+    public String getOdType() {
+        return odType;
+    }
+
+    public void setOdType(String odType) {
+        this.odType = odType;
+    }
 
     public String getSearchType() {
         return searchType;
@@ -60,7 +70,7 @@ public class SearchCriteria extends Criteria {
 
     }
 
-    // 비 로그인, 검색한 경우
+    // 비 로그인, 검색한 경우(정렬 없는 default)
     public SearchCriteria(int total, int nowPage, int cntPerPage, String searchType, String keyword) {
         setNowPage(nowPage);
         setCntPerPage(cntPerPage);
@@ -74,7 +84,7 @@ public class SearchCriteria extends Criteria {
         setKeyword(keyword);
     }
 
-    // 로그인, 검색한 경우
+    // 로그인, 검색한 경우(정렬 없는 default)
     public SearchCriteria(int total, int nowPage, int cntPerPage, String addr2, String searchType, String keyword) {
         setNowPage(nowPage);
         setCntPerPage(cntPerPage);
@@ -84,6 +94,37 @@ public class SearchCriteria extends Criteria {
         calcStartEnd(getNowPage(), getCntPerPage());
         setSearchType(searchType);
         setKeyword(keyword);
+        setAddr2(addr2);
+    }
+
+    // 비 로그인, 검색한 경우(정렬 요청)
+    public SearchCriteria(String odType, int total, int nowPage, int cntPerPage, String searchType, String keyword) {
+        setNowPage(nowPage);
+        setCntPerPage(cntPerPage);
+        setTotal(total);
+        calcLastPage(getTotal(), getCntPerPage());
+        calcStartEndPage(getNowPage(), cntPage);
+        calcStartEnd(getNowPage(), getCntPerPage());
+        setSearchType(searchType);
+        setKeyword(keyword);
+        setSearchType(searchType);
+        setKeyword(keyword);
+        setOdType(odType);
+    }
+
+    // 로그인, 검색한 경우(정렬 요청)
+    public SearchCriteria(String odType, int total, int nowPage, int cntPerPage, String addr2, String searchType, String keyword) {
+        setNowPage(nowPage);
+        setCntPerPage(cntPerPage);
+        setTotal(total);
+        calcLastPage(getTotal(), getCntPerPage());
+        calcStartEndPage(getNowPage(), cntPage);
+        calcStartEnd(getNowPage(), getCntPerPage());
+        setSearchType(searchType);
+        setKeyword(keyword);
+        setSearchType(searchType);
+        setKeyword(keyword);
+        setOdType(odType);
         setAddr2(addr2);
     }
 

@@ -12,6 +12,15 @@ public class Criteria {
 
     private String addr2;
 
+    private String odType; //정렬 기준(검색 시 제공)
+
+    public String getOdType() {
+        return odType;
+    }
+
+    public void setOdType(String odType) {
+        this.odType = odType;
+    }
     public String getAddr2() {
         return addr2;
     }

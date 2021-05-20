@@ -100,13 +100,14 @@ public class PageController {
         return "/notice/pagingList";
     }
 
-    // 판매글 리스트를 페이징 처리하여 불러오기
+    // 판매글 리스트를 페이징 처리하여 불러오기(전체 + 검색 + 정렬)
     @RequestMapping(value="/searchList")
     public String searchList(SearchCriteria pDTO, HttpServletRequest request, ModelMap model, HttpSession session,
                              @RequestParam(value="nowPage", required = false) String nowPage,
                              @RequestParam(value="cntPerPage", required = false) String cntPerPage,
                              @RequestParam(value="searchType", required = false) String searchType,
-                             @RequestParam(value="keyword", required = false) String keyword)
+                             @RequestParam(value="keyword", required = false) String keyword,
+                             @RequestParam(value="odType", required = false) String odType)
             throws Exception {
 
         log.info(this.getClass().getName() + ".pagingList(페이징 판매글 리스트) Start!");
@@ -135,10 +136,12 @@ public class PageController {
 
         log.info("가져온 검색 타입 : " + searchType);
         log.info("가져온 검색어 : " + keyword);
+        log.info("가져온 정렬 : " + odType);
 
         // 제대로 받아왔는지 확인
         log.info("searchType 받아옴(isNull이면 true) ? : " + (searchType==null));
         log.info("keyword 받아옴(isNull이면 true) ? : " + (keyword == null));
+        log.info("odType 받아옴(정렬 없으면 true, 정렬 있으면 false)" + (odType == null));
 
         // 비 로그인 상태로 페이지 로딩 또는 검색을 진행한다면
         if (addr2 == null) {
@@ -154,7 +157,10 @@ public class PageController {
                 log.info("비 로그인 + 기본 페이지 로딩(검색어 없음) pDTO 세팅 끝!");
 
             } else { // 비 로그인 상태로, 검색했다면
-                log.info("비 로그인 + 검색 진행");
+                // 1. 비 로그인 + 검색 + 정렬 안함
+                if (odType == null) {
+                    log.info("비 로그인 + 검색 진행 + 정렬X");
+
                 NoticeDTO nDTO = new NoticeDTO();
                 nDTO.setCategory(searchType); // 임시로 searchType 사용
                 nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
@@ -168,9 +174,32 @@ public class PageController {
                 // @RequestParam과 db쿼리를 통해 가져온 값을 pDTO에 세팅
                 pDTO = new SearchCriteria(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage), searchType, keyword);
 
-                log.info("비 로그인 + 검색 진행 pDTO 세팅 끝!");
+                log.info("비 로그인 + 검색 진행 + 정렬X pDTO 세팅 끝!");
+
+                // 2. 비 로그인 + 검색 + 정렬 진행
+                } else {
+                    log.info("비 로그인 + 검색 진행 + 정렬 진행");
+                    NoticeDTO nDTO = new NoticeDTO();
+                    nDTO.setCategory(searchType); // 임시로 searchType 사용
+                    nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
+
+                    /*
+                    * 로그인 안한 상태의 검색어에 해당하는 게시물 수를 가져옴
+                    * addr2에 세팅된 값이 없기 때문에, null 값 전달(아마도! 추후 검사 예정)
+                    * 정렬은 게시글 수에 영향을 미치지 않기 때문에 기존 검색결과 카운팅 함수 그대로 사용
+                    * */
+                    total = pageService.cntSearchType(nDTO);
+                    log.info("가져온 (비로그인, 검색, 정렬) 결과 게시물 수 : " + total);
+
+                    nDTO = null;
+                    // @RequestParam과 db쿼리를 통해 가져온 값을 pDTO에 세팅
+                    pDTO = new SearchCriteria(odType, total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage), searchType, keyword);
+
+                    log.info("비 로그인 + 검색 진행 + 정렬 진행 pDTO 세팅 끝!");
+                }
             }
         }
+
         // 로그인 상태로 페이지 로딩 또는 검색을 진행한다면
         else if (addr2 != null) {
             if (searchType == null && keyword == null) {
@@ -192,29 +221,57 @@ public class PageController {
                 nDTO = null;
                 log.info("로그인 + 기본 페이지 로딩(검색어 없음) pDTO 세팅 끝!");
 
-            } else { // 로그인 상태로, 검색했다면
-                log.info("로그인 + 검색 진행");
+            } else { // 로그인 상태로, 검색했다면(검색 결과에 따른 정렬 제공)
 
-                NoticeDTO nDTO = new NoticeDTO();
-                nDTO.setCategory(searchType); // 임시로 searchType 사용
-                nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
-                nDTO.setAddr2(addr2);
+                // 1. 로그인 + 검색 + 정렬 안함
+                if (odType == null) {
+                    log.info("비 로그인 + 검색 진행 + 정렬X");
 
-                log.info("로그인 상태로 검색 진행 예정 -> addr2 세팅? : " + nDTO.getAddr2());
+                    NoticeDTO nDTO = new NoticeDTO();
+                    nDTO.setCategory(searchType); // 임시로 searchType 사용
+                    nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
+                    nDTO.setAddr2(addr2);
 
-                // 로그인 안한 상태의 검색어에 해당하는 게시물 수를 가져옴
-                total = pageService.cntSearchType(nDTO);
-                log.info("가져온 지역구(로그인 O) + 검색된 게시물 수 : " + total);
+                    log.info("로그인 상태로 검색 진행 예정 -> addr2 세팅? : " + nDTO.getAddr2());
 
-                nDTO = null;
-                // @RequestParam과 db쿼리를 통해 가져온 값을 pDTO에 세팅
-                pDTO = new SearchCriteria(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage), addr2, searchType, keyword);
+                    // 로그인 안한 상태의 검색어에 해당하는 게시물 수를 가져옴
+                    total = pageService.cntSearchType(nDTO);
+                    log.info("가져온 지역구(로그인 O) + 검색된 게시물 수 : " + total);
 
-                //nDTO = null;
-                log.info("로그인 + 검색 진행 pDTO 세팅 끝!");
+                    nDTO = null;
+                    // @RequestParam과 db쿼리를 통해 가져온 값을 pDTO에 세팅
+                    pDTO = new SearchCriteria(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage), addr2, searchType, keyword);
+
+                    //nDTO = null;
+                    log.info("로그인 + 검색 진행 pDTO 세팅 끝!");
+                }
+
+                // 2. 로그인 + 검색 + 정렬 진행
+                else {
+                    log.info("로그인 + 검색 진행 + 정렬 진행");
+                    NoticeDTO nDTO = new NoticeDTO();
+                    nDTO.setCategory(searchType); // 임시로 searchType 사용
+                    nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
+                    nDTO.setAddr2(addr2);
+
+                    /*
+                     * 로그인 안한 상태의 검색어에 해당하는 게시물 수를 가져옴
+                     * addr2에 세팅된 값이 없기 때문에, null 값 전달(아마도! 추후 검사 예정)
+                     * 정렬은 게시글 수에 영향을 미치지 않기 때문에 기존 검색결과 카운팅 함수 그대로 사용
+                     * */
+                    total = pageService.cntSearchType(nDTO);
+                    log.info("가져온 (로그인, 검색, 정렬) 결과 게시물 수 : " + total);
+
+                    nDTO = null;
+                    // @RequestParam과 db쿼리를 통해 가져온 값을 pDTO에 세팅
+                    pDTO = new SearchCriteria(odType, total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage), addr2, searchType, keyword);
+
+                    log.info("로그인 + 검색 진행 + 정렬 진행!");
+                }
             }
         }
 
+        // try-catch문을 사용하여 db 쿼리에 오류없이 전달하여 값을 받아오는지 확인
         try {
             pageService.searchList(pDTO);
         } catch(Exception e) {

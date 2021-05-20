@@ -99,6 +99,8 @@ public class MyController {
         NoticeDTO pDTO = new NoticeDTO();
         pDTO.setGoods_no(del_num);
 
+        log.info("setting 되었는지 ? : " + pDTO.getGoods_no());
+
         // 지정한 회원번호로 판매글 삭제
         int res = noticeService.delMySell(pDTO);
 

@@ -16,7 +16,7 @@
                         <when test='searchType == "L".toString()'>
                             GOODS_ADDR LIKE CONCAT('%',#{keyword},'%')
                         </when>
-                        <when test='searchType == "TC".toString()'>
+                        <when test='searchType == "A".toString()'>
                             GOODS_TITLE OR GOODS_DETAIL LIKE CONCAT('%',#{keyword},'%')
                         </when>
                         <when test='searchType == "W".toString()'>
@@ -37,7 +37,34 @@
                 <when test='category == "L".toString()'>
                     WHERE GOODS_ADDR LIKE CONCAT('%',#{goods_title},'%')
                 </when>
+                <when test='category == "W".toString()'>
+                    WHERE REG_ID LIKE CONCAT('%',#{goods_title},'%')
+                </when>
+                <when test='category == "A".toString()'>
+                    WHERE GOODS_TITLE OR GOODS_DETAIL LIKE CONCAT('%',#{goods_title},'%')
+                </when>
             </choose>
+    </sql>
+
+    <!-- 검색 시, 조건별 정렬을 위한 쿼리 -->
+    <sql id="odrProduct">
+        <choose>
+            <!-- 선택하지 않을 경우 자동으로 상품번호 순 정렬-->
+            <!-- 조회수 높은 순으로(인기순) 정렬 -->
+            <when test='odType.equals("hit")'>
+                ORDER BY HIT DESC
+            </when>
+
+            <!-- 낮은 가격 순(최저가순) 정렬 -->
+            <when test='odType.equals("low")'>
+                ORDER BY GOODS_PRICE ASC
+            </when>
+
+            <!-- 높은 가격 순(최고가순) 정렬 -->
+            <when test='odType.equals("high")'>
+                ORDER BY GOODS_PRICE DESC
+            </when>
+        </choose>
     </sql>
 
     <!-- 페이징 처리 후 게시글 리스트 불러오기
@@ -87,26 +114,51 @@
         SELECT * FROM (SELECT @rownum:=@rownum+1 rowNum,
         N.* FROM (SELECT * FROM aroundsell.product) N, (SELECT @ROWNUM:=0) R
         <choose>
-            <!-- 로그인 상태에서 검색한 경우 -->
-            <when test="searchType != null and keyword != null and addr2 != null">
+            <!-- 로그인 상태에서 검색한 경우(추가 - 정렬 X - DEFAULT 정렬) -->
+            <when test="searchType != null and keyword != null and addr2 != null and odType == null">
                 WHERE
                 <include refid="searchCriteria"></include>
                 AND ADDR2 = #{addr2}
+                ORDER BY GOODS_NO DESC
             </when>
-            <!-- 비 로그인 상태에서 검색한 경우 -->
-            <when test="searchType != null and keyword != null and addr2 == null">
+            <!-- 비 로그인 상태에서 검색한 경우(추가 - 정렬 X - DEFAULT 정렬) -->
+            <when test="searchType != null and keyword != null and addr2 == null and odType == null">
                 WHERE
                 <include refid="searchCriteria"></include>
+                ORDER BY GOODS_NO DESC
             </when>
-            <!-- 로그인 상태에서 전체 로딩한 경우 -->
-            <when test="searchType == null and keyword == null and addr2 != null">
-                WHERE ADDR2 = #{addr2}
-            </when>
-            <when test="searchType == null and keyword == null and addr2 != null">
 
+            <!-- 로그인 상태에서 검색 + 정렬 요청 O -->
+            <when test="searchType != null and keyword != null and addr2 != null and odType != null">
+                WHERE
+                <!-- 검색어에 대한 조건문 쿼리 + 로그인 -->
+                <include refid="searchCriteria"></include>
+                AND ADDR2 = #{addr2}
+                <!-- 검색한 결과에 대한 정렬 쿼리 -->
+                <include refid="odrProduct"></include>
+            </when>
+
+            <!-- 비 로그인 상태에서 검색 + 정렬 요청 O -->
+            <when test="searchType != null and keyword != null and addr2 == null and odType != null">
+                WHERE
+                <!-- 검색어에 대한 조건문 쿼리 -->
+                <include refid="searchCriteria"></include>
+                <!-- 검색한 결과에 대한 정렬 쿼리 -->
+                <include refid="odrProduct"></include>
+            </when>
+
+            <!-- 로그인 상태에서 전체 로딩한 경우 -->
+            <when test="searchType == null and keyword == null and addr2 != null and odType == null">
+                WHERE ADDR2 = #{addr2}
+                ORDER BY GOODS_NO DESC
+            </when>
+
+            <!-- 비 로그인 상태에서 전체 로딩한 경우 -->
+            <when test="searchType == null and keyword == null and addr2 == null and odType == null">
+                ORDER BY GOODS_NO DESC
             </when>
         </choose>
-        ORDER BY GOODS_NO DESC) A
+        ) A
         WHERE rowNum BETWEEN #{start} AND #{end}
     </select>
 

@@ -36,13 +36,28 @@
             var keyword = document.getElementById("keyword").value;
             console.log("가져온 키워드(Controller 검색 결과 또는 검색결과에서 페이징용) : " + keyword);
 
+            // 정렬된 상태로 페이징 하는 경우를 위해 정렬값을 받아옴
+            var od = document.getElementById('odType');
+            var odType = od.options[od.selectedIndex].value;
+
+            console.log("선택한 정렬 값 : " + odType);
+            console.log("정렬 null ? : " + (odType == ""));
+
             // 검색어가 없이 페이징만 요청하는 경우에는, 불필요한 @param(검색 관련) 을 붙이지 않고 페이징 쿼리만 전송
             if (searchType == "" || keyword == "") {
                 location.href = "/searchList.do?nowPage=${paging.nowPage}&cntPerPage="+sel;
             }
             // 검색어가 있는 상태로 페이징 변경을 요청했다면, 검색타입과 검색어를 함께 요청하여 새로 페이징함
             else if (searchType != "" || keyword != ""){
-                location.href= "/searchList.do?nowPage=${paging.nowPage}&cntPerPage="+sel+"&searchType="+ searchType+"&keyword="+keyword;
+                // 정렬 타입이 지정되지 않았다면, 검색 결과값을 페이징 요청
+                if (odType == "") {
+                    location.href= "/searchList.do?nowPage=${paging.nowPage}&cntPerPage="+sel+"&searchType="+ searchType+"&keyword="+keyword;
+                }
+                // 정렬 타입이 지정되었다면, 정렬 요청한 결과값을 페이징 요청
+                else if (odType != "") {
+                    location.href="/searchList.do?nowPage=${paging.nowPage}&cntPerPage="+sel+"&searchType="+ searchType+"&keyword="+keyword + "&odType=" + odType;
+                }
+
             }
 
         }
@@ -64,7 +79,11 @@
         // 검색된 상태로 페이징할 경우 searchType과 keyword를 함께 보낸다.
         String searchType = pDTO.getSearchType();
         String keyword = pDTO.getKeyword();
-        System.out.println("받아온 타입 : " + searchType + ", 받아온 검색어 : " + keyword);
+
+        // 정렬할 경우 odType을 받아온다.
+        String odType = pDTO.getOdType();
+
+        System.out.println("받아온 타입 : " + searchType + ", 받아온 검색어 : " + keyword + ", 정렬 : " + odType);
 
         List<NoticeDTO> searchList = (List<NoticeDTO>) request.getAttribute("searchList");
 
@@ -119,19 +138,33 @@
             </div>
             <% } %>
         </div>
+
+        <!-- 검색창, 검색 후 정렬 가능, 검색한 결과와 카테고리를 저장한다. -->
         <div>
+            <!-- 검색창 -->
             <select id="searchType" name="searchType">
                 <option value="" selected disabled hidden>==카테고리를 선택하세요==</option>
                 <option value="T" <%=CmmUtil.nvl(searchType).equals("T")?"selected":""%>>상품명</option>
                 <option value="C" <%=CmmUtil.nvl(searchType).equals("C")?"selected":""%>>상품 설명</option>
                 <option value="L" <%=CmmUtil.nvl(searchType).equals("L")?"selected":""%>>상호명</option>
-                <option value="TC">제목+내용</option>
+                <option value="A" <%=CmmUtil.nvl(searchType).equals("A")?"selected":""%>>제목+내용</option>
                 <option value="W" <%=CmmUtil.nvl(searchType).equals("W")?"selected":""%>>작성자</option>
             </select>
             <input type="text" name="keyword" id="keyword" value="${paging.keyword}"/>
             <input type="hidden" id="st" name="searchType" value="${paging.searchType}"/>
             <button type="button" id="searchProduct" class="btn btn-info">검색하기</button>
 
+            <!-- 검색 후 정렬(null이면 자동으로 ORDER BY GOODS_NO DESC) -->
+            <select id="odType" name="odType">
+                <option value="" selected disabled hidden>=정렬=</option>
+                <option value="hit" <%=CmmUtil.nvl(odType).equals("hit")?"selected":""%>>인기순</option>
+                <option value="low" <%=CmmUtil.nvl(odType).equals("low")?"selected":""%>>가격 낮은순</option>
+                <option value="high" <%=CmmUtil.nvl(odType).equals("high")?"selected":""%>>가격 높은순</option>
+            </select>
+
+            <input type="hidden" id="ot" name="odType" value="${paging.odType}"/>
+            <!-- 테스트용, 추후 삭제 예정(onChange 함수로 정렬 성공) -->
+            <!--<button type="button" id="orderProduct" class="btn btn-info">정렬하기</button>-->
         </div>
         <button class="btn btn-info" type="button" onclick="location.href='/noticeForm.do'">글쓰기</button>
         <a href="/index.do">홈으로</a>
@@ -177,18 +210,19 @@
 
         var keyword = "<%=keyword%>";
         var total = "<%=total%>";
+        var odType = "<%=odType%>";
 
         console.log("총 결과 건수 : " + total);
         console.log("키워드 : " + keyword);
         console.log("keyword null? : " + (keyword == "null"));
-
+        console.log("정렬 타입 있는지? : " + (odType == "null"));
 
         // 검색어가 있는 상태라면, 검색 결과 건수를 보여줌
         if (keyword != "null") {
 
             console.log("검색된 게시물 수 : " + total);
 
-            var resultMent = "<span style='color:red'>" + keyword + "</span>에 대한 " + "총 <span style='color:blue'>" + total + "</span> 건의 검색 결과";
+            var resultMent = "<span style='color:#ff0000'>" + keyword + "</span>에 대한 " + "총 <span style='color:blue'>" + total + "</span> 건의 검색 결과";
             console.log("검색결과 멘트 : " + resultMent);
 
             res.innerHTML = resultMent;
@@ -212,8 +246,8 @@
         console.log("가져온 키워드 : " + keyword);
 
         // 검색 종류(selectBox) 받아오기 -> 선택한 값을 받아와야 함(s.selectedIndex.value)
-        var searchType = document.getElementById('searchType').value;
-        console.log("가져온 검색 타입 : " + searchType);
+        /*var searchType = document.getElementById('searchType').value;
+        console.log("가져온 검색 타입 : " + searchType); */
 
         // 선택한 option 값 받아오기
         var s = document.getElementById("searchType");
@@ -253,6 +287,36 @@
             return false;
         }
 
+
+    })
+
+    $("#odType").on("change", function() {
+    //$("#orderProduct").on("click", function() {
+        //키워드 값 받아오기
+        var keyword = document.getElementById("keyword").value;
+        console.log("가져온 키워드 : " + keyword);
+
+        // 선택한 option 값 받아오기
+        var s = document.getElementById("searchType");
+        var searchType = s.options[s.selectedIndex].value;
+
+        console.log("searchType(선택한 옵션 값) : " + searchType);
+        console.log("검색 타입, 검색어 : " + searchType + keyword);
+
+        // 정렬 종류(selectBox) 받아오기 -> 선택한 값을 받아와야 함(s.selectedIndex.value)
+        var o = document.getElementById("odType");
+        var odType = o.options[o.selectedIndex].value;
+        console.log("가져온 정렬 타입 : " + odType);
+
+        console.log("정렬 시작!(링크 보내기 직전) : " + odType);
+        // orderType이 지정되면 받아온 검색 결과 + 정렬 함수를 실행함
+        if (odType != "") {
+            console.log("정렬 쿼리 보냄!");
+            location.href = "/searchList.do?nowPage=1&cntPerPage=9&searchType=" + searchType + "&keyword=" + keyword + "&odType=" + odType;
+        } else {
+            alert("실패했습니다!");
+            return false;
+        }
     })
 </script>
 
