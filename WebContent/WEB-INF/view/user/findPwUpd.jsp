@@ -1,5 +1,6 @@
 <%@ page import="poly.util.CmmUtil"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<% String user_no = (String) session.getAttribute("SS_USER_NO"); %>
 <html>
 <head>
     <title>AroundSell-비밀번호 변경</title>
@@ -28,7 +29,7 @@
     </form>
 
 <!-- 이메일/비밀번호 찾기 js -->
-<script type="text/javascript" src="/resource/valid/searchUser.js"></script>
+<script type="text/javascript" src="/resource/valid/searchUser.js?ver=1"></script>
 
 <!-- bootstrap, css 파일 -->
 <link rel="stylesheet" href="/resource/css/user.css"/>

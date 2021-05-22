@@ -5,12 +5,19 @@
         http://www.springframework.org/schema/jdbc  http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd">
 
 	<!-- MySQL dataSource -->
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
-        <!--connect 오류를 수정하기 위해 com.mysql.cj.jdbc.Driver 변경 -->
+    <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://127.0.0.1:3306/aroundsell?useSSL=false&amp;serverTimezone=UTC" />
-        <property name="username" value="root"/> <!-- mysql user 계정 -->
-        <property name="password" value="epdlxjqnstjrrhk"/> <!-- mysql 패스워드 -->
+        <property name="username" value="root"/>
+        <property name="password" value="epdlxjqnstjrrhk"/>
+    </bean>-->
+
+    <!-- MariaDB dataSource -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.mariadb.jdbc.Driver"/>
+        <property name="url" value="jdbc:mariadb://mydb2.ckisnti5qp9h.ap-northeast-2.rds.amazonaws.com/aroundsell"/>
+        <property name="username" value="admin"/> <!-- MariaDB 계정 -->
+        <property name="password" value="epdlxjqnstjrrhk"/> <!-- MariaDB 패스워드 -->
     </bean>
     
     

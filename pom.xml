@@ -71,6 +71,13 @@
 			<version>1.4</version>
 		</dependency>
 
+		<!-- MariaDB -->
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>2.7.2</version>
+		</dependency>
+
 		<!-- MyBatis, DBCP -->
 		<dependency>
 			<groupId>org.mybatis</groupId>

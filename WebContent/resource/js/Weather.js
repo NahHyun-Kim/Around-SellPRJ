@@ -57,7 +57,7 @@
          url : "/getNext.do",
          type : "post",
          data : sendData,
-         dataType : "JSON", //응답 데이터 형식
+         dataType : "text", //응답 데이터 형식
          success : function(res) {
 
              console.log(res);

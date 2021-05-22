@@ -93,7 +93,7 @@
                     data :  sendData,
                     success(data) {
                         if (data == 1) {
-                            location.href = "findPwUpdate.do";
+                            location.href = "editPwForm.do";
                         } else { //비밀번호가 일치하지 않다면
                             alert("기존 비밀번호를 확인해 주세요.");
                             return false;

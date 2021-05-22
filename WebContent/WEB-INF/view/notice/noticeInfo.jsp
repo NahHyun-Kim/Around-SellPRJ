@@ -169,6 +169,13 @@
 
     <script type="text/javascript">
         function search() {
+            var adr = "<%=SS_USER_ADDR%>";
+            console.log("세션 주소 : " + adr);
+
+        if (adr == "") {
+            alert("로그인 후 이용해 주세요.");
+            location.href="/logIn.do";
+            } else {
         var lat1 = document.getElementById("lat1").innerText;
         var lon1 = document.getElementById("lon1").innerText;
         var lat2 = document.getElementById("lat2").innerText;
@@ -246,7 +253,7 @@
 
         $("#findpath").html(content);
 
-        }
+        } }
     </script>
     <!-- 카카오지도 API js 파일-->
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services,clusterer,drawing"></script>

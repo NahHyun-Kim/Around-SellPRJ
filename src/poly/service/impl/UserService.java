@@ -93,12 +93,16 @@ public class UserService implements IUserService {
         return userMapper.pwdCheck(pDTO);
     }
 
+    // 회원정보 수정 시 비밀번호 변경
+    @Override
+    public void updateMyPw(UserDTO pDTO) {
+        userMapper.updateMyPw(pDTO);
+    }
 
-    // 핸드폰 번호로 회원 이메일 찾기
-    /* @Override
-    public String findEmail(String phone_no) {
-        return userMapper.findEmail(phone_no);
-    } */
-
+    // 비밀번호 변경 시, 기존 비밀번호와 다른 비밀번호로 변경
+    @Override
+    public UserDTO myPwdChk(UserDTO pDTO) {
+        return userMapper.myPwdChk(pDTO);
+    }
 
 }

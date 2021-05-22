@@ -79,13 +79,18 @@
             $.ajax({
                 url : "/delMySell.do",
                 type : "post",
-                data : sendData,
+                data : {
+                    "del_num" : num
+                },
                 dataType : "JSON",
                 success : function(res) {
                     console.log("res : " + res);
                     if (res == 1) {
                         alert("삭제에 성공했습니다.");
                         window.location.reload();
+                    } else if (res == 0) {
+                        alert("삭제에 실패했습니다.");
+                        return false;
                     }
                 },
                 error : function(jqXHR, textStatus, errorThrown) {

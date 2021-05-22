@@ -80,7 +80,7 @@
         WHERE USER_NO = #{user_no}
     </delete>
 
-    <!-- 임시 비밀번호로 변경 -->
+    <!-- 세션 인증번호로 비밀번호 찾기 시, 비밀번호 변경 -->
     <update id="updatePw" parameterType="UserDTO">
         UPDATE aroundsell.user_info
         SET
@@ -134,4 +134,36 @@
             WHERE PASSWORD = #{password}
             AND USER_NO = #{user_no}
     </select>
+
+    <!-- 회원정보 수정 비밀번호 변경 -->
+    <update id="updateMyPw" parameterType="UserDTO">
+        UPDATE aroundsell.user_info
+        SET
+            PASSWORD = #{password}
+        WHERE
+            USER_NO = #{user_no}
+    </update>
+
+    <!-- 비밀번호 변경 시, 기존 비밀번호와 다른 비밀번호 변경을 위해 일치여부 확인 -->
+    <select id="myPwdChk" parameterType="UserDTO" resultType="UserDTO">
+        SELECT PASSWORD
+        FROM aroundsell.user_info
+        <include refid="findOrUpd"></include>
+        AND PASSWORD = #{password}
+    </select>
+
+    <!-- 기존 비밀번호 일치 여부를 확인할때, 비 로그인 상태로 비번 찾기와 로그인 상태로 변경 두 가지 경우에 따라 DTO에서 다르게 변수를 받는다. -->
+    <sql id="findOrUpd">
+        <choose>
+            <!-- 로그인하지 않은 상태에서 비밀번호 변경을 요청 : 회원번호 null, 세션 이메일 not null -->
+            <when test="user_no == null and user_email != null">
+                WHERE USER_EMAIL = #{user_email}
+            </when>
+
+            <!-- 로그인 상태에서 비밀번호 변경을 요청 : 회원번호 not null, 세션 이메일 null -->
+            <when test="user_no != null and user_email == null">
+                WHERE USER_NO = #{user_no}
+            </when>
+        </choose>
+    </sql>
 </mapper>

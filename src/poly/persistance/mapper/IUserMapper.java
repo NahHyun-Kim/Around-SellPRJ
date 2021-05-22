@@ -41,4 +41,10 @@ public interface IUserMapper {
     // 비밀번호 변경 시, 유효성 체크를 위함
     UserDTO pwdCheck(UserDTO pDTO);
 
+    // 회원정보 수정 시 비밀번호 변경
+    void updateMyPw(UserDTO pDTO);
+
+    // 비밀번호 변경 시, 기존 비밀번호와 다른 비밀번호로 변경
+    UserDTO myPwdChk(UserDTO pDTO);
+
 }

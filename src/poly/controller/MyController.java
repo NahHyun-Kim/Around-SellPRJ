@@ -90,10 +90,12 @@ public class MyController {
     // ajax로 마이페이지 회원 판매글 삭제(다중 삭제 구현 예정)
     @ResponseBody
     @RequestMapping(value="delMySell")
-    public int delMySell(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="del_num") String del_num)
+    public int delMySell(HttpServletRequest request, HttpServletResponse response)
         throws Exception {
 
         log.info(this.getClass().getName() + ".delMySell(ajax 판매글 삭제) Start");
+        String del_num = (String) request.getParameter("del_num");
+
         log.info("받아온 회원 번호 : " + del_num);
 
         NoticeDTO pDTO = new NoticeDTO();
@@ -101,8 +103,11 @@ public class MyController {
 
         log.info("setting 되었는지 ? : " + pDTO.getGoods_no());
 
+        int res = 0;
         // 지정한 회원번호로 판매글 삭제
-        int res = noticeService.delMySell(pDTO);
+        res = noticeService.delMySell(pDTO);
+
+        log.info("삭제했는지 ? : " + res);
 
         // 삭제에 성공했다면
         if (res > 0) {
@@ -250,6 +255,119 @@ public class MyController {
 
         log.info(this.getClass().getName() + ".pwdCheck End!");
         //res를 리턴하여, ajax를 통해 유효성 체크
+        return res;
+    }
+
+
+    // 비밀번호 변경(회원정보 수정 시)
+    @RequestMapping("/updateMyPw")
+    public String updateMyPw(HttpServletRequest request, HttpServletResponse response, ModelMap model, HttpSession session) throws Exception {
+        log.info("비밀번호 변경 시작!");
+
+        String user_no = (String) session.getAttribute("SS_USER_NO");
+        String member_pw = CmmUtil.nvl(EncryptUtil.encHashSHA256(request.getParameter("password1")));
+
+        log.info("가져온 회원번호 : " + user_no);
+        log.info("입력받은 비밀번호 : " + member_pw);
+
+        String msg = "";
+        String url = "";
+
+        UserDTO pDTO = null;
+
+        try {
+            pDTO = new UserDTO();
+
+            //수정할 비밀번호 전달
+            pDTO.setUser_no(user_no);
+            pDTO.setPassword(member_pw);
+
+            // 비밀번호 DB반영
+            userService.updateMyPw(pDTO);
+
+            // 재 로그인을 요청하기 때문에, 현재 로그인 상태를 초기화함
+            session.invalidate();
+            msg = "비밀번호가 변경되었습니다.";
+            url = "/logIn.do";
+
+            model.addAttribute("msg", msg);
+            model.addAttribute("url", url);
+
+            // 변수와 메모리 초기화
+            msg = "";
+            url = "";
+            pDTO = null;
+            log.info("비밀번호 변경 종료");
+
+        } catch (Exception e) {
+            msg = "실패하였습니다. : " + e.toString();
+            url = "/";
+
+
+            log.info(e.toString());
+            e.printStackTrace();
+
+            model.addAttribute("msg", msg);
+            model.addAttribute("url", url);
+
+        } finally {
+            // 변수와 메모리 초기화
+            msg = "";
+            url = "";
+            pDTO = null;
+        }
+
+
+        log.info("updatePw End!");
+        return "/redirect";
+    }
+
+    // 회원정보 수정 메뉴에서, 비밀번호 변경을 요청하면 비밀번호 변경 페이지로 이동
+    @RequestMapping("/editPwForm")
+    public String editPwForm() {
+        log.info(this.getClass().getName() + ".비밀번호 변경 페이지 Start!");
+        return "/user/editPwForm";
+    }
+
+    // 비밀번호 변경 시, 기존 비밀번호와 다른 비밀번호로 변경
+    @ResponseBody
+    @RequestMapping(value="/myPwdChk", method=RequestMethod.POST)
+    public int myPwdChk(HttpSession session, HttpServletRequest request) throws Exception {
+        log.info(this.getClass().getName() + ".비밀번호 기존 비밀번호 확인 Start!");
+
+        String user_no = (String) session.getAttribute("SS_USER_NO");
+        String email = (String) session.getAttribute("SS_EMAIL");
+        String password = CmmUtil.nvl(EncryptUtil.encHashSHA256(request.getParameter("password")));
+
+        log.info("받아온 회원번호 : " + user_no);
+        log.info("받아온 (비번 찾기 시) 이메일 : " + email);
+        log.info("받아온 비밀번호 (암호화하여 dto에 전달) : " + password);
+
+        UserDTO pDTO = new UserDTO();
+
+        // 로그인 안 한 상태로, 인증번호 발송을 통해 비밀번호 변경을 요청하고 있을 시
+        //if (user_no == null && email != null) {
+            pDTO.setUser_email(email);
+            pDTO.setUser_no(user_no);
+            pDTO.setPassword(password);
+        //}
+
+
+        UserDTO rDTO = new UserDTO();
+        rDTO = userService.myPwdChk(pDTO);
+
+        int res = 0;
+
+         //중복되는 값이 없다면, 기존 비밀번호와 다른 유효성에 맞는 비번 입력
+        if (rDTO == null) {
+            res = 0;
+        } else { // 기존 값이 있는 것을 입력(다른 비밀번호 입력해야함)
+            res = 1;
+        }
+        log.info("myPwd Chk 완료! null(true)이면 중복 아님, false면 기존과 중복! : " + (rDTO == null));
+
+        log.info(this.getClass().getName() + ".비밀번호 기존 비밀번호 확인 End");
+
         return res;
     }
 

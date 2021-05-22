@@ -45,9 +45,34 @@ $(pw1).on("change keyup paste", function() {
             console.log(pwJ.test($(pw1).val()));
             return false;
         }
-    } else { //유효성에 충족되었다면
-        $(pw1chk).text('비밀번호가 입력 되었습니다 :)');
-        $(pw1chk).css('color', 'green');
+    } else { //유효성에 충족되었다면, 기존 비밀번호와 같은 비밀번호가 입력되었는지 확인 후 유효 여부 표시
+        $.ajax({
+                url: "/myPwdChk.do",
+                type: "post",
+                dataType: "JSON",
+                data: {
+                    "password": $(pw1).val()
+                },
+
+                success: function (data) {
+                    console.log("받아온 res : " + data);
+                    // 기존에 등록된 비밀번호라서 not null값을 반환하면
+                    if (data == 1) {
+                        $(pw1chk).text('기존 비밀번호와 일치합니다. 변경해 주세요.');
+                        $(pw1chk).css('color', 'red');
+                    } else if (data == 0) {
+                        $(pw1chk).text('비밀번호가 입력 되었습니다 :)');
+                        $(pw1chk).css('color', 'green');
+                    }
+                },
+            error:function(request, status, error){
+
+                console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+            }
+
+        })
+
     }
 });
 
