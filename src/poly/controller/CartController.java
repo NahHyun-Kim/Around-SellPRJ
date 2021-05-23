@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import poly.dto.CartDTO;
 import poly.dto.NoticeDTO;
@@ -12,6 +13,7 @@ import poly.service.ICartService;
 import poly.service.IMailService;
 import poly.service.INoticeService;
 import poly.service.IUserService;
+import poly.util.CmmUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -90,16 +92,76 @@ public class CartController {
         pDTO.setGoods_no(gn);
         pDTO.setUser_no(user_no);
 
-        int res = cartService.InsertCart(pDTO);
+        //int success = cartService.cartChk(pDTO);
+        //log.info("중복 되었는지(1이면 중복) ? : " + success);
 
-        log.info("등록 성공 ? : " + res);
+        int res = 0;
+        //if (success > 0) { // 중복되었다면, success값을 리턴하여 insert가 실행되지 않도록 함.
+            //return success;
+        //} else if (success == 0) {
+            res = cartService.InsertCart(pDTO);
+
+            log.info("등록 성공 ? : " + res);
+
+        //}
 
         log.info("관심상품 등록 End!");
 
         return res;
     }
 
-    // 관심상품 삭제하기
+    // 관심상품 등록 전, 중복 여부 체크
+    @ResponseBody
+    @RequestMapping
+    public int cartChk(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+                       @RequestParam(value="user_no") String user_no,
+                       @RequestParam(value="gn") String gn) throws Exception {
 
+        log.info(this.getClass().getName() + "중복 체크 시작!");
+
+        log.info("받아온 회원번호 : " + user_no);
+        log.info("받아온 상품번호 : " + gn);
+
+        CartDTO pDTO = new CartDTO();
+        pDTO.setUser_no(user_no);
+        pDTO.setGoods_no(gn);
+
+        CartDTO rDTO = cartService.cartChk(pDTO);
+        log.info("rDTO에 값이 있는지 ? : " + (rDTO == null));
+
+        int success = 0;
+
+        // 중복값이 없으면, 0을 리턴하여 그 뒤에 insert를 호출
+        if (rDTO == null) {
+            success = 0;
+            // 중복값이 있으면, 1을 리턴하여 false
+        } else {
+            success = 1;
+        }
+
+        log.info("중복 체크 여부? (1이면 있음, 0이면 없음) : " + success);
+        log.info(this.getClass().getName() + "중복 체크 끝!");
+
+        return success;
+
+    }
+
+    // 관심상품 전체 삭제하기
+    @ResponseBody
+    @RequestMapping(value="/delCart")
+    public int delCart(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+                       @RequestParam(value="user_no") String user_no) throws Exception {
+        log.info(this.getClass().getName() + ".delCart Start!");
+
+        CartDTO pDTO = new CartDTO();
+        pDTO.setUser_no(user_no);
+
+        int res = cartService.delCart(pDTO);
+
+        log.info("삭제 성공했는지? 성공 : 1, 실패 : 0" + res);
+
+        log.info(this.getClass().getName() + ".delCart End!");
+        return res;
+    }
 
 }

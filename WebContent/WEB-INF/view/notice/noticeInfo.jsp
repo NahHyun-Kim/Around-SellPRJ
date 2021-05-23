@@ -175,9 +175,11 @@
        $("#doCart").on("click", function() {
 
            var goods_nm = document.getElementById("gn").value;
+           var user_no = document.getElementById("user_no").value;
 
            console.log("edit value(로그인 3이면 안함), 2면 본인(불가), 1이면 가능 : " + (<%=edit%>));
            console.log("받아온 상품 번호 : " + goods_nm);
+           console.log("받아온 회원 번호 : " + user_no);
 
            // 로그인 안 한 사용자라면, 로그인 후 관심상품 담기를 유도
            if ((<%=edit%>) == 3) {
@@ -188,36 +190,57 @@
                alert("본인이 작성한 글은 관심상품 등록이 불가능합니다.");
                return false;
            } else { // 로그인 한 작성자 본인이 아닌 일반 구매자라면, 관심상품 등록 허용
-               // 로그인 한 사용자라면,
+               // 로그인 한 사용자라면, 이미 등록되었는지 확인 후 등록되지 않은 상품이면 등록 진행
+
                $.ajax({
-                   url: "/insertCart.do",
+                   url: "/cartChk.do",
                    type: "post",
                    data: {
-                       gn : goods_nm
-                       //$("#gn").val
+                   "gn": goods_nm,
+                       "user_no" : user_no
                    },
-                   dataType: "JSON",
-                   success: function(data) {
-                       // insertCart가 성공했을 경우, res에 1을 반환
-                       if (data == 1) {
-                           confirm("관심상품 등록에 성공했습니다. 지금 확인하시겠습니까?");
-                           // 예를 누를 경우, 관심상품 페이지로 이동
-                           if (confirm){
-                               location.href="/myCart.do";
+               dataType: "JSON",
+                   success: function(res) {
+
+                       console.log("중복이면 1, 아니면 0 : " + res);
+
+                    if (res > 0) {
+                        alert("이미 등록된 상품입니다.");
+                        return false;
+                    } else if(res == 0)// 등록되지 않은 상품이라면,
+                    { // insert 실행
+                        $.ajax({
+                        url: "/insertCart.do",
+                        type: "post",
+                        data: {
+                           "gn": goods_nm
+                           //$("#gn").val
+                        },
+                       dataType: "JSON",
+                       success: function (data) {
+                           // insertCart가 성공했을 경우, res에 1을 반환
+                           if (data == 1) {
+                               // 예를 누를 경우, 관심상품 페이지로 이동
+                               if (confirm("관심상품 등록에 성공했습니다. 지금 확인하시겠습니까?") == true) {
+                                   location.href = "/myCart.do";
+                               } else {
+                                   return false;
+                               }
+                           } else {
+                               alert("등록에 실패했습니다.");
+                               return false;
                            }
-                       } else {
-                           alert("등록에 실패했습니다.");
-                           return false;
+                       },
+                       // error catch
+                       error: function (jqXHR, textStatus, errorThrown) {
+                           alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                           console.log(errorThrown);
                        }
-                   },
-                   // error catch
-                   error : function(jqXHR, textStatus, errorThrown) {
-                       alert("에러 발생! \n" + textStatus + ":" + errorThrown);
-                       console.log(errorThrown);
-                   }
-               })
+                   })
+               }
            }
         })
+        }})
     </script>
     <script type="text/javascript">
         function search() {

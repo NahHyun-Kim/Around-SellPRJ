@@ -22,8 +22,23 @@ public class CartService implements ICartService {
     public int InsertCart(CartDTO pDTO) throws Exception {
         return cartMapper.InsertCart(pDTO);
     }
+
+    // 장바구니 담기 시, 중복 여부 체크하기
+    @Override
+    public CartDTO cartChk(CartDTO pDTO) throws Exception {
+        return cartMapper.cartChk(pDTO);
+    }
+
     // 장바구니 불러오기
+    @Override
     public List<CartDTO> myCart(CartDTO pDTO) throws Exception {
         return cartMapper.myCart(pDTO);
-    };
+    }
+
+    // 장바구니 목록 전체 삭제
+    @Override
+    public int delCart(CartDTO pDTO) throws Exception {
+        return cartMapper.delCart(pDTO);
+    }
+
 }
