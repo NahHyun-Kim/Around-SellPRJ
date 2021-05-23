@@ -73,7 +73,7 @@
 
         // 목록으로 이동하기
         function doList() {
-            location.href="/noticeList.do";
+            location.href="/searchList.do";
 
         }
 

@@ -47,4 +47,7 @@ public interface IUserMapper {
     // 비밀번호 변경 시, 기존 비밀번호와 다른 비밀번호로 변경
     UserDTO myPwdChk(UserDTO pDTO);
 
+    // 회원 다중삭제 기능 구현
+    int deleteUser(UserDTO pDTO);
+
 }

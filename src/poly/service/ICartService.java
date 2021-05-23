@@ -16,6 +16,9 @@ public interface ICartService {
     // 장바구니 불러오기
     List<CartDTO> myCart(CartDTO pDTO) throws Exception;
 
+    // 장바구니 선택 목록(혹은 전체) 삭제하기
+    int deleteCart(CartDTO pDTO) throws Exception;
+
     // 장바구니 전체 목록 삭제하기
-    int delCart(CartDTO pDTO) throws Exception;
+    //int delCart(CartDTO pDTO) throws Exception;
 }

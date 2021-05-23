@@ -684,4 +684,57 @@ public class UserController {
         return "/redirect";
     }
 
+    // 회원 다중 삭제 구현
+    @ResponseBody
+    @RequestMapping(value="/deleteUser")
+    public int deleteUser(HttpServletRequest request, HttpServletResponse response, HttpSession session
+                ,@RequestParam(value="valueArr[]") List<String> valueArr) throws Exception{
+
+        log.info(this.getClass().getName() + ".deleteUser(다중 회원 삭제) Start!");
+
+        int res = 0;
+        String userNum = "";
+        String user_no = (String) session.getAttribute("SS_USER_NO");
+
+        log.info("받아온 회원번호(관리자 - 0) : " + user_no);
+
+        UserDTO pDTO = new UserDTO();
+
+        try {
+            // 로그인된 관리자만 회원 삭제 가능
+            if (user_no != null && user_no.equals("0")) {
+
+                //valueArr에 담아져 온 회원번호를 세팅하여, 값의 개수만큼 삭제 진행
+                for (String i : valueArr) {
+                    userNum = i; //userNumber에 값을 담아, dto에 세팅
+                    pDTO.setUser_no(userNum);
+
+                    log.info("pDTO에 세팅 되었는지(회원번호/다중) : " + pDTO.getUser_no());
+                    userService.deleteUser(pDTO);
+                    NoticeDTO nDTO = new NoticeDTO();
+                    nDTO.setUser_no(userNum);
+
+                    // 회원이 작성한 판매글도 함께 삭제
+                    int success = noticeService.deleteNoticeAll(nDTO);
+
+                    log.info("회원 삭제 완료! : " + userNum);
+                    log.info("판매글도 삭제되었는지? : " + userNum + "여부 : " + success);
+
+                }
+                //성공하였다면, res값을 1로 세팅(ResponseBody에서 1을 전송하면, 성공을 반환)
+                res = 1;
+            } else if (!user_no.equals("0")) {
+                log.info("회원 아님!");
+            }
+        } catch (Exception e) {
+            log.info("에러! " + e.toString());
+            e.printStackTrace();
+        }
+        finally {
+
+        }
+        log.info(this.getClass().getName() + ".회원 삭제하기(다중) End!");
+
+        return res;
+    }
 }

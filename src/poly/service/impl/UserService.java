@@ -105,4 +105,10 @@ public class UserService implements IUserService {
         return userMapper.myPwdChk(pDTO);
     }
 
+    // 회원 다중삭제 기능 구현
+    @Override
+    public int deleteUser(UserDTO pDTO) {
+        return userMapper.deleteUser(pDTO);
+    }
+
 }

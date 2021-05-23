@@ -146,8 +146,44 @@ public class CartController {
 
     }
 
-    // 관심상품 전체 삭제하기
+    //관심상품 삭제하기
     @ResponseBody
+    @RequestMapping(value="/deleteCart")
+    public int deleteCart(HttpServletRequest request, HttpServletResponse response,
+                          HttpSession session, @RequestParam(value="valueArr[]") List<String> valueArr) throws Exception {
+        log.info(this.getClass().getName() + ".관심상품 삭제하기 Start!");
+
+        int res = 0;
+        String cartNum = "";
+        String user_no = (String) session.getAttribute("SS_USER_NO");
+
+        log.info("받아온 회원번호 : " + user_no);
+
+        CartDTO pDTO = new CartDTO();
+
+        if (user_no != null) {
+            pDTO.setUser_no(user_no);
+            log.info("pDTO에 세팅 되었는지? : " + pDTO.getUser_no());
+
+            // valueArr에 담아져 온 상품번호를 세팅하여, 삭제 진행
+            // 리스트형 변수 valueArr가 가지고 있는 값의 개수만큼 반복
+            for (String i : valueArr) {
+                cartNum = i;
+                pDTO.setGoods_no(cartNum);
+                log.info("pDTO에 세팅 되었는지(굿즈번호) : " + pDTO.getGoods_no());
+                cartService.deleteCart(pDTO);
+
+                log.info("cartNum 삭제 완료!: " + cartNum);
+
+            }
+            res = 1;
+        }
+        log.info(this.getClass().getName() + ".관심상품 삭제하기 End!");
+        return res;
+    }
+
+    // 관심상품 전체 삭제하기
+    /*@ResponseBody
     @RequestMapping(value="/delCart")
     public int delCart(HttpServletRequest request, HttpServletResponse response, HttpSession session,
                        @RequestParam(value="user_no") String user_no) throws Exception {
@@ -162,6 +198,6 @@ public class CartController {
 
         log.info(this.getClass().getName() + ".delCart End!");
         return res;
-    }
+    } */
 
 }

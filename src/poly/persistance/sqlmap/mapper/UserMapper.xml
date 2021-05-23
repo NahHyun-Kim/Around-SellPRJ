@@ -166,4 +166,12 @@
             </when>
         </choose>
     </sql>
+
+    <!-- 회원 다중 삭제 -->
+    <delete id="deleteUser" parameterType="UserDTO">
+        DELETE
+        FROM aroundsell.user_info
+        WHERE USER_NO = #{user_no}
+    </delete>
+
 </mapper>

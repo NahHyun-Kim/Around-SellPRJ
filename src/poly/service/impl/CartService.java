@@ -35,10 +35,17 @@ public class CartService implements ICartService {
         return cartMapper.myCart(pDTO);
     }
 
-    // 장바구니 목록 전체 삭제
+    // 장바구니 선택 목록(혹은 전체) 삭제하기
     @Override
+    public int deleteCart(CartDTO pDTO) throws Exception {
+        return cartMapper.deleteCart(pDTO);
+    }
+
+
+    // 장바구니 목록 전체 삭제
+    /*@Override
     public int delCart(CartDTO pDTO) throws Exception {
         return cartMapper.delCart(pDTO);
-    }
+    } */
 
 }
