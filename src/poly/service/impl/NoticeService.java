@@ -51,6 +51,7 @@ public class NoticeService implements INoticeService {
         noticeMapper.deleteNoticeInfo(pDTO);
     }
 
+    // 모든 판매글 삭제하기(회원 탈퇴, 강제 탈퇴 시)
     @Override
     public int deleteNoticeAll(NoticeDTO pDTO) throws Exception {
         return noticeMapper.deleteNoticeAll(pDTO);

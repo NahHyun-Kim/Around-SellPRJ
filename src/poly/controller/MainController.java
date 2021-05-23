@@ -14,23 +14,14 @@ public class MainController {
 	@RequestMapping(value="index")
 	public String Index() {
 		log.info(this.getClass());
-		
+
 		return "/index";
 	}
 
-	//상품 판매글 등록 화면
-	@RequestMapping(value="/newPost")
-	public String newPost() {
-		log.info(this.getClass().getName() + "판매글 Start!");
-
-		return "/board/newPost";
+	@RequestMapping(value="test")
+	public String test() {
+		log.info("워드 클라우드 테스트 화면");
+		return "/wordcloud/test";
 	}
 
-	//상품 판매글 수정 화면
-	@RequestMapping(value="/editPost")
-	public String editPost() {
-		log.info(this.getClass().getName() + "판매글 수정 Start!");
-
-		return "/boare/editPost";
-	}
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.ICartMapper">
+
+    <!-- 장바구니 담기 -->
+    <insert id="InsertCart" parameterType="CartDTO">
+        INSERT INTO
+        aroundsell.cart
+        (
+         USER_NO,
+         GOODS_NO,
+         IMGS,
+         GOODS_TITLE,
+         GOODS_PRICE,
+         CATEGORY
+        )
+        VALUES
+        (
+         #{user_no},
+         (SELECT GOODS_NO <include refid="scala"/>),
+         (SELECT IMGS <include refid="scala"/>),
+         (SELECT GOODS_TITLE <include refid="scala"/>),
+         (SELECT GOODS_PRICE <include refid="scala"/>),
+         (SELECT CATEGORY<include refid="scala"/>)
+         )
+    </insert>
+
+    <!-- 장바구니 목록 가져오기 -->
+    <select id="myCart" parameterType="CartDTO" resultType="CartDTO">
+        SELECT *
+        FROM aroundsell.cart
+        WHERE USER_NO = #{user_no}
+    </select>
+
+    <!-- select문 안의 서브쿼리가 다른 컬럼 user_no가 들어면서 스칼라로 동작하여, 각각 행에 대한 중복 행을 include 하여 사용 -->
+    <sql id="scala">
+        FROM aroundsell.product WHERE GOODS_NO = #{goods_no}
+    </sql>
+
+</mapper>

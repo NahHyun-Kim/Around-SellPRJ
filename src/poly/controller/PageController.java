@@ -31,13 +31,6 @@ public class PageController {
     @Resource(name="PageService")
     private IPageService pageService;
 
-    @RequestMapping(value="/test")
-    public String test() {
-        log.info("PageController test jsp Start!!");
-
-        return "/notice/test";
-    }
-
     // 판매글 리스트를 페이징 처리하여 불러오기
     @RequestMapping(value="/pagingList")
     public String pagingList(Criteria pDTO, ModelMap model, HttpSession session,

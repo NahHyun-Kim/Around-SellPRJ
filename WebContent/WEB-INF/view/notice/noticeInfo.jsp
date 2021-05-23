@@ -158,6 +158,7 @@
                 </div>
                 <div class="row">
                     <div class="col">
+                        <button class="btn btn-info" type="button" id="doCart">관심상품 등록</button>
                         <input type="button" onclick="return doEdit();" value="수정"/>
                         <input type="button" onclick="return doDelete();" value="삭제"/>
                         <input type="button" onclick="return doList();" value="목록으로"/>
@@ -167,6 +168,57 @@
         </div>
     </div>
 
+    <input type="hidden" id="user_no" value="<%=SS_USER_NO%>"/>
+    <input type="hidden" id="gn" value="<%=rDTO.getGoods_no()%>"/>
+    <script type="text/javascript">
+        // 장바구니 담기 클릭 시, 함수 실행
+       $("#doCart").on("click", function() {
+
+           var goods_nm = document.getElementById("gn").value;
+
+           console.log("edit value(로그인 3이면 안함), 2면 본인(불가), 1이면 가능 : " + (<%=edit%>));
+           console.log("받아온 상품 번호 : " + goods_nm);
+
+           // 로그인 안 한 사용자라면, 로그인 후 관심상품 담기를 유도
+           if ((<%=edit%>) == 3) {
+               alert("로그인 후 이용해 주세요.");
+               location.href="/logIn.do";
+               return false;
+           } else if ((<%=edit%>) == 2) {
+               alert("본인이 작성한 글은 관심상품 등록이 불가능합니다.");
+               return false;
+           } else { // 로그인 한 작성자 본인이 아닌 일반 구매자라면, 관심상품 등록 허용
+               // 로그인 한 사용자라면,
+               $.ajax({
+                   url: "/insertCart.do",
+                   type: "post",
+                   data: {
+                       gn : goods_nm
+                       //$("#gn").val
+                   },
+                   dataType: "JSON",
+                   success: function(data) {
+                       // insertCart가 성공했을 경우, res에 1을 반환
+                       if (data == 1) {
+                           confirm("관심상품 등록에 성공했습니다. 지금 확인하시겠습니까?");
+                           // 예를 누를 경우, 관심상품 페이지로 이동
+                           if (confirm){
+                               location.href="/myCart.do";
+                           }
+                       } else {
+                           alert("등록에 실패했습니다.");
+                           return false;
+                       }
+                   },
+                   // error catch
+                   error : function(jqXHR, textStatus, errorThrown) {
+                       alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                       console.log(errorThrown);
+                   }
+               })
+           }
+        })
+    </script>
     <script type="text/javascript">
         function search() {
             var adr = "<%=SS_USER_ADDR%>";

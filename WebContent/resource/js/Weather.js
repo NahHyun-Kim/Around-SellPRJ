@@ -57,10 +57,11 @@
          url : "/getNext.do",
          type : "post",
          data : sendData,
-         dataType : "text", //응답 데이터 형식
+         dataType : "JSON", //응답 데이터 형식
          success : function(res) {
 
              console.log(res);
+             console.log("temp : " + res.temperature);
              var resweather = "";
              resweather += res.temperature + "도 ";
              resweather += res.weather + '<img src="' + res.imgs + '" alt="이미지 불러오기 실패" style="width:45px"/>' + "이며, 강수 확률은 ";

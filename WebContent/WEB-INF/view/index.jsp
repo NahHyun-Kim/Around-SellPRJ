@@ -34,19 +34,17 @@
 <a href="/logOut.do">로그아웃</a>
 <% } %>
 <a href="/adminPage.do">관리자 페이지</a>
-<a href="/crawlingRes.do">크롤링 테스트</a>
-<a href="/getUserInfo.do">마이페이지 정보 보기</a>
 <a href="/userSearch.do">이메일/비밀번호 찾기</a>
 <br />
 <a href="/noticeForm.do">판매글 등록하기</a>
 <a href="/noticeList.do">판매글 리스트(일반)</a>
-<a href="/pagingList.do">페이징 리스트 테스트</a>
 <br/>
 <a href="/searchList.do">페이징+검색 판매글 페이지</a>
 <a href="/myPage.do">마이페이지</a>
+<a href="/myCart.do">관심상품</a>
 <input type="hidden" id="ss_no" value="<%=SS_USER_NO%>">
 <!-- 크롤링 -->
-<script type="text/javascript" src="/resource/js/Weather.js?ver=1"></script>
+<script type="text/javascript" src="/resource/js/Weather.js?ver=2"></script>
 <!-- bootstrap, css 파일 -->
 <script src="/resources/js/bootstrap.js"></script>
 <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
