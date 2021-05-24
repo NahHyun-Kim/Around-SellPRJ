@@ -47,11 +47,22 @@ $(document).ready(function() {
             console.log("판매주소 위도(lat1) : " + lat1);
             console.log("판매주소 경도(lon1) : " + lon1);
 
+            // 마커 이미지의 이미지 주소입니다
+            var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+            // 마커 이미지의 이미지 크기 입니다
+            var imageSize = new kakao.maps.Size(24, 35);
+
+            // 마커 이미지를 생성합니다
+            var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
             // 결과값으로 받은 위치를 마커로 표시
             var marker = new kakao.maps.Marker({
                 map: map,
-                position: coords
+                position: coords,
+                image : markerImage // 마커 이미지
             });
+
 
             // 인포윈도우로 장소에 대한 설명 표시(상호명 - goods_addr 를 받아와 저장)
             var mystore = document.getElementById("goods_addr").innerHTML;

@@ -4,6 +4,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="poly.dto.Criteria" %>
+<%@ page import="java.util.Iterator" %>
 <%
     String SS_USER_NO = (String) session.getAttribute("SS_USER_NO");
     String SS_USER_ADDR2 = (String) session.getAttribute("SS_USER_ADDR2"); // 추후 사용, 지역구별 판매글
@@ -91,7 +92,20 @@
             searchList = new ArrayList<NoticeDTO>();
         }
 
+        List<String> addrList = new ArrayList<>();
+
+        String tempaddr = "";
+        for (NoticeDTO i : searchList) {
+            tempaddr = i.getGoods_addr2();
+            System.out.println(tempaddr);
+        }
     %>
+
+    <script type="text/javascript">
+
+        var latArr = new Array();
+        var lonArr = new Array();
+    </script>
 </head>
 <body>
 <div class="container">

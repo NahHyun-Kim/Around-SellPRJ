@@ -101,8 +101,47 @@
         <input type="reset" value="다시 작성하기" />
         <a href="javascript:history.back();">뒤로가기</a>
 
+        <!-- 위도 -->
+        <input type="text" name="latY" id="longY" value=""/>
+        <!-- 경도 -->
+        <input type="text" name="longX" id="latX" value=""/>
     </form>
     </div>
+
+    <script type="text/javascript">
+        $("#category").on("change", function() {
+
+            console.log("옵션 변경!");
+            // 입력된 주소값(value)을 가져와서, 위경도 검색하여 저장
+            var tempaddr = document.getElementById("sample5_address");
+            var addrs = tempaddr.value;
+
+            console.log("주소값 : " + addrs);
+
+            geocoder.addressSearch(addrs, function addr2(result, status) {
+
+                // 정상적으로 검색이 완료됐으면
+                if (status === kakao.maps.services.Status.OK) {
+
+                    // 위도, 경도값을 받아와서 저장
+                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                    // 위도, 경도를 구분하여 거리 계산을 위해 변수 선언
+
+                    console.log("위도값 : " + result[0].y + " 경도값 : " +  result[0].x);
+
+                    // 위도, 경도값을 input value 값에 추가
+                    $('input[name=latY]').attr('value',result[0].y);
+                    console.log("위도값 : " + result.y);
+                    $('input[name=longX]').attr('value',result[0].x);
+                    //document.getElementById("longX").value = results[0].x;
+                    console.log("경도값 : " + result.x);
+
+                }
+            })
+
+        })
+    </script>
     <!-- 도로명주소 API js 파일-->
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services"></script>
@@ -114,6 +153,6 @@
     <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
 
     <!-- 판매글 등록 시, 유효성 체크 js -->
-    <script type="text/javascript" src="/resource/valid/noticeCheck.js"></script>
+    <script type="text/javascript" src="/resource/valid/noticeCheck.js?ver=1"></script>
 </body>
 </html>

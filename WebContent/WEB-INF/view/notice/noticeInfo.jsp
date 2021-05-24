@@ -332,7 +332,7 @@
     </script>
     <!-- 카카오지도 API js 파일-->
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services,clusterer,drawing"></script>
-    <script type="text/javascript" src="/resource/js/mapAPI.js"></script>
+    <script type="text/javascript" src="/resource/js/mapAPI.js?ver=1"></script>
 
     <!-- bootstrap, css 파일 -->
     <style>

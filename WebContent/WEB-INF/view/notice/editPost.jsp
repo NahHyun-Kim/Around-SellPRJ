@@ -106,10 +106,15 @@
 
     </form>
 </div>
+
+    <!-- 위도, 경도값 표시 -->
+    <input type="hidden" name="longY" id="longY" value=""/>
+    <input type="hidden" name="latX" id="latX" value=""/>
+
     <!-- 도로명주소 API js 파일-->
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services"></script>
-    <script type="text/javascript" src="/resource/js/addrAPI2.js"></script>
+    <script type="text/javascript" src="/resource/js/addrAPI2.js?ver=1"></script>
 
     <!-- bootstrap, css 파일 -->
     <script src="/resources/js/bootstrap.js"></script>
