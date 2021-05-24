@@ -155,7 +155,7 @@
 
         <!-- 검색창, 검색 후 정렬 가능, 검색한 결과와 카테고리를 저장한다. -->
         <div>
-            <!-- 검색창 -->
+            <!-- 검색창(카테고리 지정) -->
             <select id="searchType" name="searchType">
                 <option value="" selected disabled hidden>==카테고리를 선택하세요==</option>
                 <option value="T" <%=CmmUtil.nvl(searchType).equals("T")?"selected":""%>>상품명</option>
@@ -164,7 +164,10 @@
                 <option value="A" <%=CmmUtil.nvl(searchType).equals("A")?"selected":""%>>제목+내용</option>
                 <option value="W" <%=CmmUtil.nvl(searchType).equals("W")?"selected":""%>>작성자</option>
             </select>
-            <input type="text" name="keyword" id="keyword" value="${paging.keyword}"/>
+
+            <!-- 검색창(키워드 입력, 검색창 선택 시 최근검색어 불러옴) -->
+            <input type="text" name="keyword" id="keyword" value="${paging.keyword}" onblur="rmKeyword()" />
+            <div id="keywordList"></div>
             <input type="hidden" id="st" name="searchType" value="${paging.searchType}"/>
             <button type="button" id="searchProduct" class="btn btn-info">검색하기</button>
 
@@ -304,6 +307,7 @@
 
     })
 
+    // 정렬 타입을 클릭하면, 선택한 키워드값과 정렬타입을 저장한 채로 정렬 요청 url 전송
     $("#odType").on("change", function() {
     //$("#orderProduct").on("click", function() {
         //키워드 값 받아오기
@@ -332,6 +336,39 @@
             return false;
         }
     })
+
+    // 검색창을 클릭했을때, 로그인 상태로 검색 기록이 있는 사용자라면 최근검색어 리스트 제공
+    $("#keyword").on("click", function() {
+
+        var userno = <%=SS_USER_NO%>;
+        console.log("세션 유저번호 있는지 체크 : " + userno);
+
+        // 받아온 회원 정보가 있을 경우(로그인한 사용자인 경우), 최근검색어 불러오기 진행
+        if (userno != null) {
+
+            $.ajax({
+                url: "/getKeyword.do",
+                type: "post",
+                success: function(data) {
+                    // 검색어 값들을 for문을 통해 저장
+                    let searchList = "";
+                    for (let i=0; i<data.length; i++) {
+                        searchList += data[i] + "<br>";
+                    }
+                    console.log("불러오기 성공! searchList : " + searchList);
+
+                    // 검색어 목록에 담음
+                    $("#keywordList").html(searchList);
+                    $("#keywordList").show();
+
+                }
+            })
+        }
+    })
+
+    function rmKeyword() {
+        $("#keywordList").hide();
+    }
 </script>
 
 <!-- bootstrap, css 파일 -->

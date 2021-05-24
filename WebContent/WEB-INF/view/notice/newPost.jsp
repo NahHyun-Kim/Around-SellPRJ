@@ -20,13 +20,54 @@
         top.location.href = "/logIn.do";
     }
     }
+
+    //전송시 유효성 체크
+    function doSubmit(f){
+        if(f.goods_title.value == ""){
+            alert("제목을 입력하시기 바랍니다.");
+            f.goods_title.focus();
+            return false;
+        }
+        if(calBytes(f.goods_title.value) > 200){
+            alert("최대 200Bytes까지 입력 가능합니다.");
+            f.goods_title.focus();
+            return false;
+        }
+        if(f.goods_detail.value == ""){
+            alert("내용을 입력하시기 바랍니다.");
+            f.goods_detail.focus();
+            return false;
+        }
+        if(calBytes(f.goods_detail.value) > 5000){
+            alert("최대 5000Bytes까지 입력 가능합니다.");
+            f.goods_detail.focus();
+            return false;
+        }
+    }
+
+    //글자 길이 바이트 단위로 체크하기(바이트값 전달)
+    function calBytes(str){
+        var tcount = 0;
+        var tmpStr = new String(str);
+        var strCnt = tmpStr.length;
+        var onechar;
+        for (i=0;i<strCnt;i++){
+            onechar = tmpStr.charAt(i);
+            if (escape(onechar).length > 4){
+                tcount += 2;
+            }else{
+                tcount += 1;
+            }
+        }
+        return tcount;
+    }
 </script>
 </head>
 <!-- body가 실행될 때, 로그인 여부를 실행하기 위해 onLoad() 함수 호출 -->
 <body onload="doOnload();">
     <div class="container">
     <!-- 판매글 등록 폼 -->
-    <form action="/noticeInsert.do" method="post" onsubmit="return doSubmit();" enctype="multipart/form-data">
+    <form name="f" action="/noticeInsert.do" method="post" onsubmit="return doSubmit();" enctype="multipart/form-data">
 
         <!-- 상품 이미지 등록 -->
         <!-- 상품명 등록(추후 제목으로 표시된다) -->
@@ -48,7 +89,7 @@
             }
             });
         </script>
-        <%=request.getRealPath("/")%>
+        //request.getRealPath("/")%>
 
         <!-- 상품명 등록(추후 제목으로 표시된다) -->
         <div class="form-control">

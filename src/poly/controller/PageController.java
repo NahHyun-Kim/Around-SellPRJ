@@ -5,16 +5,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import poly.dto.Criteria;
 import poly.dto.NoticeDTO;
 import poly.dto.SearchCriteria;
 import poly.service.INoticeService;
 import poly.service.IPageService;
+import poly.service.ISearchService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class PageController {
@@ -30,6 +34,9 @@ public class PageController {
 
     @Resource(name="PageService")
     private IPageService pageService;
+
+    @Resource(name="SearchService")
+    private ISearchService searchService;
 
     // 판매글 리스트를 페이징 처리하여 불러오기
     @RequestMapping(value="/pagingList")
@@ -107,6 +114,8 @@ public class PageController {
 
         // 가입 주소를 기반으로 검색해야 하기 때문에, 주소값을 받아와 dto에 저장
         String addr2 = (String) session.getAttribute("SS_USER_ADDR2");
+        String user_no = (String) session.getAttribute("SS_USER_NO");
+
         log.info("addr null? : " + (addr2==null));
 
         log.info("가져온 주소(addr2) : " + addr2);
@@ -235,6 +244,27 @@ public class PageController {
                     // @RequestParam과 db쿼리를 통해 가져온 값을 pDTO에 세팅
                     pDTO = new SearchCriteria(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage), addr2, searchType, keyword);
 
+
+                    /** 로그인한 사용자의 최근 검색어 저장을 위해 cDTO에 회원번호, 검색어를 셋팅
+                     * 검색+정렬의 경우에는 이미 검색된 단어로 정렬하기 때문에, 같은 키워드로 첫 검색 시에만 최근검색어를 저장
+                     **/
+
+                    NoticeDTO cDTO = new NoticeDTO();
+                    cDTO.setUser_no(user_no);
+                    cDTO.setKeyword(keyword);
+
+                    try {
+                        // 최근검색어 redis에 저장
+                        searchService.insertKeyword(cDTO);
+
+                    } catch(Exception e) {
+                        log.info("최근검색어 insert 실패! : " + e.toString());
+                        e.printStackTrace();
+                    }
+
+                    log.info("(Controller) 검색어 Insert 완료!");
+
+                    cDTO = null;
                     //nDTO = null;
                     log.info("로그인 + 검색 진행 pDTO 세팅 끝!");
                 }
@@ -291,4 +321,29 @@ public class PageController {
         return "/notice/searchList";
     }
 
+    // 최근 검색어 불러오기
+    @ResponseBody
+    @RequestMapping(value="/getKeyword")
+    public Set getKeyword(HttpSession session) throws Exception {
+
+        log.info(this.getClass().getName() + ".getKeyword(최근검색어 불러오기) Start!");
+
+        String user_no = (String) session.getAttribute("SS_USER_NO");
+        log.info("user_no(회원을 위한 검색어 저장) : " + user_no);
+
+        NoticeDTO pDTO = new NoticeDTO();
+        pDTO.setUser_no(user_no);
+        
+        // 회원번호에 해당하는 최근검색어 가져오기(redis)
+        Set rList = searchService.getKeyword(pDTO);
+
+        if (rList == null) {
+            rList = new LinkedHashSet();
+        }
+        pDTO = null;
+
+        log.info(this.getClass().getName() + ".getKeyword(최근검색어 불러오기) End!");
+
+        return rList;
+    }
 }

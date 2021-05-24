@@ -1,8 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="poly.util.CmmUtil" %>
 <%@ page import="poly.dto.NoticeDTO" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.*" %>
 <%
     String SS_USER_NO = (String) session.getAttribute("SS_USER_NO");
     String SS_USER_ADDR2 = (String) session.getAttribute("SS_USER_ADDR2"); // 추후 사용, 지역구별 판매글
@@ -21,6 +20,12 @@
         titleList.add(title);
         System.out.println(title);
     }
+
+    Map<String, String> rMap = new HashMap<>();
+    for (NoticeDTO j : rList) {
+        rMap.put(j.getGoods_title(), j.getHit());
+    }
+
 %>
 
 <html>
@@ -42,77 +47,67 @@
 
     <!-- Chart code -->
     <script>
-        $(document).ready(function() {
-            $.ajax({
-                url : "/titleCount.do",
-                type : "post",
-                success(data) {
-                    alert("받아오기 성공!");
-                    console.log(data);
-                }
-            })
-        })
         am4core.ready(function() {
+                $.ajax({
+                    url : "/titleCount.do",
+                    type : "post",
+                    //dataType: "text", //서버에서 전송받을 데이터 형식
+                    dataType: "JSON",
+                    contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                    success(res) {
+                        console.log("받아오기 성공!");
 
-            var titleArr = new Array();
+                        console.log("받아온 데이터(배열형태 - json 해봄) : " + res);
 
-            <% for (int i=0; i<titleList.size(); i++) { %>
-            var title = "<%=titleList.get(i)%>";
-            titleArr.push(title);
-            console.log("push된 배열값 : " + "<%=titleList.get(i).trim()%>");
-            <%}%>
+                        // Themes begin
+                        am4core.useTheme(am4themes_animated);
 
-            var data = "";
-            //총합 구현 예정
-            var cnt = 1;
 
-            for (var i=0; i<titleArr.length; i++) {
-                console.log("push된 값 : " + titleArr[i]);
-                data = data + " " + titleArr[i];
-                console.log("추가된 data 값 : " + data);
-            }
+                        var chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);
+                        chart.fontFamily = "Courier New";
+                        var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+                        series.randomness = 0.1;
+                        series.rotationThreshold = 0.5;
 
-            // Themes begin
-            am4core.useTheme(am4themes_material);
-            am4core.useTheme(am4themes_animated);
-            // Themes end
+                        // 단어를 클릭하면 이동할 url 지정(검색 페이지로 이동)
+                        series.labels.template.url = "http://localhost:8081/searchList.do?nowPage=1&cntPerPage=9&searchType=T&keyword=" + "틴트";
+                        series.labels.template.urlTarget = "_blank";
 
-            var chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);
-            var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+                        series.data = res;
 
-            series.accuracy = 4;
-            series.step = 15;
-            series.rotationThreshold = 0.7;
-            series.maxCount = 200;
-            series.minWordLength = 2;
-            series.labels.template.margin(4,4,4,4);
-            series.maxFontSize = am4core.percent(30);
+                        //단어(word)는 collection 배열 값 안에 있는 "tag" 값
+                        //빈도수(value)는 collection 배열 값 안에 있는 "count" 값
+                        series.dataFields.word = "tag";
+                        series.dataFields.value = "count";
 
-            // 단어를 클릭하면 이동할 url 지정(검색 페이지로 이동)
-            series.labels.template.url = "http://localhost:8081/searchList.do?nowPage=1&cntPerPage=9&searchType=T&keyword=" + "틴트";
-            series.labels.template.urlTarget = "_blank";
+                        series.heatRules.push({
+                            "target": series.labels.template,
+                            "property": "fill",
+                            "min": am4core.color("#0000CC"),
+                            "max": am4core.color("#CC00CC"),
+                            "dataField": "value"
+                        });
 
-            series.text = data;
-            console.log("데이터(워드클라우드 예정 : " + data);
+                        // 단어를 클릭 시, 해당 단어에 해당하는 단어로 검색 진행(get)
+                        series.labels.template.url = "http://localhost:8081/searchList.do?nowPage=1&cntPerPage=9&searchType=T&keyword={word}";
+                        series.labels.template.urlTarget = "_blank";
 
-            series.colors = new am4core.ColorSet();
-            series.colors.passOptions = {}; // makes it loop
+                        // 단어에 마우스를 올릴 때, 단어:빈도수 형태로 표시해줌
+                        series.labels.template.tooltipText = "{word}:\n[bold]{value}[/]";
 
-            //series.labelsContainer.rotation = 45;
-            series.angles = [0,-90];
-            series.fontWeight = "700"
+                        var subtitle = chart.titles.create();
+                        subtitle.text = "(click to open)";
 
-            //워드 클라우드 제목 지정
-            var title = chart.titles.create();
-            title.text = "Our Product!";
-            title.fontSize = 20;
-            title.fontWeight = "800";
+                        var title = chart.titles.create();
+                        title.text = "Our Products!";
+                        title.fontSize = 20;
+                        title.fontWeight = "100";
 
-            setInterval(function () {
-                series.dataItems.getIndex(Math.round(Math.random() * (series.dataItems.length - 1))).setValue("value", Math.round(Math.random() * 10));
-            }, 10000)
+                    }
+                })
+            })
 
-        }); // end am4core.ready()
+        // end am4core.ready()
     </script>
 
 </head>
@@ -155,7 +150,7 @@
 </div>
 </div>
 <!-- bootstrap, css 파일 -->
-<link rel="stylesheet" href="/resource/css/notice.css"/>
+<link rel="stylesheet" href="/resource/css/notice.css?ver=1"/>
 <script src="/resources/js/bootstrap.js"></script>
 <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
 
