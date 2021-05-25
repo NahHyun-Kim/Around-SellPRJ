@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import poly.dto.NoticeDTO;
 import poly.service.INoticeService;
+import poly.service.ISearchService;
 import poly.util.CmmUtil;
 import poly.util.DateUtil;
 import poly.util.FileUtil;
@@ -38,6 +39,9 @@ public class NoticeController {
     * */
     @Resource(name="NoticeService")
     private INoticeService noticeService;
+
+    @Resource(name="SearchService")
+    private ISearchService searchService;
 
     // 업로드되는 파일이 저장되는 기본 폴더 설정
     final private String FILE_UPLOAD_SAVE_PATH = "C:/PersonalProject/WebContent/resource//images";
@@ -189,12 +193,14 @@ public class NoticeController {
     // 게시글 상세보기
     @RequestMapping(value="/noticeInfo", method=RequestMethod.GET)
     public String noticeInfo(HttpServletRequest request, HttpServletResponse response,
-                             ModelMap model) throws Exception {
+                             ModelMap model, HttpSession session) throws Exception {
 
         log.info(this.getClass().getName() + ".noticeInfo(게시판 상세보기) Start!");
 
         // form 객체의 판매글 번호(pk)를 받아옴
         String goods_no = CmmUtil.nvl(request.getParameter("nSeq"));
+
+        String SS_USER_NO = (String) session.getAttribute("SS_USER_NO");
 
         log.info("form으로부터 받아온 goods_no : " + goods_no);
 
@@ -218,6 +224,29 @@ public class NoticeController {
             log.info("is null");
         }
 
+        // 로그인 상태의 회원이 상품을 조회했을 경우, 최근 본 상품에 저장
+        /*try {
+            if (SS_USER_NO != null) {
+                log.info("최근 본 상품 저장 시작!");
+                NoticeDTO cDTO = new NoticeDTO();
+
+                //상품명, 사진, 회원번호를 저장함
+                cDTO.setUser_no(SS_USER_NO);
+                cDTO.setImgs(rDTO.getImgs());
+                cDTO.setGoods_title(rDTO.getGoods_title());
+                cDTO.setGoods_no(goods_no);
+
+                log.info("최근 본 상품에 저장할 데이터 : " + rDTO.getImgs() + rDTO.getGoods_title());
+
+                searchService.insertGoods(cDTO);
+
+                log.info("최근 본 상품 저장 성공!");
+            }
+
+        } catch(Exception e) {
+            log.info("최근 본 상품 저장 실패!" + e.toString());
+            e.printStackTrace();
+        } */
 
 
         log.info("getNoticeInfo Success!");

@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import poly.dto.CartDTO;
 import poly.dto.NoticeDTO;
-import poly.service.ICartService;
-import poly.service.IMailService;
-import poly.service.INoticeService;
-import poly.service.IUserService;
+import poly.service.*;
 import poly.util.CmmUtil;
 
 import javax.annotation.Resource;
@@ -20,7 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class CartController {
@@ -35,6 +34,9 @@ public class CartController {
 
     @Resource(name = "CartService")
     private ICartService cartService;
+
+    @Resource(name = "SearchService")
+    private ISearchService searchService;
 
     // 관심상품 페이지(불러오기)
     @RequestMapping(value="/myCart")
@@ -200,4 +202,56 @@ public class CartController {
         return res;
     } */
 
+    // 최근 본 상품 페이지 시작
+    @RequestMapping(value="mySee")
+    public String mySee(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+                        ModelMap model) throws Exception {
+
+        log.info("최근 본 상품 페이지 시작!");
+
+        /*String user_no = (String) session.getAttribute("SS_USER_NO");
+        log.info("user_no(회원을 위한 검색어 저장) : " + user_no);
+
+        NoticeDTO pDTO = new NoticeDTO();
+        pDTO.setUser_no(user_no);
+
+        // 회원번호에 해당하는 최근검색어 가져오기(redis)
+        Set rList = searchService.getGoods(pDTO);
+
+        if (rList == null) {
+            rList = new LinkedHashSet<String>();
+        }
+        pDTO = null;
+
+        model.addAttribute("rList", rList);*/
+
+        return "/cart/mySee";
+    }
+    
+    /*최근 본 상품 불러오기*/
+    //, produces = "application/text; charset=utf8"
+    @ResponseBody
+    @RequestMapping(value="getGoods")
+    public Set getGoods(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
+
+        log.info(this.getClass().getName() + ".getKeyword(최근검색어 불러오기) Start!");
+
+        String user_no = (String) session.getAttribute("SS_USER_NO");
+        log.info("user_no(회원을 위한 검색어 저장) : " + user_no);
+
+        NoticeDTO pDTO = new NoticeDTO();
+        pDTO.setUser_no(user_no);
+
+        // 회원번호에 해당하는 최근검색어 가져오기(redis)
+        Set rList = searchService.getGoods(pDTO);
+
+        if (rList == null) {
+            rList = new LinkedHashSet<>();
+        }
+        pDTO = null;
+
+        log.info(this.getClass().getName() + ".getKeyword(최근검색어 불러오기) End!");
+
+        return rList;
+    }
 }

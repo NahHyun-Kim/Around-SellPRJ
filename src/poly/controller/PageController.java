@@ -12,9 +12,11 @@ import poly.dto.SearchCriteria;
 import poly.service.INoticeService;
 import poly.service.IPageService;
 import poly.service.ISearchService;
+import poly.util.CmmUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -29,27 +31,27 @@ public class PageController {
      * 비즈니스 로직(중요 로직을 수행하기 위해 사용되는 서비스를 싱글톤패턴으로 메모리에 적재
      * NoticeService(INoticeService 사용)
      * */
-    @Resource(name="NoticeService")
+    @Resource(name = "NoticeService")
     private INoticeService noticeService;
 
-    @Resource(name="PageService")
+    @Resource(name = "PageService")
     private IPageService pageService;
 
-    @Resource(name="SearchService")
+    @Resource(name = "SearchService")
     private ISearchService searchService;
 
     // 판매글 리스트를 페이징 처리하여 불러오기
-    @RequestMapping(value="/pagingList")
+    @RequestMapping(value = "/pagingList")
     public String pagingList(Criteria pDTO, ModelMap model, HttpSession session,
-                             @RequestParam(value="nowPage", required = false) String nowPage,
-                             @RequestParam(value="cntPerPage", required = false) String cntPerPage)
-        throws Exception {
+                             @RequestParam(value = "nowPage", required = false) String nowPage,
+                             @RequestParam(value = "cntPerPage", required = false) String cntPerPage)
+            throws Exception {
 
         log.info(this.getClass().getName() + ".pagingList(페이징 판매글 리스트) Start!");
 
         // 가입 주소를 기반으로 검색해야 하기 때문에, 주소값을 받아와 dto에 저장
         String addr2 = (String) session.getAttribute("SS_USER_ADDR2");
-        log.info("addr null? : " + (addr2==null));
+        log.info("addr null? : " + (addr2 == null));
 
         log.info("가져온 주소(addr2) : " + addr2);
 
@@ -69,27 +71,27 @@ public class PageController {
 
         int total = 0;
 
-       if (addr2 == null) {
+        if (addr2 == null) {
             // 총 게시물 수를 가져옴(count *)
             total = pageService.cntNotice();
             log.info("가져온 전체 게시물 수(int total) : " + total);
 
-           // @RequestParam과 db쿼리를 통해 가져온 값을 pDTO에 세팅
-           pDTO = new Criteria(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage));
+            // @RequestParam과 db쿼리를 통해 가져온 값을 pDTO에 세팅
+            pDTO = new Criteria(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage));
 
-       } else if (addr2 != null) {
+        } else if (addr2 != null) {
             NoticeDTO nDTO = new NoticeDTO();
             nDTO.setAddr2(addr2);
 
-           // 지역구에 해당하는 게시물 수를 가져옴(total count가 달라짐 -> 이에 따른 페이징 필요)
+            // 지역구에 해당하는 게시물 수를 가져옴(total count가 달라짐 -> 이에 따른 페이징 필요)
             total = pageService.cntAddrNotice(nDTO);
             log.info("가져온 지역구에 해당하는 게시물 수 : " + total);
 
             nDTO = null;
-           pDTO = new Criteria(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage), addr2);
+            pDTO = new Criteria(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage), addr2);
         }
 
-        model.addAttribute("paging",pDTO);
+        model.addAttribute("paging", pDTO);
         model.addAttribute("sellList", pageService.selectPaging(pDTO));
 
         log.info("addr2값 세팅 되었는지 : " + pDTO.getAddr2());
@@ -101,13 +103,13 @@ public class PageController {
     }
 
     // 판매글 리스트를 페이징 처리하여 불러오기(전체 + 검색 + 정렬)
-    @RequestMapping(value="/searchList")
+    @RequestMapping(value = "/searchList")
     public String searchList(SearchCriteria pDTO, HttpServletRequest request, ModelMap model, HttpSession session,
-                             @RequestParam(value="nowPage", required = false) String nowPage,
-                             @RequestParam(value="cntPerPage", required = false) String cntPerPage,
-                             @RequestParam(value="searchType", required = false) String searchType,
-                             @RequestParam(value="keyword", required = false) String keyword,
-                             @RequestParam(value="odType", required = false) String odType)
+                             @RequestParam(value = "nowPage", required = false) String nowPage,
+                             @RequestParam(value = "cntPerPage", required = false) String cntPerPage,
+                             @RequestParam(value = "searchType", required = false) String searchType,
+                             @RequestParam(value = "keyword", required = false) String keyword,
+                             @RequestParam(value = "odType", required = false) String odType)
             throws Exception {
 
         log.info(this.getClass().getName() + ".pagingList(페이징 판매글 리스트) Start!");
@@ -116,7 +118,7 @@ public class PageController {
         String addr2 = (String) session.getAttribute("SS_USER_ADDR2");
         String user_no = (String) session.getAttribute("SS_USER_NO");
 
-        log.info("addr null? : " + (addr2==null));
+        log.info("addr null? : " + (addr2 == null));
 
         log.info("가져온 주소(addr2) : " + addr2);
 
@@ -141,7 +143,7 @@ public class PageController {
         log.info("가져온 정렬 : " + odType);
 
         // 제대로 받아왔는지 확인
-        log.info("searchType 받아옴(isNull이면 true) ? : " + (searchType==null));
+        log.info("searchType 받아옴(isNull이면 true) ? : " + (searchType == null));
         log.info("keyword 받아옴(isNull이면 true) ? : " + (keyword == null));
         log.info("odType 받아옴(정렬 없으면 true, 정렬 있으면 false)" + (odType == null));
 
@@ -163,22 +165,22 @@ public class PageController {
                 if (odType == null) {
                     log.info("비 로그인 + 검색 진행 + 정렬X");
 
-                NoticeDTO nDTO = new NoticeDTO();
-                nDTO.setCategory(searchType); // 임시로 searchType 사용
-                nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
+                    NoticeDTO nDTO = new NoticeDTO();
+                    nDTO.setCategory(searchType); // 임시로 searchType 사용
+                    nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
 
-                // 로그인 안한 상태의 검색어에 해당하는 게시물 수를 가져옴
-                // addr2에 세팅된 값이 없기 때문에, null 값 전달(아마도! 추후 검사 예정)
-                total = pageService.cntSearchType(nDTO);
-                log.info("가져온 (비로그인, 전체 범위) 검색 결과 게시물 수 : " + total);
+                    // 로그인 안한 상태의 검색어에 해당하는 게시물 수를 가져옴
+                    // addr2에 세팅된 값이 없기 때문에, null 값 전달(아마도! 추후 검사 예정)
+                    total = pageService.cntSearchType(nDTO);
+                    log.info("가져온 (비로그인, 전체 범위) 검색 결과 게시물 수 : " + total);
 
-                nDTO = null;
-                // @RequestParam과 db쿼리를 통해 가져온 값을 pDTO에 세팅
-                pDTO = new SearchCriteria(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage), searchType, keyword);
+                    nDTO = null;
+                    // @RequestParam과 db쿼리를 통해 가져온 값을 pDTO에 세팅
+                    pDTO = new SearchCriteria(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage), searchType, keyword);
 
-                log.info("비 로그인 + 검색 진행 + 정렬X pDTO 세팅 끝!");
+                    log.info("비 로그인 + 검색 진행 + 정렬X pDTO 세팅 끝!");
 
-                // 2. 비 로그인 + 검색 + 정렬 진행
+                    // 2. 비 로그인 + 검색 + 정렬 진행
                 } else {
                     log.info("비 로그인 + 검색 진행 + 정렬 진행");
                     NoticeDTO nDTO = new NoticeDTO();
@@ -186,10 +188,10 @@ public class PageController {
                     nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
 
                     /*
-                    * 로그인 안한 상태의 검색어에 해당하는 게시물 수를 가져옴
-                    * addr2에 세팅된 값이 없기 때문에, null 값 전달(아마도! 추후 검사 예정)
-                    * 정렬은 게시글 수에 영향을 미치지 않기 때문에 기존 검색결과 카운팅 함수 그대로 사용
-                    * */
+                     * 로그인 안한 상태의 검색어에 해당하는 게시물 수를 가져옴
+                     * addr2에 세팅된 값이 없기 때문에, null 값 전달(아마도! 추후 검사 예정)
+                     * 정렬은 게시글 수에 영향을 미치지 않기 때문에 기존 검색결과 카운팅 함수 그대로 사용
+                     * */
                     total = pageService.cntSearchType(nDTO);
                     log.info("가져온 (비로그인, 검색, 정렬) 결과 게시물 수 : " + total);
 
@@ -257,7 +259,7 @@ public class PageController {
                         // 최근검색어 redis에 저장
                         searchService.insertKeyword(cDTO);
 
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         log.info("최근검색어 insert 실패! : " + e.toString());
                         e.printStackTrace();
                     }
@@ -297,7 +299,7 @@ public class PageController {
         // try-catch문을 사용하여 db 쿼리에 오류없이 전달하여 값을 받아오는지 확인
         try {
             pageService.searchList(pDTO);
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.info("받아오기 실패!" + e.toString());
             e.printStackTrace();
         }
@@ -311,7 +313,7 @@ public class PageController {
             System.out.println("검색 결과 가져온 값들(주소-비로그인시 null) : " + rDTO.getAddr2());
         } */
 
-        model.addAttribute("paging",pDTO);
+        model.addAttribute("paging", pDTO);
         model.addAttribute("searchList", pageService.searchList(pDTO));
 
         pDTO = null;
@@ -323,7 +325,7 @@ public class PageController {
 
     // 최근 검색어 불러오기
     @ResponseBody
-    @RequestMapping(value="/getKeyword")
+    @RequestMapping(value = "/getKeyword")
     public Set getKeyword(HttpSession session) throws Exception {
 
         log.info(this.getClass().getName() + ".getKeyword(최근검색어 불러오기) Start!");
@@ -333,7 +335,7 @@ public class PageController {
 
         NoticeDTO pDTO = new NoticeDTO();
         pDTO.setUser_no(user_no);
-        
+
         // 회원번호에 해당하는 최근검색어 가져오기(redis)
         Set rList = searchService.getKeyword(pDTO);
 
@@ -345,5 +347,42 @@ public class PageController {
         log.info(this.getClass().getName() + ".getKeyword(최근검색어 불러오기) End!");
 
         return rList;
+    }
+
+    // 최근 본 상품 저장하기
+    @ResponseBody
+    @RequestMapping(value = "/insertGoods")
+    public int insertGoods(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+                           @RequestParam(value = "user_no") String user_no,
+                           @RequestParam(value = "goods_no") String goods_no,
+                           @RequestParam(value = "imgs") String imgs,
+                           @RequestParam(value = "goods_title") String goods_title) throws Exception {
+
+        log.info("insertGoods Start!");
+        //String user_no = CmmUtil.nvl((String) session.getAttribute("SS_USER_NO"));
+
+        NoticeDTO pDTO = new NoticeDTO();
+        pDTO.setUser_no(user_no);
+        pDTO.setGoods_no(goods_no);
+        pDTO.setImgs(imgs);
+        pDTO.setGoods_title(goods_title);
+
+        log.info("pDTO에 세팅 되었는지 ? : " + pDTO.getImgs());
+
+        int res = 0;
+        // 회원번호가 null이 아니라면(로그인 상태라면), 최근 본 상품 insert 진행
+        //if (user_no != null) {
+
+            try {
+                searchService.insertGoods(pDTO);
+                log.info("최근상품 insert 요청!");
+                res = 1;
+            } catch (Exception e) {
+                log.info("최근 본 상품 insert 실패! : " + e.toString());
+                e.printStackTrace();
+            }
+        //}
+
+        return res;
     }
 }

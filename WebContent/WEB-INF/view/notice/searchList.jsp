@@ -166,7 +166,7 @@
             </select>
 
             <!-- 검색창(키워드 입력, 검색창 선택 시 최근검색어 불러옴) -->
-            <input type="text" name="keyword" id="keyword" value="${paging.keyword}" onblur="rmKeyword()" />
+            <input type="text" name="keyword" id="keyword" value="${paging.keyword}" onfocusout="rmKeyword()" />
             <div id="keywordList"></div>
             <input type="hidden" id="st" name="searchType" value="${paging.searchType}"/>
             <button type="button" id="searchProduct" class="btn btn-info">검색하기</button>
@@ -350,6 +350,8 @@
                 url: "/getKeyword.do",
                 type: "post",
                 success: function(data) {
+                    console.log("data : " + data);
+
                     // 검색어 값들을 for문을 통해 저장
                     let searchList = "";
                     for (let i=0; i<data.length; i++) {

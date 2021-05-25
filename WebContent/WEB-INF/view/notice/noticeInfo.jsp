@@ -38,6 +38,35 @@
     <!-- jquery -->
     <script src="/resource/js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript">
+        $(document).ready(function() {
+            var loginChk = <%=SS_USER_NO%>;
+            console.log("로그인 여부?(유저번호) : " + loginChk);
+
+            // 로그인 상태로 판매글 상세보기를 로딩했다면, 최근 본 상품에 등록 진행
+            if (loginChk != null) {
+                $.ajax({
+                    url: "/insertGoods.do",
+                    type: "post",
+                    data: {
+                        "user_no" : loginChk,
+                        "goods_no" : <%=rDTO.getGoods_no()%>,
+                        "imgs" : "<%=rDTO.getImgs()%>",
+                        "goods_title" :  "<%=rDTO.getGoods_title()%>"
+                    },
+                    success: function(data) {
+                        if (data > 0) {
+                            alert("최근 본 상품 insert 성공!");
+                        } else if (data == 0) {
+                            alert("실패!");
+                        }
+                    }
+                })
+            } else {
+                console.log("로그인 안 함 또는 세션값 못받아옴 : " + <%=SS_USER_NO%>);
+            }
+        })
+    </script>
+    <script type="text/javascript">
         // 게시글 수정하기
         function doEdit() {
             // 본인이라면(2), 수정 페이지로 이동

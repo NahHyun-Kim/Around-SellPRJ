@@ -1,6 +1,8 @@
 package poly.controller;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -10,8 +12,6 @@ import poly.service.INoticeService;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,10 +104,15 @@ public class MainController {
 		// URLEncoder.encode(titleCnt , "UTF-8");
 
 		titleCnt = titleCnt.substring(0,titleCnt.length()-1); // 마지막에 붙은 따옴표 제거
-		//String result = "[" + titleCnt + "]";
+		String result = "[" + titleCnt + "]";
 
-		System.out.println("count 형태로 변경한 데이터 : " + titleCnt);
-		return titleCnt;
+		System.out.println("count 형태로 변경한 데이터 : " + result);
+
+		//JSONParser jsonParser = new JSONParser();
+
+		//JSONObject jsonObj = (JSONObject) jsonParser.parse(result);
+
+		return result;
 	}
 
 	/*@ResponseBody

@@ -45,70 +45,73 @@
     <script src="https://cdn.amcharts.com/lib/4/themes/material.js"></script>
     <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
+
     <!-- Chart code -->
     <script>
-        am4core.ready(function() {
-                $.ajax({
-                    url : "/titleCount.do",
-                    type : "post",
-                    //dataType: "text", //서버에서 전송받을 데이터 형식
-                    dataType: "JSON",
-                    contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-                    success(res) {
-                        console.log("받아오기 성공!");
+        $(document).ready(function() {
+            console.log("준비 됐나?");
+            $.ajax({
+                url : "/titleCount.do",
+                type : "post",
+                //dataType: "text", //서버에서 전송받을 데이터 형식
+                dataType: "JSON",
+                //contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                success(res) {
+                    alert("받아오기 성공!");
 
-                        console.log("받아온 데이터(배열형태 - json 해봄) : " + res);
+                    console.log("받아온 데이터(배열형태 - json 해봄) : " + res);
 
-                        // Themes begin
-                        am4core.useTheme(am4themes_animated);
+                    // Themes begin
+                    am4core.useTheme(am4themes_animated);
 
 
-                        var chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);
-                        chart.fontFamily = "Courier New";
-                        var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
-                        series.randomness = 0.1;
-                        series.rotationThreshold = 0.5;
+                    var chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);
+                    chart.fontFamily = "Courier New";
+                    var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+                    series.randomness = 0.1;
+                    series.rotationThreshold = 0.5;
 
-                        // 단어를 클릭하면 이동할 url 지정(검색 페이지로 이동)
-                        series.labels.template.url = "http://localhost:8081/searchList.do?nowPage=1&cntPerPage=9&searchType=T&keyword=" + "틴트";
-                        series.labels.template.urlTarget = "_blank";
+                    // 단어를 클릭하면 이동할 url 지정(검색 페이지로 이동)
+                    series.labels.template.url = "http://localhost:8081/searchList.do?nowPage=1&cntPerPage=9&searchType=T&keyword=" + "틴트";
+                    series.labels.template.urlTarget = "_blank";
 
-                        series.data = res;
+                    series.data = res;
 
-                        //단어(word)는 collection 배열 값 안에 있는 "tag" 값
-                        //빈도수(value)는 collection 배열 값 안에 있는 "count" 값
-                        series.dataFields.word = "tag";
-                        series.dataFields.value = "count";
+                    //단어(word)는 collection 배열 값 안에 있는 "tag" 값
+                    //빈도수(value)는 collection 배열 값 안에 있는 "count" 값
+                    series.dataFields.word = "tag";
+                    series.dataFields.value = "count";
 
-                        series.heatRules.push({
-                            "target": series.labels.template,
-                            "property": "fill",
-                            "min": am4core.color("#0000CC"),
-                            "max": am4core.color("#CC00CC"),
-                            "dataField": "value"
-                        });
+                    series.heatRules.push({
+                        "target": series.labels.template,
+                        "property": "fill",
+                        "min": am4core.color("#0000CC"),
+                        "max": am4core.color("#CC00CC"),
+                        "dataField": "value"
+                    });
 
-                        // 단어를 클릭 시, 해당 단어에 해당하는 단어로 검색 진행(get)
-                        series.labels.template.url = "http://localhost:8081/searchList.do?nowPage=1&cntPerPage=9&searchType=T&keyword={word}";
-                        series.labels.template.urlTarget = "_blank";
+                    // 단어를 클릭 시, 해당 단어에 해당하는 단어로 검색 진행(get)
+                    series.labels.template.url = "http://localhost:8081/searchList.do?nowPage=1&cntPerPage=9&searchType=T&keyword={word}";
+                    series.labels.template.urlTarget = "_blank";
 
-                        // 단어에 마우스를 올릴 때, 단어:빈도수 형태로 표시해줌
-                        series.labels.template.tooltipText = "{word}:\n[bold]{value}[/]";
+                    // 단어에 마우스를 올릴 때, 단어:빈도수 형태로 표시해줌
+                    series.labels.template.tooltipText = "{word}:\n[bold]{value}[/]";
 
-                        var subtitle = chart.titles.create();
-                        subtitle.text = "(click to open)";
+                    var subtitle = chart.titles.create();
+                    subtitle.text = "(click to open)";
 
-                        var title = chart.titles.create();
-                        title.text = "Our Products!";
-                        title.fontSize = 20;
-                        title.fontWeight = "100";
+                    var title = chart.titles.create();
+                    title.text = "Our Products!";
+                    title.fontSize = 20;
+                    title.fontWeight = "100";
 
-                    }
-                })
+                }
             })
+        })
 
         // end am4core.ready()
     </script>
+
 
 </head>
 <body>
@@ -149,6 +152,7 @@
         <hr/>
 </div>
 </div>
+
 <!-- bootstrap, css 파일 -->
 <link rel="stylesheet" href="/resource/css/notice.css?ver=1"/>
 <script src="/resources/js/bootstrap.js"></script>

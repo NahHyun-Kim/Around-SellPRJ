@@ -28,4 +28,16 @@ public class SearchService implements ISearchService {
     public Set getKeyword(NoticeDTO pDTO) throws Exception {
         return searchMapper.getKeyword(pDTO);
     }
+
+    // 최근 본 상품 저장하기
+    @Override
+    public void insertGoods(NoticeDTO pDTO) throws Exception {
+        searchMapper.insertGoods(pDTO);
+    }
+
+    // 최근 본 상품 불러오기
+    @Override
+    public Set getGoods(NoticeDTO pDTO) throws Exception {
+        return searchMapper.getGoods(pDTO);
+    }
 }
