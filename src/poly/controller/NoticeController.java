@@ -73,6 +73,10 @@ public class NoticeController {
 
         }
 
+        /* for (NoticeDTO i : rList) {
+            log.info("가져온 주소값 : " + i.getGoods_addr2());
+        } */
+
         // 조회된 리스트 결과값을 model에 보냄
         model.addAttribute("rList", rList);
 

@@ -89,7 +89,6 @@
             }
             });
         </script>
-        //request.getRealPath("/")%>
 
         <!-- 상품명 등록(추후 제목으로 표시된다) -->
         <div class="form-control">
@@ -173,10 +172,10 @@
 
                     // 위도, 경도값을 input value 값에 추가
                     $('input[name=latY]').attr('value',result[0].y);
-                    console.log("위도값 : " + result.y);
+                    console.log("위도값 : " + result[0].y);
                     $('input[name=longX]').attr('value',result[0].x);
                     //document.getElementById("longX").value = results[0].x;
-                    console.log("경도값 : " + result.x);
+                    console.log("경도값 : " + result[0].x);
 
                 }
             })
@@ -186,7 +185,7 @@
     <!-- 도로명주소 API js 파일-->
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services"></script>
-    <script type="text/javascript" src="/resource/js/addrAPI2.js"></script>
+    <script type="text/javascript" src="/resource/js/addrAPI2.js?ver=1"></script>
 
     <!-- bootstrap, css 파일 -->
     <link rel="stylesheet" href="/resource/css/notice.css"/>

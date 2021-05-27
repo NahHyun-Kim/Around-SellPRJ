@@ -167,9 +167,15 @@
 
             <!-- 검색창(키워드 입력, 검색창 선택 시 최근검색어 불러옴) -->
             <input type="text" name="keyword" id="keyword" value="${paging.keyword}" onfocusout="rmKeyword()" />
-            <div id="keywordList"></div>
-            <input type="hidden" id="st" name="searchType" value="${paging.searchType}"/>
             <button type="button" id="searchProduct" class="btn btn-info">검색하기</button>
+
+            <!-- 최근검색어 keyword 동적으로 생성하기 -->
+            <select id="selectId" name="selectId">
+
+            </select>
+            <!--<div id="keywordList"></div>-->
+            <input type="hidden" id="st" name="searchType" value="${paging.searchType}"/>
+
 
             <!-- 검색 후 정렬(null이면 자동으로 ORDER BY GOODS_NO DESC) -->
             <select id="odType" name="odType">
@@ -352,16 +358,34 @@
                 success: function(data) {
                     console.log("data : " + data);
 
+                    /*
+                    * 최근검색어 목록 동적으로 생성하여 불러오기
+                    */
+                    var searchArr = new Array();
+
                     // 검색어 값들을 for문을 통해 저장
                     let searchList = "";
-                    for (let i=0; i<data.length; i++) {
-                        searchList += data[i] + "<br>";
+                    for (let i=data.length-1; i>=0; i--) {
+                        //searchList += data[i] + "<br>";
+                        searchArr.push(data[i]);
                     }
-                    console.log("불러오기 성공! searchList : " + searchList);
+
+                    // 검색어 중복 option값 생성 방지를 위해, 검색어를 초기화
+                    $("select#selectId option").remove();
+
+                    console.log("removed ? : ");
+
+                    for (let i=0; i<searchArr.length; i++) {
+                        var option_value = searchArr[i];
+
+                        console.log("option 값 ? : " + option_value);
+                        $("#selectId").append('<option value="' + option_value + '">' + option_value + '</option>');
+                    }
+                    //console.log("불러오기 성공! searchList : " + searchList);
 
                     // 검색어 목록에 담음
-                    $("#keywordList").html(searchList);
-                    $("#keywordList").show();
+                    /* $("#keywordList").html(searchList);
+                    $("#keywordList").show(); */
 
                 }
             })
@@ -369,7 +393,8 @@
     })
 
     function rmKeyword() {
-        $("#keywordList").hide();
+        //$("#keywordList").hide();
+        //$("#selectId").hide();
     }
 </script>
 

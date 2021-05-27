@@ -55,9 +55,9 @@
                     },
                     success: function(data) {
                         if (data > 0) {
-                            alert("최근 본 상품 insert 성공!");
+                            console.log("최근 본 상품 insert 성공!");
                         } else if (data == 0) {
-                            alert("실패!");
+                            alert("(최근 본 상품 insert) 실패!");
                         }
                     }
                 })

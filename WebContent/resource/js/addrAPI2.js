@@ -26,7 +26,6 @@
 
             // 주소 정보를 해당 필드에 넣는다.
             document.getElementById("sample5_address").value = addr;
-            document.getElementById("tempaddr").value = addr;
 
             // 주소로 상세 정보를 검색
             geocoder.addressSearch(data.address, function(results, status) {

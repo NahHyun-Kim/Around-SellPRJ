@@ -209,22 +209,6 @@ public class CartController {
 
         log.info("최근 본 상품 페이지 시작!");
 
-        /*String user_no = (String) session.getAttribute("SS_USER_NO");
-        log.info("user_no(회원을 위한 검색어 저장) : " + user_no);
-
-        NoticeDTO pDTO = new NoticeDTO();
-        pDTO.setUser_no(user_no);
-
-        // 회원번호에 해당하는 최근검색어 가져오기(redis)
-        Set rList = searchService.getGoods(pDTO);
-
-        if (rList == null) {
-            rList = new LinkedHashSet<String>();
-        }
-        pDTO = null;
-
-        model.addAttribute("rList", rList);*/
-
         return "/cart/mySee";
     }
     
@@ -234,10 +218,10 @@ public class CartController {
     @RequestMapping(value="getGoods")
     public Set getGoods(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
 
-        log.info(this.getClass().getName() + ".getKeyword(최근검색어 불러오기) Start!");
+        log.info(this.getClass().getName() + ".getGoods(최근 본 상품 불러오기) Start!");
 
         String user_no = (String) session.getAttribute("SS_USER_NO");
-        log.info("user_no(회원을 위한 검색어 저장) : " + user_no);
+        log.info("user_no(회원을 위한 최근 본 상품) : " + user_no);
 
         NoticeDTO pDTO = new NoticeDTO();
         pDTO.setUser_no(user_no);
@@ -250,7 +234,7 @@ public class CartController {
         }
         pDTO = null;
 
-        log.info(this.getClass().getName() + ".getKeyword(최근검색어 불러오기) End!");
+        log.info(this.getClass().getName() + ".getGoods(최근 본 상품 불러오기) End!");
 
         return rList;
     }
