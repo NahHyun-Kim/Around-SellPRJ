@@ -184,24 +184,6 @@ public class CartController {
         return res;
     }
 
-    // 관심상품 전체 삭제하기
-    /*@ResponseBody
-    @RequestMapping(value="/delCart")
-    public int delCart(HttpServletRequest request, HttpServletResponse response, HttpSession session,
-                       @RequestParam(value="user_no") String user_no) throws Exception {
-        log.info(this.getClass().getName() + ".delCart Start!");
-
-        CartDTO pDTO = new CartDTO();
-        pDTO.setUser_no(user_no);
-
-        int res = cartService.delCart(pDTO);
-
-        log.info("삭제 성공했는지? 성공 : 1, 실패 : 0" + res);
-
-        log.info(this.getClass().getName() + ".delCart End!");
-        return res;
-    } */
-
     // 최근 본 상품 페이지 시작
     @RequestMapping(value="mySee")
     public String mySee(HttpServletRequest request, HttpServletResponse response, HttpSession session,

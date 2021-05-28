@@ -33,6 +33,16 @@ public class NoticeDTO {
     private String searchType; //검색 종류
     private String keyword; //검색어
 
+    private String cnt; //count 수
+
+    public String getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(String cnt) {
+        this.cnt = cnt;
+    }
+
     public String getLaty() {
         return laty;
     }

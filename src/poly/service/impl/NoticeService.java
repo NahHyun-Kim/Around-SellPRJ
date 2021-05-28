@@ -15,10 +15,22 @@ public class NoticeService implements INoticeService {
     @Resource(name="NoticeMapper")
     private INoticeMapper noticeMapper;
 
-    //  판매글 (List)
+    // 판매글 (List)
     @Override
-    public List<NoticeDTO> getNoticeList() throws Exception {
-        return noticeMapper.getNoticeList();
+    public List<NoticeDTO> getNoticeList(NoticeDTO pDTO) throws Exception {
+        return noticeMapper.getNoticeList(pDTO);
+    }
+
+    // 판매글 상위 5개 게시글 불러오기(일반)
+    @Override
+    public List<NoticeDTO> maxCount(NoticeDTO pDTO) throws Exception {
+        return noticeMapper.maxCount(pDTO);
+    }
+
+    // 판매글 카테고리별 게시물 수 불러오기
+    @Override
+    public List<NoticeDTO> cateCount(NoticeDTO pDTO) throws Exception {
+        return noticeMapper.cateCount(pDTO);
     }
 
     // 판매글 등록하기

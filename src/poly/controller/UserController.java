@@ -9,10 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import poly.dto.MailDTO;
-import poly.dto.NoticeDTO;
-import poly.dto.UserDTO;
-import poly.dto.WeatherDTO;
+import poly.dto.*;
+import poly.service.ICartService;
 import poly.service.IMailService;
 import poly.service.INoticeService;
 import poly.service.IUserService;
@@ -396,13 +394,13 @@ public class UserController {
         log.info("삭제할 회원 번호 : " + user_no);
 
         UserDTO pDTO = new UserDTO();
-        NoticeDTO nDTO = new NoticeDTO();
+        //NoticeDTO nDTO = new NoticeDTO();
 
         pDTO.setUser_no(user_no);
-        nDTO.setUser_no(user_no);
+        //nDTO.setUser_no(user_no);
 
         log.info("pDTO에 보낼 회원 번호 : " + pDTO.getUser_no());
-        log.info("판매글 삭제에 사용될 회원 번호 : " + nDTO.getUser_no());
+        //log.info("판매글 삭제에 사용될 회원 번호 : " + nDTO.getUser_no());
 
         // 회원 탈퇴 시 알림 메일 전송을 위해 DTO 생성
         UserDTO rDTO = userService.getUserInfo(pDTO);
@@ -410,11 +408,11 @@ public class UserController {
         log.info("이메일 발송을 위해 복호화한 이메일 : " + email);
 
         int res = userService.deleteForceUser(pDTO);
-        // 회원이 등록한 판매글도 함께 삭제
-        int success = noticeService.deleteNoticeAll(nDTO);
+        // 회원이 등록한 판매글도 함께 삭제 (외래키 delete cascade 로 변경)
+        // int success = noticeService.deleteNoticeAll(nDTO);
 
         log.info("res? : " + res);
-        log.info("판매글 delete success? : " + success);
+        // log.info("판매글 delete success? : " + success);
 
         if (res > 0) { // 회원 탈퇴에 성공했다면,
             log.info("deleteForceUser 성공");
@@ -711,14 +709,9 @@ public class UserController {
 
                     log.info("pDTO에 세팅 되었는지(회원번호/다중) : " + pDTO.getUser_no());
                     userService.deleteUser(pDTO);
-                    NoticeDTO nDTO = new NoticeDTO();
-                    nDTO.setUser_no(userNum);
-
-                    // 회원이 작성한 판매글도 함께 삭제
-                    int success = noticeService.deleteNoticeAll(nDTO);
+                    // 외래키 설정으로, 회원이 작성한 판매글과 장바구니도 함께 삭제됨(on delete cascade)
 
                     log.info("회원 삭제 완료! : " + userNum);
-                    log.info("판매글도 삭제되었는지? : " + userNum + "여부 : " + success);
 
                 }
                 //성공하였다면, res값을 1로 세팅(ResponseBody에서 1을 전송하면, 성공을 반환)

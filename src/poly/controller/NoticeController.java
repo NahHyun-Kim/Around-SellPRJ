@@ -60,27 +60,35 @@ public class NoticeController {
     * */
     @RequestMapping(value="/noticeList", method = RequestMethod.GET)
     public String noticeList(HttpServletRequest request, HttpServletResponse response,
-                             ModelMap model) throws Exception {
+                             ModelMap model, HttpSession session) throws Exception {
 
         log.info(this.getClass().getName() + ".noticeList(판매글 리스트) Start!");
 
+        // 지역구가 있다면 지역구에 해당하는 판매 글을 불러오고, 로그인 상태가 아니라면 전체 판매글을 불러옴
+        String addr2 = CmmUtil.nvl((String) session.getAttribute("SS_USER_ADDR2"), "none");
+        log.info("로그인 안하면 'none'으로 뜸, 로그인 하면 지역구 표시 : " + addr2);
+
+        NoticeDTO pDTO = new NoticeDTO();
+        pDTO.setAddr2(addr2);
+
         // 판매글 리스트 가져오기
         // 판매글 정보는 여러개이므로, DTO를 List 형태에 담아 반환한다.
-        List<NoticeDTO> rList = noticeService.getNoticeList();
+        List<NoticeDTO> rList = noticeService.getNoticeList(pDTO);
 
         if (rList == null) {
             rList = new ArrayList<NoticeDTO>();
 
         }
 
-        /* for (NoticeDTO i : rList) {
-            log.info("가져온 주소값 : " + i.getGoods_addr2());
-        } */
+        for (NoticeDTO i : rList) {
+            log.info("가져온 주소값(비 로그인때 작동되는지 확인용, 추후 삭제) : " + i.getGoods_addr2());
+        }
 
         // 조회된 리스트 결과값을 model에 보냄
         model.addAttribute("rList", rList);
 
         // 메모리 효율화를 위한 변수 초기화
+        pDTO = null;
         rList = null;
 
         log.info(this.getClass().getName() + ".noticeList(판매글 리스트) End!");

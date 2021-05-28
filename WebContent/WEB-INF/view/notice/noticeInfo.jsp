@@ -39,11 +39,11 @@
     <script src="/resource/js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            var loginChk = <%=SS_USER_NO%>;
+            var loginChk = "<%=CmmUtil.nvl(SS_USER_NO)%>";
             console.log("로그인 여부?(유저번호) : " + loginChk);
 
             // 로그인 상태로 판매글 상세보기를 로딩했다면, 최근 본 상품에 등록 진행
-            if (loginChk != null) {
+            if (loginChk != "") {
                 $.ajax({
                     url: "/insertGoods.do",
                     type: "post",
@@ -62,7 +62,7 @@
                     }
                 })
             } else {
-                console.log("로그인 안 함 또는 세션값 못받아옴 : " + <%=SS_USER_NO%>);
+                console.log("로그인 안 함 또는 세션값 못받아옴 : " + loginChk);
             }
         })
     </script>
@@ -70,10 +70,10 @@
         // 게시글 수정하기
         function doEdit() {
             // 본인이라면(2), 수정 페이지로 이동
-            if ("<%=edit%>" == 2) {
+            if ((<%=edit%>) == 2) {
                 location.href="/noticeEditInfo.do?nSeq=<%=rDTO.getGoods_no()%>";
                 // 로그인이 안 된 상태라면
-            } else if ("<%=edit%>" == 3) {
+            } else if ((<%=edit%>) == 3) {
                 alert("로그인 후 이용해 주세요.");
                 location.href="/logIn.do";
 
@@ -85,19 +85,19 @@
 
         // 삭제하기
         function doDelete() {
+            console.log("edit이 2라면 삭제 가능, 1이면 본인 아님 : " + <%=edit%>);
+            console.log(typeof (<%=edit%>));
             // 본인이라면(2), 삭제 확인을 물어본 후(confirm) 삭제
-            if ("<%=edit%>" == 2) {
+            if ((<%=edit%>) == 2) {
                 if(confirm("판매글을 삭제하시겠습니까?")) {
-                    location.href="/noticeDelete.do?nSeq=<%=rDTO.getGoods_no()%>";
-
-                } else if ("<%=edit%>" == 3) { // 로그인이 안 된 상태라면
-                    alert("로그인 후 이용해 주세요.");
-
-                } else if ("<%=edit%>" == 1) { // 본인이 아니라면(edit=1) 삭제 불가능
-                    alert("본인이 작성한 글만 삭제가 가능합니다.");
+                    location.href = "/noticeDelete.do?nSeq=<%=rDTO.getGoods_no()%>";
                 }
+             }  else if ((<%=edit%>) == 3) { // 로그인이 안 된 상태라면
+                alert("로그인 후 이용해 주세요.");
 
-            }
+        } else if ((<%=edit%>) == 1) { // 본인이 아니라면(edit=1) 삭제 불가능
+            alert("본인이 작성한 글만 삭제가 가능합니다.");
+        }
         }
 
         // 목록으로 이동하기

@@ -42,6 +42,9 @@
             alert("최대 5000Bytes까지 입력 가능합니다.");
             f.goods_detail.focus();
             return false;
+        } else {
+            confirm("판매글을 등록하시겠습니까?");
+
         }
     }
 
@@ -117,7 +120,7 @@
         <!-- 상품이 판매되는 상세 주소 입력(도로명주소 api 사용, 실시간으로 위치 확인이 가능하다.) -->
         <div class="form-group">
             <label for="sample5_address">주소 입력</label>
-            <input type="text" name="goods_addr2" id="sample5_address" placeholder="주소를 검색해 주세요" required/>
+            <input type="text" name="goods_addr2" id="sample5_address" placeholder="주소를 검색해 주세요" readonly required/>
             <input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"/><br>
 
         </div>
@@ -142,15 +145,34 @@
         <a href="javascript:history.back();">뒤로가기</a>
 
         <!-- 위도 -->
-        <input type="text" name="latY" id="longY" value=""/>
+        <input type="text" name="latY" id="latY" value=""/>
         <!-- 경도 -->
-        <input type="text" name="longX" id="latX" value=""/>
+        <input type="text" name="longX" id="longX" value=""/>
     </form>
     </div>
 
     <script type="text/javascript">
-        $("#category").on("change", function() {
 
+
+
+        (function ($) {
+            var originalVal = $.fn.val;
+            $.fn.val = function (value) {
+                var res = originalVal.apply(this, arguments);
+
+                if (this.is('input:text') && arguments.length >= 1) {
+                    // this is input type=text setter
+                    this.trigger("input");
+                }
+
+                return res;
+            };
+        })(jQuery);
+
+        var $input = $("#sample5_address");
+
+        //$("#sample5_address").on('input', function() {
+        $("#category").on('change', function() {
             console.log("옵션 변경!");
             // 입력된 주소값(value)을 가져와서, 위경도 검색하여 저장
             var tempaddr = document.getElementById("sample5_address");

@@ -4,9 +4,10 @@
 <mapper namespace="poly.persistance.mapper.INoticeMapper">
 
     <!-- 판매글 리스트(전체) -->
-    <select id="getNoticeList" resultType="NoticeDTO">
+    <select id="getNoticeList" parameterType="NoticeDTO" resultType="NoticeDTO">
         SELECT GOODS_NO, GOODS_TITLE, GOODS_PRICE, GOODS_ADDR, GOODS_ADDR2, IMGS, HIT
         FROM aroundsell.product
+        <include refid="addrchk"/>
         ORDER BY GOODS_NO DESC
     </select>
 
@@ -108,5 +109,31 @@
         aroundsell.product
         WHERE GOODS_NO = #{goods_no}
     </delete>
+
+    <!-- 로그인 여부에 따라 전체글을 가져올지, 지역구에 해당하는 판매글을 가져올지 판단 -->
+    <sql id="addrchk">
+        <choose>
+        <!-- nvl처리로 로그인 안한 사용자라면, "none"으로 전체글을 가져옴 -->
+        <when test='addr2.equals("none")'>
+
+        </when>
+        <!-- 로그인한 사용자라면, 가입 지역구에 있는 판매글을 가져옴 -->
+        <when test='!addr2.equals("none")'>
+        WHERE ADDR2 = #{addr2}
+        </when>
+        </choose>
+    </sql>
+
+    <!-- 카테고리별 몇 건의 게시물이 있는지 카운트 -->
+    <select id="cateCount" parameterType="NoticeDTO" resultType="NoticeDTO">
+        SELECT CATEGORY, COUNT(*) AS CNT
+        FROM aroundsell.product
+        <include refid="addrchk"/>
+        GROUP BY CATEGORY;
+    </select>
+
+    <!-- 카테고리별로 인기순 5건씩 가져옴 -->
+    <select id=""></select>
+
 
 </mapper>
