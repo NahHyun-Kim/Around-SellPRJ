@@ -161,6 +161,8 @@
                 <option value="T" <%=CmmUtil.nvl(searchType).equals("T")?"selected":""%>>상품명</option>
                 <option value="C" <%=CmmUtil.nvl(searchType).equals("C")?"selected":""%>>상품 설명</option>
                 <option value="L" <%=CmmUtil.nvl(searchType).equals("L")?"selected":""%>>상호명</option>
+                <option value="J" <%=CmmUtil.nvl(searchType).equals("J")?"selected":""%>>주소지</option>
+                <option value="G" <%=CmmUtil.nvl(searchType).equals("G")?"selected":""%>>카테고리</option>
                 <option value="A" <%=CmmUtil.nvl(searchType).equals("A")?"selected":""%>>제목+내용</option>
                 <option value="W" <%=CmmUtil.nvl(searchType).equals("W")?"selected":""%>>작성자</option>
             </select>
@@ -240,12 +242,19 @@
         console.log("keyword null? : " + (keyword == "null"));
         console.log("정렬 타입 있는지? : " + (odType == "null"));
 
+        var s = document.getElementById("searchType");
+        var searchType = s.options[s.selectedIndex].text;
+        console.log("searchType(value 말고 text값) : " + searchType);
+
+        var resultMent = "";
+
         // 검색어가 있는 상태라면, 검색 결과 건수를 보여줌
-        if (keyword != "null") {
+        // 판매 주소지(검색타입 J)로 검색하는 경우, "해당 주소지"에 대한 n건의 검색결과로 깔끔하게 나타냄
+        if (keyword != "null" && searchType != "주소지" && searchType != "카테고리") {
 
             console.log("검색된 게시물 수 : " + total);
 
-            var resultMent = "<span style='color:#ff0000'>" + keyword + "</span>에 대한 " + "총 <span style='color:blue'>" + total + "</span> 건의 검색 결과";
+            resultMent = "<span style='color:#ff0000'>" + keyword + "</span>에 대한 " + "총 <span style='color:blue'>" + total + "</span> 건의 검색 결과";
             console.log("검색결과 멘트 : " + resultMent);
 
             res.innerHTML = resultMent;
@@ -258,6 +267,14 @@
             var totalMent = "전체 <span style='color:blue'>" + total + "</span> 건의 상품";
 
             res.innerHTML = totalMent;
+        } else if (keyword != "null" && (searchType == "주소지" || searchType == "카테고리")) {
+
+            console.log("검색된 게시물 수 : " + total);
+
+            resultMent = "해당 " + searchType + "<span style='color:#ff0000'>(" + keyword + ")</span>에 대한 " + "총 <span style='color:blue'>" + total + "</span> 건의 검색 결과";
+            console.log("검색결과 멘트 : " + resultMent);
+
+            res.innerHTML = resultMent;
         }
 
     })

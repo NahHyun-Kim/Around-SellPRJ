@@ -166,11 +166,11 @@ public class PageController {
                     log.info("비 로그인 + 검색 진행 + 정렬X");
 
                     NoticeDTO nDTO = new NoticeDTO();
-                    nDTO.setCategory(searchType); // 임시로 searchType 사용
-                    nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
+                    nDTO.setSearchType(searchType);
+                    nDTO.setKeyword(keyword);
 
                     // 로그인 안한 상태의 검색어에 해당하는 게시물 수를 가져옴
-                    // addr2에 세팅된 값이 없기 때문에, null 값 전달(아마도! 추후 검사 예정)
+                    // addr2에 세팅된 값이 없기 때문에, null 값 전달
                     total = pageService.cntSearchType(nDTO);
                     log.info("가져온 (비로그인, 전체 범위) 검색 결과 게시물 수 : " + total);
 
@@ -184,8 +184,8 @@ public class PageController {
                 } else {
                     log.info("비 로그인 + 검색 진행 + 정렬 진행");
                     NoticeDTO nDTO = new NoticeDTO();
-                    nDTO.setCategory(searchType); // 임시로 searchType 사용
-                    nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
+                    nDTO.setSearchType(searchType);
+                    nDTO.setKeyword(keyword);
 
                     /*
                      * 로그인 안한 상태의 검색어에 해당하는 게시물 수를 가져옴
@@ -232,8 +232,8 @@ public class PageController {
                     log.info("비 로그인 + 검색 진행 + 정렬X");
 
                     NoticeDTO nDTO = new NoticeDTO();
-                    nDTO.setCategory(searchType); // 임시로 searchType 사용
-                    nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
+                    nDTO.setSearchType(searchType);
+                    nDTO.setKeyword(keyword);
                     nDTO.setAddr2(addr2);
 
                     log.info("로그인 상태로 검색 진행 예정 -> addr2 세팅? : " + nDTO.getAddr2());
@@ -275,8 +275,8 @@ public class PageController {
                 else {
                     log.info("로그인 + 검색 진행 + 정렬 진행");
                     NoticeDTO nDTO = new NoticeDTO();
-                    nDTO.setCategory(searchType); // 임시로 searchType 사용
-                    nDTO.setGoods_title(keyword); // 임시로 keyword 사용(count를 위함)
+                    nDTO.setSearchType(searchType); // 임시로 searchType 사용
+                    nDTO.setKeyword(keyword); // 임시로 keyword 사용(count를 위함)
                     nDTO.setAddr2(addr2);
 
                     /*

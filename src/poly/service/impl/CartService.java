@@ -41,6 +41,18 @@ public class CartService implements ICartService {
         return cartMapper.deleteCart(pDTO);
     }
 
+    // 판매글 수정 시, 장바구니에 담긴 상품인지 체크
+    @Override
+    public List<CartDTO> updateChk(CartDTO pDTO) throws Exception {
+        return cartMapper.updateChk(pDTO);
+    }
+
+    // 판매글 수정 시, 장바구니 내용도 함께 업데이트
+    @Override
+    public void updateCart(CartDTO pDTO) throws Exception {
+        cartMapper.updateCart(pDTO);
+    }
+
 
     // 장바구니 목록 전체 삭제
     /*@Override

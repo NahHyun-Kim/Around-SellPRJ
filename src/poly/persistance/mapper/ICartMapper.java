@@ -21,6 +21,12 @@ public interface ICartMapper {
     // 장바구니 선택 목록(혹은 전체) 삭제하기
     int deleteCart(CartDTO pDTO) throws Exception;
 
+    // 판매글 수정 시, 장바구니에 담긴 상품인지 체크
+    List<CartDTO> updateChk(CartDTO pDTO) throws Exception;
+
+    // 판매글 수정 시, 장바구니 내용도 함께 업데이트
+    void updateCart(CartDTO pDTO) throws Exception;
+
     // 장바구니 전체 목록 삭제하기
     //int delCart(CartDTO pDTO) throws Exception;
 }

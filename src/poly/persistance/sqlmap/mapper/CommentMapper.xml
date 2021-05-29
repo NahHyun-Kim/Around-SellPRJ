@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="poly.persistance.mapper.ICommentMapper">
+
+    <!-- 댓글 등록하기(존재하는 게시글의 번호에 ajax 방식으로 등록된다) -->
+    <insert id="insertComment" parameterType="CommentDTO">
+        INSERT INTO
+        aroundsell.comment
+        (
+         GOODS_NO,
+         USER_NO,
+         CONTENT,
+         USER_NAME
+        )
+        VALUES
+        (
+         #{goods_no},
+         #{user_no},
+         #{content},
+         #{user_name}
+        )
+    </insert>
+
+    <!-- 댓글 목록 가져오기(게시글이 로딩될 때, 댓글 목록을 함께 불러옴) -->
+    <select id="getComment" parameterType="CommentDTO" resultType="CommentDTO">
+        SELECT *
+        FROM
+             aroundsell.comment
+        WHERE
+            GOODS_NO = #{goods_no}
+    </select>
+
+</mapper>

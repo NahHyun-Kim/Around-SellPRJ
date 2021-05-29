@@ -22,26 +22,40 @@
                         <when test='searchType == "W".toString()'>
                             REG_ID LIKE CONCAT('%',#{keyword},'%')
                         </when>
+                        <when test='searchType == "G".toString()'>
+                            CATEGORY LIKE CONCAT('%',#{keyword},'%')
+                        </when>
+                        <!-- 다중 마커 지도에서 클릭하여 검색하는 경우, 일치하는 주소의 검색 결과만 반환함 -->
+                        <when test='searchType == "J".toString()'>
+                            GOODS_ADDR2 LIKE CONCAT('%',#{keyword},'%')
+                        </when>
                     </choose>
             </foreach>
     </sql>
 
+    <!-- 검색 조건, 키워드에 따라 결과 건수를 가져오기 위한 include sql문 -->
     <sql id="searchCnt">
             <choose>
-                <when test='category == "T".toString()'>
-                    WHERE GOODS_TITLE LIKE CONCAT('%',#{goods_title},'%')
+                <when test='searchType == "T".toString()'>
+                    WHERE GOODS_TITLE LIKE CONCAT('%',#{keyword},'%')
                 </when>
-                <when test='category == "C".toString()'>
-                    WHERE GOODS_DETAIL LIKE CONCAT('%',#{goods_title},'%')
+                <when test='searchType == "C".toString()'>
+                    WHERE GOODS_DETAIL LIKE CONCAT('%',#{keyword},'%')
                 </when>
-                <when test='category == "L".toString()'>
-                    WHERE GOODS_ADDR LIKE CONCAT('%',#{goods_title},'%')
+                <when test='searchType == "L".toString()'>
+                    WHERE GOODS_ADDR LIKE CONCAT('%',#{keyword},'%')
                 </when>
-                <when test='category == "W".toString()'>
-                    WHERE REG_ID LIKE CONCAT('%',#{goods_title},'%')
+                <when test='searchType == "W".toString()'>
+                    WHERE REG_ID LIKE CONCAT('%',#{keyword},'%')
                 </when>
-                <when test='category == "A".toString()'>
-                    WHERE GOODS_TITLE OR GOODS_DETAIL LIKE CONCAT('%',#{goods_title},'%')
+                <when test='searchType == "A".toString()'>
+                    WHERE GOODS_TITLE OR GOODS_DETAIL LIKE CONCAT('%',#{keyword},'%')
+                </when>
+                <when test='searchType == "G".toString()'>
+                    WHERE CATEGORY LIKE CONCAT('%',#{keyword},'%')
+                </when>
+                <when test='searchType == "J".toString()'>
+                    WHERE GOODS_ADDR2 LIKE CONCAT('%',#{keyword},'%')
                 </when>
             </choose>
     </sql>

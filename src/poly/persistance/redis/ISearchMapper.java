@@ -17,4 +17,7 @@ public interface ISearchMapper {
 
     // 최근 본 상품 불러오기
     public Set getGoods(NoticeDTO pDTO) throws Exception;
+
+    // 최근 본 상품 삭제하기
+    public void rmKeyword(NoticeDTO pDTO) throws Exception;
 }

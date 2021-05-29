@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import poly.dto.CartDTO;
 import poly.dto.NoticeDTO;
+import poly.service.ICartService;
 import poly.service.INoticeService;
 import poly.service.ISearchService;
 import poly.util.CmmUtil;
@@ -42,6 +44,9 @@ public class NoticeController {
 
     @Resource(name="SearchService")
     private ISearchService searchService;
+
+    @Resource(name="CartService")
+    private ICartService cartService;
 
     // 업로드되는 파일이 저장되는 기본 폴더 설정
     final private String FILE_UPLOAD_SAVE_PATH = "C:/PersonalProject/WebContent/resource//images";
@@ -77,7 +82,6 @@ public class NoticeController {
 
         if (rList == null) {
             rList = new ArrayList<NoticeDTO>();
-
         }
 
         for (NoticeDTO i : rList) {
@@ -232,8 +236,12 @@ public class NoticeController {
 
         if (rDTO == null)
         {
-            rDTO = new NoticeDTO();
+            //rDTO = new NoticeDTO();
             log.info("is null");
+            model.addAttribute("msg", "존재하지 않는 게시글입니다.");
+            model.addAttribute("url", "/noticeList.do");
+
+            return "/redirect";
         }
 
         // 로그인 상태의 회원이 상품을 조회했을 경우, 최근 본 상품에 저장
@@ -324,6 +332,9 @@ public class NoticeController {
         // update할 값을 pDTO에 담기 위해 NoticeDTO 객체 생성
         NoticeDTO pDTO = new NoticeDTO();
 
+        // 장바구니 담았는지 체크 및, 담았다면 정보 수정을 위해 CartDTO 객체 생성
+        CartDTO cDTO = new CartDTO();
+
         try {
             // 업로드하는 실제 파일명
             String org_file_name = mf.getOriginalFilename();
@@ -354,6 +365,21 @@ public class NoticeController {
             log.info("update할 지역구 : " + addr2);
             log.info("update할 카테고리 : " + category);
 
+
+            /*String goods_no = (String) request.getParameter("nSeq");
+            log.info("장바구니 수정체크를 위한 상품번호 받아왔는지" + goods_no); */
+
+            /**
+             * 장바구니에 해당 상품명에 해당하는 상품이 담겨져 있는지 확인(chDTO 사용)
+             * */
+            CartDTO chDTO = new CartDTO();
+            chDTO.setGoods_no(goods_no);
+
+            List<CartDTO> rList = cartService.updateChk(chDTO);
+            log.info("장바구니 상품 체크 완료! is Null? : " + (rList == null));
+
+            chDTO = null;
+
             if (ext.equals("jpeg") || ext.equals("jpg") || ext.equals("gif") || ext.equals("png")) {
 
 
@@ -375,6 +401,10 @@ public class NoticeController {
 
                 pDTO.setImgs(full_img);
                 log.info("img(폴더 경로) : " + pDTO.getImgs());
+
+                /** 새로운 이미지가 첨부되었다면, 수정할 cartDTO cDTO에 img 주소 세팅
+                 */
+                cDTO.setImgs(full_img);
             } else { // 기존 파일이 그대로인 경우(새로운 파일업로드로부터 이미지를 받아오지 못함)
                 log.info("새로운 이미지 파일 들어오지 않음(기존 이미지 사용)");
                 NoticeDTO nDTO = new NoticeDTO();
@@ -389,6 +419,10 @@ public class NoticeController {
                 log.info("실패한 경우 받아온 이미지 경로(nvl) : " + def_img);
                 pDTO.setImgs(def_img);
                 log.info("setting 되었는지?" + pDTO.getImgs());
+
+                /** 기존의 이미지가 전달되었다면, 수정할 cartDTO cDTO에 기존 이미지 주소 세팅
+                 */
+                cDTO.setImgs(def_img);
             }
 
             pDTO.setUser_no(user_no);
@@ -404,8 +438,26 @@ public class NoticeController {
             log.info("pDTO 세팅 여부 : " + pDTO.getAddr2());
 
             noticeService.updateNoticeInfo(pDTO);
-            log.info("update 완료!");
+            log.info("상품 update 완료!");
 
+            /**
+             * 장바구니 상품 수정 로직. rList != null(해당 상품 장바구니 정보가 있다면, 함께 수정)
+             * */
+            if (rList != null) {
+
+                //for (CartDTO c : rList) 와 같이 user_no를 불러와 따로 지정 또는 사용하지 않아도 해당 상품번호에 해당되면 모두 수정됨
+                    cDTO.setGoods_title(goods_title);
+                    cDTO.setCategory(category);
+                    cDTO.setGoods_price(goods_price);
+                    // 해당 상품번호에 해당하는 장바구니 테이블 모두 수정
+                    cDTO.setGoods_no(goods_no);
+
+                    // 장바구니 업데이트 진행
+                    cartService.updateCart(cDTO);
+
+                    log.info("장바구니 업데이트 성공!");
+
+            }
             msg = "수정되었습니다.";
             url = "/noticeInfo.do?nSeq=" + goods_no;
 
@@ -421,6 +473,7 @@ public class NoticeController {
             return "/redirect";
         } finally {
             log.info(this.getClass().getName() + ".noticeUpdate(게시판 수정 등록) End!");
+
 
             // redirect로 결과 메시지 전달
             model.addAttribute("msg", msg);
@@ -438,12 +491,31 @@ public class NoticeController {
 
         log.info(this.getClass().getName() + ".noticeDelete(판매글 삭제) Start!");
 
+        String user_no = (String) session.getAttribute("SS_USER_NO");
+
         String msg = "";
 
         try {
             String goods_no = CmmUtil.nvl(request.getParameter("nSeq")); //글번호
 
             log.info("받아온 글 번호 : " + goods_no);
+
+            NoticeDTO nDTO = new NoticeDTO();
+            nDTO.setGoods_no(goods_no);
+            NoticeDTO rDTO = noticeService.getNoticeInfo(nDTO);
+            log.info("판매 정보 가져오기 성공!");
+            nDTO = null;
+
+            NoticeDTO dDTO = new NoticeDTO();
+            dDTO.setUser_no(user_no);
+            dDTO.setImgs(rDTO.getImgs());
+            dDTO.setGoods_title(rDTO.getGoods_title());
+            dDTO.setGoods_no(goods_no);
+
+            log.info("삭제 요청할 정보 받아오기 성공!" + dDTO.getGoods_title());
+
+            searchService.rmKeyword(dDTO);
+            log.info("삭제 요청 완료!");
 
             // 판매글 번호를 DTO에 담기 위해 pDTO 객체 생성
             NoticeDTO pDTO = new NoticeDTO();

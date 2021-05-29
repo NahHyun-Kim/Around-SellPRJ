@@ -5,13 +5,14 @@
     NoticeDTO rDTO = (NoticeDTO) request.getAttribute("rDTO");
 
     // 정보를 불러오지 못했을 경우, 객체 생성
-    if (rDTO == null) {
+    /*if (rDTO == null) {
         rDTO = new NoticeDTO();
-    }
+    }*/
 
     // 게시글 수정, 삭제 시 로그인&본인 여부 확인을 위한 세션값 받아오기
     String SS_USER_NO = CmmUtil.nvl((String) session.getAttribute("SS_USER_NO"));
     String SS_USER_ADDR = CmmUtil.nvl((String) session.getAttribute("SS_USER_ADDR"));
+    String SS_USER_NAME = CmmUtil.nvl((String) session.getAttribute("SS_USER_NAME"));
 
     System.out.println("세션에서 받아온 회원 주소 = " + SS_USER_ADDR);
     System.out.println("rDTO.getGoods_addr2() 주소값 꼭 받아와야 함 = " + rDTO.getGoods_addr2());
@@ -163,7 +164,7 @@
 
         <!-- 지도, 상호명, 위치, 거리 표시 -->
         <div class="row">
-            <div class="col-6" id="map">지도 예정</div>
+            <div class="col-6" id="map"></div>
             <div class="col-6">
                 <div class="row">
                     <div class="col" id="goods_addr">
@@ -182,6 +183,7 @@
                 <div class="row">
                     <div class="col" id="distance">
                         <input type="button" id="searchD" onclick="return search()" value="거리 검색"/>
+                        <button type="button" id="findroad" onclick="return road()">길찾기</button>
                     </div>
                     <div class="col" id="findpath"></div>
                 </div>
@@ -195,6 +197,19 @@
                 </div>
             </div>
         </div>
+        <!-- end 지도 관련 -->
+
+        <!-- 댓글 작성란(임시) -->
+        <div class="row">
+            <div class="col">작성자 : <%=SS_USER_NAME%></div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <input type="textarea" name="comment" id="comment" style="width: 200px; height:100px" placeholder="댓글을 입력하세요."/>
+                <button type="button" class="btn btn-info" onclick="doSubmit()">댓글 등록</button>
+            </div>
+        </div>
+
     </div>
 
     <input type="hidden" id="user_no" value="<%=SS_USER_NO%>"/>
@@ -272,6 +287,20 @@
         }})
     </script>
     <script type="text/javascript">
+
+        var lat1 = document.getElementById("lat1").innerText;
+        var lon1 = document.getElementById("lon1").innerText;
+        var lat2 = document.getElementById("lat2").innerText;
+        var lon2 = document.getElementById("lon2").innerText;
+
+        // 길찾기를 눌렀을 때, 카카오 길찾기 페이지로 이동
+        function road() {
+            var url = "https://map.kakao.com/link/to/" + "<%=rDTO.getGoods_addr()%>," + lat1 + "," + lon1;
+            console.log("url : " + url);
+
+            window.open(url, '_blank');
+        }
+
         function search() {
             var adr = "<%=SS_USER_ADDR%>";
             console.log("세션 주소 : " + adr);
@@ -280,10 +309,6 @@
             alert("로그인 후 이용해 주세요.");
             location.href="/logIn.do";
             } else {
-        var lat1 = document.getElementById("lat1").innerText;
-        var lon1 = document.getElementById("lon1").innerText;
-        var lat2 = document.getElementById("lat2").innerText;
-        var lon2 = document.getElementById("lon2").innerText;
 
         console.log("동작 확인(판매 위도) : " + lat1);
         console.log("동작 확인(유저 위도) : " + lat2);

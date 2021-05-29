@@ -216,4 +216,57 @@ public class SearchMapper implements ISearchMapper {
         return rSet;
     }
 
+    // 최근 본 상품 삭제
+    @Override
+    public void rmKeyword(NoticeDTO pDTO) throws Exception {
+
+        log.info(this.getClass().getName() + ".rmKeyword 시작!");
+
+        String user_no = pDTO.getUser_no();
+        String imgs = pDTO.getImgs();
+        String goods_title = pDTO.getGoods_title();
+        String goods_no = pDTO.getGoods_no();
+
+        // json 형태의 String으로 redis에 저장(추후 불러올때, json.parse로 json 객체로 변환)
+        String jsonGoods = "{\"" + "goods_no" + "\" : \"" + goods_no + "\", \""
+                + "imgs" + "\" : \"" + imgs + "\", \"" + "goods_title" + "\" : \"" + goods_title + "\"}";
+
+
+        String redisKey = "Goods_UserNo_" + user_no;
+        log.info("키값 : " + redisKey);
+
+        log.info("mapper에서 pDTO값 가져왔는지 ? : " + goods_no);
+
+        // redis 저장 및 읽기에 대한 데이터 타입 지정(String 타입으로 지정)
+        redisDB.setKeySerializer(new StringRedisSerializer());
+
+        // DTO를 JSON구조로 변경
+        redisDB.setValueSerializer(new StringRedisSerializer());
+
+        log.info("json 형태 결과값 : " + jsonGoods);
+
+        // 해당되는
+        try {
+                Set rSet = (Set) redisDB.opsForSet().members(redisKey);
+
+                Iterator<String> it = rSet.iterator();
+
+                while (it.hasNext()) {
+                    String value = CmmUtil.nvl((String) it.next());
+
+                    System.out.println("value : " + value);
+                    /* 최근 본 상품에 들어가 있는 데이터일 것이기 때문에, 기존 데이터를 삭제한다.
+                     */
+                    if (value.equals(jsonGoods)) {
+                        log.info("중복 값 있음. 삭제함");
+                        redisDB.opsForZSet().remove(redisKey, jsonGoods);
+                        log.info("삭제 완료");
+                    }
+                }
+
+       } catch (Exception e) {
+
+        }
+        log.info("rmKeyword end!");
+    }
 }

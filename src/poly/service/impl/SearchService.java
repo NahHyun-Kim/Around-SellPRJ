@@ -40,4 +40,10 @@ public class SearchService implements ISearchService {
     public Set getGoods(NoticeDTO pDTO) throws Exception {
         return searchMapper.getGoods(pDTO);
     }
+
+    // 최근 본 상품 삭제하기(판매글 수정 또는 삭제시)
+    @Override
+    public void rmKeyword(NoticeDTO pDTO) throws Exception {
+        searchMapper.rmKeyword(pDTO);
+    }
 }
