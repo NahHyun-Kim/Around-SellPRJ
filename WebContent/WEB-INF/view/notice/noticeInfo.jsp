@@ -4,13 +4,16 @@
 <%
     NoticeDTO rDTO = (NoticeDTO) request.getAttribute("rDTO");
 
+    String GOODS_NO = (String) rDTO.getGoods_no();
+    System.out.println("가져온 상품번호 : " + GOODS_NO);
+
     // 정보를 불러오지 못했을 경우, 객체 생성
     /*if (rDTO == null) {
         rDTO = new NoticeDTO();
     }*/
 
     // 게시글 수정, 삭제 시 로그인&본인 여부 확인을 위한 세션값 받아오기
-    String SS_USER_NO = CmmUtil.nvl((String) session.getAttribute("SS_USER_NO"));
+    String SS_USER_NO = CmmUtil.nvl(((String) session.getAttribute("SS_USER_NO")), "-1");
     String SS_USER_ADDR = CmmUtil.nvl((String) session.getAttribute("SS_USER_ADDR"));
     String SS_USER_NAME = CmmUtil.nvl((String) session.getAttribute("SS_USER_NAME"));
 
@@ -20,8 +23,8 @@
     // 로그인 여부&본인 여부를 판단하는 edit 변수 선언
     int edit = 1; // 1(작성자 아님), 2(본인이 작성), 3(로그인 안 함)
 
-    // 로그인을 하지 않았다면(SS_USER_ID값이 null이라면)
-    if (SS_USER_NO.equals("")) {
+    // 로그인을 하지 않았다면(SS_USER_ID값이 nvl 처리를 타고 -1 이라면)
+    if (SS_USER_NO.equals("-1")) {
         edit = 3; // 로그인 안 함 표시
 
         // 세션으로 받아온 회원번호가 rDTO에서 가져온 회원번호와 같을 경우(=본인일 경우)
@@ -48,7 +51,7 @@
             console.log("로그인 여부?(유저번호) : " + loginChk);
 
             // 로그인 상태로 판매글 상세보기를 로딩했다면, 최근 본 상품에 등록 진행
-            if (loginChk != "") {
+            if (loginChk != "-1") {
                 $.ajax({
                     url: "/insertGoods.do",
                     type: "post",
@@ -100,43 +103,63 @@
                 return false;
             }
 
+            $.ajax({
+                url: "commentCnt.do",
+                type: "post",
+                data: {
+                    "user_no" : <%=SS_USER_NO%>,
+                    "goods_no" : <%=rDTO.getGoods_no()%>
+                },
+                success : function(res) {
+                    console.log("댓글 몇개? : " + res);
+                    if (res == 3) {
+                        alert("한 게시물에 댓글은 3개까지 달 수 있습니다.");
+                        return false;
+
+                        // 댓글이 3개 이하라면, 댓글 등록 진행
+                    } else if (res < 3) {
+
+                        $.ajax({
+                            url : "/insertComment.do",
+                            type: "post",
+                            dataType: "JSON",
+                            data: {
+                                "content" : comment,
+                                "goods_no" : '<%=rDTO.getGoods_no()%>',
+                                "user_no" : '<%=SS_USER_NO%>',
+                                "user_name" : '<%=SS_USER_NAME%>'
+                            },
+                            success: function (data) {
+                                if (data == 1) { //등록에 성공했다면
+                                    alert("댓글이 등록되었습니다.");
+
+                                    // 댓글이 등록되었다면, 기존 입력창에 썼던 내용을 초기화(placeholder만 남는다.)
+                                    document.getElementById("comment").value = "";
+                                    //window.location.reload() 는 판매글 전체가 다시 로딩되어 화면이동 없이 처리할 수 있는 ajax와 적합하지 않은 듯 함
+                                    // 댓글 리스트를 가져오는 getComment() 함수를 통해 댓글 리스트만 다시 가져온다.
+                                    getComment();
+                                }
+                                else if (data == 0) { // 등록에 실패했다면
+                                    console.log("댓글 등록 실패!");
+                                    return false;
+                                }
+                            },
+                            // error catch!
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                                console.log(errorThrown);
+                            }
+                        })
+                    }
+                }
+            })
             /**
              *  댓글 유효성에 문제가 없다면, ajax로 댓글 등록을 호출
              *  */
-            else {
-                $.ajax({
-                    url : "/insertComment.do",
-                    type: "post",
-                    dataType: "JSON",
-                    data: {
-                        "content" : comment,
-                        "goods_no" : '<%=rDTO.getGoods_no()%>',
-                        "user_no" : '<%=SS_USER_NO%>',
-                        "user_name" : '<%=SS_USER_NAME%>'
-                    },
-                    success: function (data) {
-                        if (data == 1) { //등록에 성공했다면
-                            alert("댓글이 등록되었습니다.");
+            //else {
 
-                            // 댓글이 등록되었다면, 기존 입력창에 썼던 내용을 초기화(placeholder만 남는다.)
-                            document.getElementById("comment").value = "";
-                            //window.location.reload() 는 판매글 전체가 다시 로딩되어 화면이동 없이 처리할 수 있는 ajax와 적합하지 않은 듯 함
-                            // 댓글 리스트를 가져오는 getComment() 함수를 통해 댓글 리스트만 다시 가져온다.
-                            getComment();
-                        }
-                        else if (data == 0) { // 등록에 실패했다면
-                            console.log("댓글 등록 실패!");
-                            return false;
-                        }
-                    },
-                    // error catch!
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert("에러 발생! \n" + textStatus + ":" + errorThrown);
-                        console.log(errorThrown);
-                    }
-                })
             }
-        }
+        //}
 
         //글자 길이 바이트 단위로 체크하기(바이트값 전달)
         function calBytes(str){
@@ -169,6 +192,10 @@
                 // rList를 json이라는 이름으로 받음
                 success: function (json) {
                     var comment_list = "";
+                    var total = json.length;
+                    var totalMent = "총 " + total + " 건의 댓글";
+
+                    console.log("총 댓글 수 : " + total);
 
                     // rList로 댓글 리스트를 JSON 형태로 받아와, 전체 사이즈만큼 출력.
                     // json형태는 .변수명으로 값을 가져올 수 있다.
@@ -179,6 +206,16 @@
                         comment_list += '<div>';
                         comment_list += ("작성자 : " + json[i].user_name+"<br>");
                         comment_list += (json[i].content+"<br>");
+
+                        // 긍정, 부정 댓글에 따라 표시되는 이모티콘을 다르게함
+                        if (json[i].polarity == "+") {
+                            comment_list += '<img src="${pageContext.request.contextPath}/resources/assets/img/good.png" style="width:30px; height:30px" />';
+                        } else if (json[i].polarity == "-") {
+                            comment_list += '<img src="${pageContext.request.contextPath}/resources/assets/img/crying.png" style="width:30px; height:30px"/>';
+                        } else if (json[i].polarity == "0") {
+                            comment_list += '<img src="${pageContext.request.contextPath}/resources/assets/img/oing.png" style="width:30px; height:30px"/>';
+                        }
+
                         // 본인이 작성한 댓글인 경우에만 수정, 삭제할 수 있도록 수정, 삭제 버튼을 표시함
                         if ((<%=SS_USER_NO%>) == (json[i].user_no))
                         {
@@ -188,6 +225,7 @@
                         }
                         comment_list += '</div>';
                     }
+                    $("#total").html(totalMent);
                     $("#comment_list").html(comment_list);
                 }
             })
@@ -476,6 +514,7 @@
         </div>
         <!-- end 지도 관련 -->
 
+        <div id="total"></div>
         <!-- 댓글 작성란(임시) -->
         <div class="row">
             <div class="col">작성자 : <%=SS_USER_NAME%></div>
@@ -589,10 +628,10 @@
             console.log("세션 주소 : " + adr);
 
         if (adr == "") {
-            alert("로그인 후 이용해 주세요.");
-            location.href="/logIn.do";
-            } else {
-
+            if (confirm("로그인한 사용자만 거리를 확인할 수 있습니다. 로그인 하시겠습니까?")) {
+                location.href = "/logIn.do";
+            }
+        } else {
         console.log("동작 확인(판매 위도) : " + lat1);
         console.log("동작 확인(유저 위도) : " + lat2);
         console.log("바뀜");

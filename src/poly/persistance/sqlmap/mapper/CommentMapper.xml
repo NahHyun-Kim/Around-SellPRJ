@@ -11,14 +11,16 @@
          GOODS_NO,
          USER_NO,
          CONTENT,
-         USER_NAME
+         USER_NAME,
+         POLARITY
         )
         VALUES
         (
          #{goods_no},
          #{user_no},
          #{content},
-         #{user_name}
+         #{user_name},
+         #{polarity}
         )
     </insert>
 
@@ -46,7 +48,8 @@
             aroundsell.comment
         SET
             CONTENT = #{content},
-            USER_NAME = #{user_name}
+            USER_NAME = #{user_name},
+            POLARITY = #{polarity}
         WHERE
             COMMENT_NO = #{comment_no}
     </update>

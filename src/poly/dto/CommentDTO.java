@@ -7,6 +7,15 @@ public class CommentDTO {
     private String user_no; // 회원 번호(on delete cascade 설정)
     private String content; // 댓글 내용
     private String user_name; // 작성자 이름
+    private String polarity; // 긍정, 부정 척도(오피니언 마이닝)
+
+    public String getPolarity() {
+        return polarity;
+    }
+
+    public void setPolarity(String polarity) {
+        this.polarity = polarity;
+    }
 
     public String getComment_no() {
         return comment_no;

@@ -1,12 +1,12 @@
 package poly.controller;
 
-import org.apache.hadoop.mapreduce.v2.app.commit.CommitterEventType;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import poly.dto.CommentDTO;
+import poly.dto.NlpDTO;
 import poly.service.*;
 import poly.util.CmmUtil;
 
@@ -23,14 +23,12 @@ public class CommentController {
     // 댓글 컨트롤러
     private Logger log = Logger.getLogger(this.getClass());
 
-    @Resource(name = "UserService")
-    private IUserService userService;
-
-    @Resource(name = "NoticeService")
-    private INoticeService noticeService;
-
     @Resource(name = "CommentService")
     private ICommentService commentService;
+
+    @Resource(name = "NlpService")
+    private INlpService nlpService;
+
 
     // 댓글 등록하기(getNoticeInfo 화면에서, 댓글 등록 시 ajax로 진행된다.)
     @ResponseBody
@@ -53,6 +51,28 @@ public class CommentController {
 
         try {
 
+            String pol = "";
+
+            NlpDTO nDTO = new NlpDTO();
+
+            nDTO.setWord(content);
+
+            // 댓글 긍정부정 분석
+            int point = nlpService.preProcessWordAnalysisForMind(nDTO);
+            if (point < 0) {
+                pol = "-";
+
+            }else if (point == 0) {
+                pol = "0";
+
+            }else {
+                pol = "+";
+
+            }
+
+            log.info("긍정부정 분석(point) + (pol값) : " + point + pol);
+            nDTO = null;
+
             // 댓글 DTO 생성 + insert 할 값을 pDTO에 세팅
             CommentDTO pDTO = new CommentDTO();
 
@@ -60,6 +80,7 @@ public class CommentController {
             pDTO.setUser_no(user_no);
             pDTO.setContent(content);
             pDTO.setUser_name(user_name);
+            pDTO.setPolarity(pol);
 
             // 댓글 insert
             commentService.insertComment(pDTO);
@@ -179,18 +200,46 @@ public class CommentController {
         int res = 0;
 
         try {
+            // 변경된 댓글에 대해 오피니언 마이닝 재 진행
+            String pol = "";
+
+            NlpDTO nDTO = new NlpDTO();
+
+            nDTO.setWord(content);
+
+            // 댓글 긍정부정 분석 진행
+            int point = nlpService.preProcessWordAnalysisForMind(nDTO);
+
+            // 결과값에 따라 -이면 부정(-), +이면 긍정(+), 중립이면 0을 부여한다.
+
+            if (point < 0) {
+                pol = "-";
+
+            }else if (point == 0) {
+                pol = "0";
+
+            }else {
+                pol = "+";
+
+            }
+
+            log.info("긍정부정(수정) 분석(point) + (pol값) : " + point + pol);
+            nDTO = null;
+
             // 수정할 댓글 정보를 pDTO에 세팅
             // pk인 댓글 번호에 해당하는 정보를 수정한다.
             CommentDTO pDTO = new CommentDTO();
             pDTO.setContent(content);
             pDTO.setUser_name(user_name);
             pDTO.setComment_no(comment_no);
+            pDTO.setPolarity(pol);
 
             commentService.editComment(pDTO);
             log.info("수정 성공! (editCommet 함수 실행!)");
 
             // 수정에 성공했다면 ,res = 1 반환
             res = 1;
+            pDTO = null;
         }
         catch(Exception e) {
             log.info("수정 에러 발생! : " + e.toString());
@@ -198,6 +247,65 @@ public class CommentController {
         }
 
         log.info(this.getClass().getName() + ".editComment(ajax 댓글 수정 로직 진행) 끝!" + res);
+
+        return res;
+    }
+
+    // 한 게시물에 회원당 3개의 댓글까지만 허용, cnt 진행
+    @ResponseBody
+    @RequestMapping(value="commentCnt")
+    public int commentCnt(HttpServletRequest request, HttpServletResponse response,
+                          @RequestParam(value="goods_no") String goods_no,
+                          @RequestParam(value="user_no") String user_no)
+        throws Exception {
+
+        log.info(this.getClass().getName() + ".commentCnt(개수 체크) 시작!");
+        log.info("받아온 상품번호, 회원번호 : " + goods_no + " " + user_no);
+
+        CommentDTO pDTO = new CommentDTO();
+        pDTO.setGoods_no(goods_no);
+        pDTO.setUser_no(user_no);
+
+        int res = commentService.commentCnt(pDTO);
+        log.info("받아온 res값 (성공시 count값 들어옴 : " + res);
+
+        log.info(this.getClass().getName() + ".commentCnt(개수 체크) 끝!" + res);
+
+        return res;
+    }
+
+    /**
+     * 긍정, 부정 분석하기(test!)
+     */
+    @ResponseBody
+    @RequestMapping(value = "nlpAnalysis", produces = "application/text; charset=utf8")
+    public String wordAnalysis(HttpServletRequest request, HttpServletResponse response,
+                               @RequestParam(value="text_message") String text_message)
+            throws Exception {
+
+        log.info(this.getClass().getName() + ".wordAnalysis start!");
+
+        String res = "";
+
+        log.info("ajax로 가져온 text_message : " + text_message);
+
+        NlpDTO pDTO = new NlpDTO();
+        pDTO.setWord(text_message);
+
+        int point = nlpService.preProcessWordAnalysisForMind(pDTO);
+
+        if (point < 0) {
+            res = "\""+ text_message + "\" 문장의 분석결과는 "+ point + "로 부정적인 결과가 나왔습니다.";
+
+        }else if (point == 0) {
+            res = "\""+ text_message + "\" 문장의 분석결과는 데이터 사전에 존재하지 않아 분석이 불가능합니다.";
+
+        }else {
+            res = "\""+ text_message + "\" 문장의 분석결과는 "+ point + "로 긍정적인 결과가 나왔습니다.";
+
+        }
+
+        log.info(this.getClass().getName() + ".wordAnalysis end!" + res);
 
         return res;
     }

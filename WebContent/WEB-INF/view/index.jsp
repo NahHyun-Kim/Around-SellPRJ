@@ -17,6 +17,7 @@
     <title>Around-Sell</title>
     <!-- jquery -->
     <script src="/resource/js/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <body>
 <a href="/index.do">메인 페이지</a>
@@ -44,10 +45,35 @@
 <a href="/myCart.do">관심상품</a>
 <a href="/mySee.do">최근 본 상품</a>
 <input type="hidden" id="ss_no" value="<%=SS_USER_NO%>">
+
+<!-- 오피니언 마이닝 테스트 -->
+    <input type="text" id="text_message" name="text_message" style="width:400px"/>
+    <input type="submit" onclick="doNlp()" value="전송" />
+    <div id="nlpRes"></div>
+
 <!-- 크롤링 -->
 <script type="text/javascript" src="/resource/js/Weather.js?ver=2"></script>
 
 <script type="text/javascript">
+
+    function doNlp() {
+        var text_message = document.getElementById("text_message").value;
+        console.log("입력한 text값" + text_message);
+
+        $.ajax({
+            url : "nlpAnalysis.do",
+            type : "post",
+            dataType : "text",
+            data : {
+                "text_message" : text_message
+            },
+            success: function(res) {
+                console.log("res : " + res);
+                document.getElementById("nlpRes").innerHTML = res;
+                document.getElementById("text_message").value = "";
+            }
+        })
+    }
     // 페이지가 로딩될 때, 최근 본 상품을 불러옴(추후 mainPage에 로그인시 띄울까 고민중)
     $(document).ready(function() {
         // 받아온 회원 정보가 있을 경우(로그인한 사용자인 경우), 최근 본 상품 불러오기 진행

@@ -9,5 +9,6 @@
         <typeAlias type="poly.dto.NoticeDTO" alias="NoticeDTO"/>
         <typeAlias type="poly.dto.CartDTO" alias="CartDTO"/>
         <typeAlias type="poly.dto.CommentDTO" alias="CommentDTO"/>
+        <typeAlias type="poly.dto.NlpDTO" alias="NlpDTO"/>
     </typeAliases>
 </configuration>

@@ -43,4 +43,10 @@ public class CommentService implements ICommentService {
     public void editComment(CommentDTO pDTO) throws Exception {
         commentMapper.editComment(pDTO);
     }
+
+    // 댓글 수 체크
+    @Override
+    public int commentCnt(CommentDTO pDTO) throws Exception {
+        return commentMapper.commentCnt(pDTO);
+    }
 }

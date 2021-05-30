@@ -20,4 +20,7 @@ public interface ICommentService {
 
     // 댓글 수정하기(ajax)
     void editComment(CommentDTO pDTO) throws Exception;
+
+    // 댓글 수 체크
+    int commentCnt(CommentDTO pDTO) throws Exception;
 }

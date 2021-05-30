@@ -75,7 +75,7 @@ public class MainController {
 		//List<String> titleList = new ArrayList<>();
 		String titles = "";
 
-		for (NoticeDTO i : rList) {
+		/*for (NoticeDTO i : rList) {
 			// 상품명에 문자가 아닌 기호가 있다면, 제거
 			title = i.getGoods_title().replace(":", "").replace("(", "").replace(")", "").replace(":", "");
 			log.info("가져온 상품명 : " + title);
@@ -83,7 +83,7 @@ public class MainController {
 			titles += title + " ";
 
 			//titleList.add(title);
-		}
+		} */
 
 		String[] splitTitle = titles.split(" ");
 		log.info(splitTitle[0] + " " + splitTitle[1]);
