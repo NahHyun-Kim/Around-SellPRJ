@@ -11,4 +11,13 @@ public interface ICommentService {
 
     // 댓글 목록 가져오기(ajax)
     List<CommentDTO> getComment(CommentDTO pDTO) throws Exception;
+
+    // 댓글 삭제하기(ajax)
+    void delComment(CommentDTO pDTO) throws Exception;
+
+    // 댓글을 수정 시, 내용 표시를 위해 기존 댓글정보를 가져옴(댓글번호)
+    CommentDTO getCommentDetail(CommentDTO pDTO) throws Exception;
+
+    // 댓글 수정하기(ajax)
+    void editComment(CommentDTO pDTO) throws Exception;
 }

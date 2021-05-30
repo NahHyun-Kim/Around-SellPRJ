@@ -31,4 +31,44 @@
             GOODS_NO = #{goods_no}
     </select>
 
+    <!-- 댓글 삭제하기(댓글번호 comment_no)를 전달받아 삭제 진행 -->
+    <delete id="delComment" parameterType="CommentDTO">
+        DELETE
+        FROM
+            aroundsell.comment
+        WHERE
+            COMMENT_NO = #{comment_no}
+    </delete>
+
+    <!-- 댓글 수정하기(상품번호, 회원번호는 모두 동일함) -->
+    <update id="editComment" parameterType="CommentDTO">
+        UPDATE
+            aroundsell.comment
+        SET
+            CONTENT = #{content},
+            USER_NAME = #{user_name}
+        WHERE
+            COMMENT_NO = #{comment_no}
+    </update>
+
+    <!-- 댓글을 수정할 때, 내용 표시를 위해 기존 댓글정보를 가져옴(댓글번호) -->
+    <select id="getCommentDetail" parameterType="CommentDTO" resultType="CommentDTO">
+        SELECT * FROM
+            aroundsell.comment
+        WHERE
+            COMMENT_NO = #{comment_no}
+    </select>
+
+    <!-- 댓글 수 체크(한명 당 최대 3개의 댓글만 달 수 있도록 설정) -->
+    <select id="commentCnt" parameterType="CommentDTO" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            aroundsell.comment
+        WHERE
+            USER_NO = #{user_no}
+        AND
+            GOODS_NO = #{goods_no}
+    </select>
+
 </mapper>

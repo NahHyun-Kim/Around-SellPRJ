@@ -40,6 +40,10 @@
     <script src="/resource/js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
+
+            // 댓글 리스트 가져오기
+            getComment();
+
             var loginChk = "<%=CmmUtil.nvl(SS_USER_NO)%>";
             console.log("로그인 여부?(유저번호) : " + loginChk);
 
@@ -68,6 +72,279 @@
         })
     </script>
     <script type="text/javascript">
+
+        // 댓글창(textarea) 클릭 시, 유효성 체크
+        function validChk() {
+            if ((<%=edit%>) == 3) { //로그인 하지 않은 사용자라면
+                if (confirm("댓글 작성은 로그인한 사용자만 가능합니다. 로그인 후 이용 하시겠습니까?")) {
+                    location.href = "/logIn.do";
+                }
+            }
+        }
+
+        // 댓글 등록 시 유효성 체크(댓글 등록 onclick시 실행)
+        function doSubmit(){
+            var comment = document.getElementById("comment").value;
+            console.log("가져온 댓글 : " + comment);
+
+            // 댓글이 입력되지 않았다면,
+            if (comment == "") {
+                alert("댓글을 입력해 주세요.");
+                $("#comment").focus();
+                return false;
+            }
+
+            if (calBytes(comment) > 3000) {
+                alert("댓글은 최대 3000Bytes 까지 입력 가능합니다.");
+                $("#comment").focus();
+                return false;
+            }
+
+            /**
+             *  댓글 유효성에 문제가 없다면, ajax로 댓글 등록을 호출
+             *  */
+            else {
+                $.ajax({
+                    url : "/insertComment.do",
+                    type: "post",
+                    dataType: "JSON",
+                    data: {
+                        "content" : comment,
+                        "goods_no" : '<%=rDTO.getGoods_no()%>',
+                        "user_no" : '<%=SS_USER_NO%>',
+                        "user_name" : '<%=SS_USER_NAME%>'
+                    },
+                    success: function (data) {
+                        if (data == 1) { //등록에 성공했다면
+                            alert("댓글이 등록되었습니다.");
+
+                            // 댓글이 등록되었다면, 기존 입력창에 썼던 내용을 초기화(placeholder만 남는다.)
+                            document.getElementById("comment").value = "";
+                            //window.location.reload() 는 판매글 전체가 다시 로딩되어 화면이동 없이 처리할 수 있는 ajax와 적합하지 않은 듯 함
+                            // 댓글 리스트를 가져오는 getComment() 함수를 통해 댓글 리스트만 다시 가져온다.
+                            getComment();
+                        }
+                        else if (data == 0) { // 등록에 실패했다면
+                            console.log("댓글 등록 실패!");
+                            return false;
+                        }
+                    },
+                    // error catch!
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                        console.log(errorThrown);
+                    }
+                })
+            }
+        }
+
+        //글자 길이 바이트 단위로 체크하기(바이트값 전달)
+        function calBytes(str){
+            var tcount = 0;
+            var tmpStr = new String(str);
+            var strCnt = tmpStr.length;
+            var onechar;
+            for (i=0;i<strCnt;i++){
+                onechar = tmpStr.charAt(i);
+                if (escape(onechar).length > 4){
+                    tcount += 2;
+                }else{
+                    tcount += 1;
+                }
+            }
+            return tcount;
+        }
+
+        /**
+         * 등록된 댓글 가져오기(댓글 등록,수정,삭제,상세보기 페이지 로딩 시 사용)
+         * */
+        function getComment() {
+            $.ajax({
+                url : "/getComment.do",
+                type : "post",
+                dataType: "JSON", //json 형식으로 받아야 .으로 리스트에 접근 가능
+                data: {
+                    "goods_no" : '<%=rDTO.getGoods_no()%>'
+                },
+                // rList를 json이라는 이름으로 받음
+                success: function (json) {
+                    var comment_list = "";
+
+                    // rList로 댓글 리스트를 JSON 형태로 받아와, 전체 사이즈만큼 출력.
+                    // json형태는 .변수명으로 값을 가져올 수 있다.
+                    for (var i=0; i<json.length; i++) {
+                        var comment_no = json[i].comment_no;
+                        console.log("받아온 댓글번호 : " + comment_no);
+
+                        comment_list += '<div>';
+                        comment_list += ("작성자 : " + json[i].user_name+"<br>");
+                        comment_list += (json[i].content+"<br>");
+                        // 본인이 작성한 댓글인 경우에만 수정, 삭제할 수 있도록 수정, 삭제 버튼을 표시함
+                        if ((<%=SS_USER_NO%>) == (json[i].user_no))
+                        {
+                            console.log("SS_USER_NO == user_no(삭제 가능!)" + (json[i].user_no));
+                            comment_list += '<button type="button" class="btn btn-info" onclick="editForm(' + comment_no + ')">수정</button><br>';
+                            comment_list += '<button type="button" class="btn btn-danger" onclick="delComment(' + comment_no + ')">X</button><br>';
+                        }
+                        comment_list += '</div>';
+                    }
+                    $("#comment_list").html(comment_list);
+                }
+            })
+        }
+
+        /** 댓글 삭제하기(해당 글에 대한 댓글번호를 함수 호출 시 파라미터로 전달하여,
+        * ajax로 해당 댓글을 삭제한다.(삭제 or 수정 후 getComment() 불러오기)
+         */
+        function delComment(comment_no) {
+
+            console.log("삭제할 댓글 번호(comment_no) : " + comment_no);
+            var delConfirm = "댓글을 삭제하시겠습니까?";
+
+            if (confirm(delConfirm)) {
+                // 본인이 작성한 댓글에 대해서만 수정, 삭제 버튼이 표시되기 때문에 바로 ajax 삭제 진행
+                $.ajax({
+                    url : "delComment.do",
+                    type : "post",
+                    // 서버로 전송할 data(댓글번호)
+                    data :
+                        {
+                            "comment_no" : comment_no
+                        },
+
+                    // 삭제에 성공했다면(data==1)
+                    success: function(data) {
+                        if (data == 1) {
+                            alert("삭제에 성공했습니다.");
+                            // 댓글 목록 불러오기
+                            getComment();
+
+                        } else if (data == 0) {
+                            alert("삭제에 실패했습니다.");
+                        }
+                    },
+
+                    // error catch!
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                        console.log(errorThrown);
+                    }
+                }) // ajax 끝
+
+            } // confirm 끝
+
+        }
+
+        /**
+         * 댓글 수정을 위해 기존 댓글 불러오기
+         * */
+        function editForm(comment_no) {
+
+            console.log("수정할 댓글 번호(comment_no) : " + comment_no);
+
+            $.ajax({
+                url : "getCommentDetail.do",
+                type : "post",
+                dataType : "JSON", //json 형태로 DTO를 받아 데이터를 뽑아올 수 있다.
+                data : {
+                    "comment_no" : comment_no
+                },
+                success : function(res) {
+                    console.log("받아온 댓글 DTO 정보(json) : " + res);
+
+                    /**
+                     * 수정 체크 시, 기존 댓글 등록을 실행하면 새로운 댓글로 등록되기 때문에,
+                     * 새로운 edit (댓글 수정) 버튼을 만들어서 기존의 등록 버튼을 지우고 수정 버튼을 보여준다.
+                     * */
+                    document.getElementById("regComment").style.display = "none";
+                    document.getElementById("editComment").style.display = "block";
+                    console.log("기존 등록 버튼 대신 수정 버튼 띄우기 성공!");
+
+                    var originalComment = res.content;
+                    var comment_no = res.comment_no;
+                    console.log("기존 댓글 내용, 댓글 번호 : " + originalComment + comment_no);
+
+                    // 기존 댓글 박스에(textarea) 기존 댓글을 넣고,
+                    // button value값에 수정할 댓글 번호 값을 넣는다.(추후 더 효율적인 코드 찾아보기)
+                    var commentBox = document.getElementById("comment");
+                    var editBtn = document.getElementById("editComment");
+                    commentBox.value = originalComment;
+                    editBtn.value = comment_no;
+                }
+            })
+        }
+
+        /**
+         * 댓글 수정 로직 ajax
+         * */
+        function editComment() {
+
+            var comment = document.getElementById("comment").value;
+
+            // 수정 버튼에 value로 등록되어 있는 comment_no 댓글번호를 가져옴
+            var editBtn = document.getElementById("editComment");
+            var comment_no = editBtn.value;
+
+            console.log("댓글 번호 가져왔는지 : " + comment_no);
+
+            // 댓글이 입력되지 않았다면,
+            if (comment == "") {
+                alert("댓글을 입력해 주세요.");
+                $("#comment").focus();
+                return false;
+            }
+
+            if (calBytes(comment) > 3000) {
+                alert("댓글은 최대 3000Bytes 까지 입력 가능합니다.");
+                $("#comment").focus();
+                return false;
+            }
+
+            else {
+                // 댓글 수정 ajax 로직 진행
+                $.ajax({
+                    url : "editComment.do",
+                    type : "post",
+                    dataType : "JSON",
+                    data : {
+                        "content" : comment,
+                        "comment_no" : comment_no,
+                        "user_name" : '<%=SS_USER_NAME%>'
+                    },
+                    // 성공했다면(data == 1, 수정 성공)
+                    success : function(data) {
+                        console.log("수정 성공! data가 1이라면 성공" + data);
+
+                        if (data == 1) {
+                            alert("댓글을 수정했습니다.");
+                            // 댓글 목록 새로 가져오기
+                            getComment();
+
+                            // 수정을 위해 "등록(댓글 새로 insert)"과 "수정(댓글 내용 불러와서 edit)" 버튼을 바꿨으므로,
+                            // 등록이 완료된 후 다시 화면에 새로운 댓글 등록창을 표시
+                            document.getElementById("regComment").style.display = "block";
+                            document.getElementById("editComment").style.display = "none";
+
+                            // 댓글이 수정되었다면, 기존 입력창에 썼던 내용을 초기화(placeholder만 남는다.)
+                            document.getElementById("comment").value = "";
+
+                        } else if (data == 0) {
+                            alert("댓글 수정에 실패했습니다.");
+                            return false;
+                        }
+                    },
+                    // error catch!
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                        console.log(errorThrown);
+                    }
+
+                })
+
+            }
+
+        }
+
         // 게시글 수정하기
         function doEdit() {
             // 본인이라면(2), 수정 페이지로 이동
@@ -84,7 +361,7 @@
             }
         }
 
-        // 삭제하기
+        // 게시물 삭제하기
         function doDelete() {
             console.log("edit이 2라면 삭제 가능, 1이면 본인 아님 : " + <%=edit%>);
             console.log(typeof (<%=edit%>));
@@ -204,11 +481,17 @@
             <div class="col">작성자 : <%=SS_USER_NAME%></div>
         </div>
         <div class="row">
-            <div class="col">
-                <input type="textarea" name="comment" id="comment" style="width: 200px; height:100px" placeholder="댓글을 입력하세요."/>
-                <button type="button" class="btn btn-info" onclick="doSubmit()">댓글 등록</button>
+            <div class="col-6">
+                <input type="textarea" name="comment" id="comment" onclick="validChk()" style="width: 200px; height:100px" placeholder="댓글을 입력하세요."/>
+            </div>
+            <div class="col-6">
+                <button type="button" class="btn btn-info" id="regComment" onclick="doSubmit()">댓글 등록</button>
+                <!-- 댓글 수정을 눌렀을 때만 버튼이 표시되도록 설정 -->
+                <button type="button" class="btn btn-info" id="editComment" onclick="editComment()" style="display: none">댓글 수정</button>
             </div>
         </div>
+
+        <div id="comment_list">해당 게시물에 대한 댓글이 없습니다.</div>
 
     </div>
 

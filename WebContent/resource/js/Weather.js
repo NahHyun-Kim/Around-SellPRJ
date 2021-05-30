@@ -57,7 +57,7 @@
          url : "/getNext.do",
          type : "post",
          data : sendData,
-         dataType : "JSON", //응답 데이터 형식
+         dataType : "JSON", //응답 데이터 형식(JSON 형태로 받아, .으로 데이터 접근 가능)
          success : function(res) {
 
              console.log(res);
