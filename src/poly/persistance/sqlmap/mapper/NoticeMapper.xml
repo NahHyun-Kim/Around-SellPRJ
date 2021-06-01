@@ -132,8 +132,27 @@
         GROUP BY CATEGORY;
     </select>
 
-    <!-- 카테고리별로 인기순 5건씩 가져옴 -->
-    <select id=""></select>
+    <!-- 카테고리별로 조회수 많은(인기순) 5건씩 가져옴 -> LIMIT은 0부터 가져올 개수만큼-->
+    <select id="hitProduct" parameterType="NoticeDTO" resultType="NoticeDTO">
+        SELECT
+            *
+        FROM
+            aroundsell.product
+        <include refid="category"/>
+        ORDER BY HIT DESC
+        LIMIT 0,5
+    </select>
 
+    <!-- 카테고리 별로 인기 상품 제공, 지정되지 않은 경우(default) 전체 상품에 대해 진행함 -->
+    <sql id="category">
+        <choose>
+        <!-- 카테고리별 인기 게시물을 요청받을 경우에만 where절을 추가함 -->
+        <when test='!category.equals("none")'>
+            WHERE CATEGORY = #{category}
+        </when>
+        <when test='category.equals("none")'>
+        </when>
+        </choose>
+    </sql>
 
 </mapper>

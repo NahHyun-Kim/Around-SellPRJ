@@ -18,6 +18,13 @@
     <!-- jquery -->
     <script src="/resource/js/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <!-- Resources(amchart 차트, 워드클라우드) -->
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/plugins/wordCloud.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/material.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 </head>
 <body>
 <a href="/index.do">메인 페이지</a>
@@ -74,50 +81,9 @@
             }
         })
     }
-    // 페이지가 로딩될 때, 최근 본 상품을 불러옴(추후 mainPage에 로그인시 띄울까 고민중)
-    $(document).ready(function() {
-        // 받아온 회원 정보가 있을 경우(로그인한 사용자인 경우), 최근 본 상품 불러오기 진행
-        var userno = <%=SS_USER_NO%>;
-        console.log("받아온 회원번호 : " + userno);
-
-        if (userno != null) {
-
-            $.ajax({
-                url: "/getGoods.do",
-                type: "post",
-                dataType: "JSON",
-                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-                success: function(data) {
-
-                    var data = data;
-
-                    // 검색어 값들을 for문을 통해 저장
-                    console.log("가져오기 성공!");
-                    console.log(data);
-                    console.log("타입 : " + typeof data);
-
-                    // 최근 본 상품부터 불러와야 하기 때문에, 역순으로 리스트를 가져옴
-                    let searchList = "";
-
-                    for (let i=data.length-1; i>=0; i--) {
-                        // String 형태의 값을 변환함 .으로 접근할 수 있는 JSON 객체로 변환
-                        var obj = JSON.parse(data[i]);
-
-                        searchList += obj.goods_no + "<br>";
-                        searchList += obj.imgs + "<br>";
-                        searchList += obj.goods_title + "<br> <hr>";
-                    }
-                    console.log("불러오기 성공! searchList : " + searchList);
-
-                    // 검색어 목록에 담음
-                    $("#keywordList").html(searchList);
-                    $("#keywordList").show();
-
-                }
-            })
-        }
-    })
 </script>
+<hr>
+<div id="chartdiv"></div>
 <hr>
 <%
     if (SS_USER_NO == null) {
@@ -126,6 +92,13 @@
 <div>최근 본 상품</div>
 <div id="keywordList"></div>
 <% } %>
+
+<style>
+    #chartdiv {
+        width: 500px;
+        height: 500px;
+    }
+</style>
 <!-- bootstrap, css 파일 -->
 <script src="/resources/js/bootstrap.js"></script>
 <link rel="stylesheet" href="/resources/css/bootstrap.css"/>

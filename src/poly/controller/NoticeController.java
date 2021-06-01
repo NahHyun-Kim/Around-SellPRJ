@@ -84,10 +84,6 @@ public class NoticeController {
             rList = new ArrayList<NoticeDTO>();
         }
 
-        for (NoticeDTO i : rList) {
-            log.info("가져온 주소값(비 로그인때 작동되는지 확인용, 추후 삭제) : " + i.getGoods_addr2());
-        }
-
         // 조회된 리스트 결과값을 model에 보냄
         model.addAttribute("rList", rList);
 

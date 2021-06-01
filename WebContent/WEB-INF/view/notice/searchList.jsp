@@ -167,20 +167,29 @@
                 <option value="W" <%=CmmUtil.nvl(searchType).equals("W")?"selected":""%>>작성자</option>
             </select>
 
-            <!-- 검색창(키워드 입력, 검색창 선택 시 최근검색어 불러옴) -->
-            <input type="text" name="keyword" id="keyword" value="${paging.keyword}" onfocusout="rmKeyword()" />
-            <button type="button" id="searchProduct" class="btn btn-info">검색하기</button>
+            <div class="row">
+                <div class="col-6">
+                    <!-- 검색창(키워드 입력, 검색창 선택 시 최근검색어 불러옴) -->
+                    <input type="text" name="keyword" id="keyword" value="${paging.keyword}" />
 
-            <!-- 최근검색어 keyword 동적으로 생성하기 -->
-            <select id="selectId" name="selectId">
+                    <!-- div로 최근검색어 리스트에 추가함 -->
+                <div id="searchHistory" style="display:none;">
+                    <ul id="list">
+                    </ul>
+                </div>
+                </div>
+                <div class="col-6">
+                    <button type="button" id="searchProduct" class="btn btn-info">검색하기</button>
+                </div>
+            </div>
 
-            </select>
-            <!--<div id="keywordList"></div>-->
+            <!--<button type="button" id="searchProduct" class="btn btn-info">검색하기</button> -->
+
             <input type="hidden" id="st" name="searchType" value="${paging.searchType}"/>
 
 
             <!-- 검색 후 정렬(null이면 자동으로 ORDER BY GOODS_NO DESC) -->
-            <select id="odType" name="odType">
+            <select id="odType" name="odType" style="display:none;">
                 <option value="" selected disabled hidden>=정렬=</option>
                 <option value="hit" <%=CmmUtil.nvl(odType).equals("hit")?"selected":""%>>인기순</option>
                 <option value="low" <%=CmmUtil.nvl(odType).equals("low")?"selected":""%>>가격 낮은순</option>
@@ -257,6 +266,9 @@
             resultMent = "<span style='color:#ff0000'>" + keyword + "</span>에 대한 " + "총 <span style='color:blue'>" + total + "</span> 건의 검색 결과";
             console.log("검색결과 멘트 : " + resultMent);
 
+            // 검색한 상품이 있을 때에만 정렬 기능을 지원하므로, 기본 display:none 속성을 해제한다.
+            $("#odType").show();
+
             res.innerHTML = resultMent;
 
             // 검색어가 존재하지 않으면, 전체 게시물 건수를 보여줌.
@@ -273,6 +285,9 @@
 
             resultMent = "해당 " + searchType + "<span style='color:#ff0000'>(" + keyword + ")</span>에 대한 " + "총 <span style='color:blue'>" + total + "</span> 건의 검색 결과";
             console.log("검색결과 멘트 : " + resultMent);
+
+            // 검색한 상품이 있을 때에만 정렬 기능을 지원하므로, 기본 display:none 속성을 해제한다.
+            $("#odType").show();
 
             res.innerHTML = resultMent;
         }
@@ -380,43 +395,61 @@
                     */
                     var searchArr = new Array();
 
-                    // 검색어 값들을 for문을 통해 저장
-                    let searchList = "";
+                    // 검색어 값들을 for문을 통해 배열에 저장
                     for (let i=data.length-1; i>=0; i--) {
-                        //searchList += data[i] + "<br>";
                         searchArr.push(data[i]);
                     }
 
-                    // 검색어 중복 option값 생성 방지를 위해, 검색어를 초기화
-                    $("select#selectId option").remove();
-
-                    console.log("removed ? : ");
-
+                    // remove() 요소 자체를 지움, empty 요소의 내용을 지움 -> empty()로 검색어 리스트(내용)를 지움
+                    $("#list").empty();
+                    console.log("기존 검색어 지우기 완료!");
                     for (let i=0; i<searchArr.length; i++) {
-                        var option_value = searchArr[i];
+                        var searchKeyword = searchArr[i];
 
-                        console.log("option 값 ? : " + option_value);
-                        $("#selectId").append('<option value="' + option_value + '">' + option_value + '</option>');
+                        console.log("검색한 키워드 값 : " + searchKeyword);
+
+                        // 검색어 목록을 list에 append 함
+                        $("#list").append('<li id="' + i + '" onclick="insertKeyword(' + i + ')" >' + searchKeyword + '</li>');
+
                     }
-                    //console.log("불러오기 성공! searchList : " + searchList);
+                    $("#list").append('<button class="btn btn-danger" onclick="rmKeyword()"">X</button>');
+                    $("#searchHistory").show();
 
-                    // 검색어 목록에 담음
-                    /* $("#keywordList").html(searchList);
-                    $("#keywordList").show(); */
 
                 }
             })
         }
     })
 
-    function rmKeyword() {
-        //$("#keywordList").hide();
-        //$("#selectId").hide();
-    }
-</script>
+    // 최근검색어 클릭 시, 검색어창에 자동 입력되게 하는 함수
+    function insertKeyword(keyword) {
+        console.log("insertKeyword() 함수 호출!");
 
+        var insertKeyword = keyword;
+        console.log("받아온 검색어 : " + insertKeyword);
+
+        var value = document.getElementById(insertKeyword).innerHTML;
+        console.log("받아온 검색어2 : " + value);
+
+        // 클릭한 최근검색어를 검색창에 자동 입력되도록 설정
+        $('input[name=keyword]').attr('value', value);
+
+        console.log("검색어 입력 성공!");
+    }
+
+    // 최근검색어 창 없애기(X)
+    function rmKeyword() {
+
+        $("#searchHistory").hide();
+        $("#list").empty();
+        $('input[name=keyword]').attr('value', "");
+        console.log("검색어 창 벗어나면 숨기기 + 기존 요소 지움!");
+
+    }
+
+</script>
 <!-- bootstrap, css 파일 -->
-<link rel="stylesheet" href="/resource/css/notice.css"/>
+<link rel="stylesheet" href="/resource/css/notice.css?ver=1"/>
 <script src="/resources/js/bootstrap.js"></script>
 <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
 

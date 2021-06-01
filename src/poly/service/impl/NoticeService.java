@@ -23,8 +23,8 @@ public class NoticeService implements INoticeService {
 
     // 판매글 상위 5개 게시글 불러오기(일반)
     @Override
-    public List<NoticeDTO> maxCount(NoticeDTO pDTO) throws Exception {
-        return noticeMapper.maxCount(pDTO);
+    public List<NoticeDTO> hitProduct(NoticeDTO pDTO) throws Exception {
+        return noticeMapper.hitProduct(pDTO);
     }
 
     // 판매글 카테고리별 게시물 수 불러오기

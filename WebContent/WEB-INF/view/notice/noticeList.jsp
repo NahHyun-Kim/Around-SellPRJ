@@ -12,20 +12,6 @@
         rList = new ArrayList<NoticeDTO>();
     }
 
-    String title = "";
-    List<String> titleList = new ArrayList<>();
-
-    for (NoticeDTO i : rList) {
-        title = i.getGoods_title();
-        titleList.add(title);
-        System.out.println(title);
-    }
-
-    Map<String, String> rMap = new HashMap<>();
-    for (NoticeDTO j : rList) {
-        rMap.put(j.getGoods_title(), j.getHit());
-    }
-
 %>
 
 <html>
@@ -136,6 +122,8 @@
     <div id="chartdiv3"></div>
     <hr/>
 
+    <!-- 이미지 넣은 차트(고민중) -->
+    <div id="chartdiv4"></div>
     <hr/>
 
     <!-- 판매글 리스트 불러오기(로그인/비 로그인 여부 나뉨) -->

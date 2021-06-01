@@ -12,7 +12,7 @@ public interface INoticeMapper {
     List<NoticeDTO> getNoticeList(NoticeDTO pDTO) throws Exception;
 
     // 판매글 상위 5개 게시글 불러오기(일반)
-    List<NoticeDTO> maxCount(NoticeDTO pDTO) throws Exception;
+    List<NoticeDTO> hitProduct(NoticeDTO pDTO) throws Exception;
 
     // 판매글 카테고리별 게시물 수 불러오기
     List<NoticeDTO> cateCount(NoticeDTO pDTO) throws Exception;
