@@ -43,8 +43,8 @@ public class MainController {
 
 	@RequestMapping(value = "test")
 	public String test() {
-		log.info("워드 클라우드 테스트 화면");
-		return "/wordcloud/test";
+		log.info("부트스트랩 테스트 화면");
+		return "/test";
 	}
 
 	/*

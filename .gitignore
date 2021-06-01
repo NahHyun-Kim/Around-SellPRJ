@@ -218,3 +218,4 @@ context-datasource.xml
 MailService
 privateUtil.java
 WebContent/resource/images/*
+out/*

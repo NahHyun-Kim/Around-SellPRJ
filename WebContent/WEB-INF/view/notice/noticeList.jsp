@@ -39,6 +39,7 @@
 </head>
 <body>
 <div class="container">
+
     <!-- 다중 마커 -->
     <div id="map" style="width: 300px; height:300px;">지도</div>
 

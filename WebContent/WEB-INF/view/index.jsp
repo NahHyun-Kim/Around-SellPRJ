@@ -6,8 +6,8 @@
     //Controller에 저장된 세션으로 로그인할 때 생성됨
     String SS_USER_NO = ((String) session.getAttribute("SS_USER_NO"));
     String SS_USER_NAME = ((String) session.getAttribute("SS_USER_NAME"));
+    String SS_USER_ADDR = ((String) session.getAttribute("SS_USER_ADDR"));
     String SS_USER_ADDR2 = ((String) session.getAttribute("SS_USER_ADDR2"));
-    System.out.println(SS_USER_NO);
 
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -17,7 +17,8 @@
     <title>Around-Sell</title>
     <!-- jquery -->
     <script src="/resource/js/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <!-- sweet alert2 -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Resources(amchart 차트, 워드클라우드) -->
     <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
@@ -25,8 +26,12 @@
     <script src="https://cdn.amcharts.com/lib/4/plugins/wordCloud.js"></script>
     <script src="https://cdn.amcharts.com/lib/4/themes/material.js"></script>
     <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+    <!-- aroundsell 메인 로고 -->
+    <link href="/resources/assets/img/favicon.png" rel="icon">
 </head>
 <body>
+<a href="/test.do">부트스트랩 테스트</a>
 <a href="/index.do">메인 페이지</a>
 <a href="/signup.do">회원가입</a>
 <% if (SS_USER_NO == null) { %> <!--세션이 설정되지 않은 경우(=로그인되지 않은 경우) 로그인 표시-->
@@ -52,7 +57,7 @@
 <a href="/myCart.do">관심상품</a>
 <a href="/mySee.do">최근 본 상품</a>
 <input type="hidden" id="ss_no" value="<%=SS_USER_NO%>">
-
+<button type="button" onclick="alertTest()">swal 테스트</button>
 <!-- 오피니언 마이닝 테스트 -->
     <input type="text" id="text_message" name="text_message" style="width:400px"/>
     <input type="submit" onclick="doNlp()" value="전송" />
@@ -99,9 +104,12 @@
         height: 500px;
     }
 </style>
-<!-- bootstrap, css 파일 -->
+<script type="text/javascript">
+    function alertTest() {
+        swal.fire("<%=SS_USER_ADDR2%>");
+    }
+</script>
 <script src="/resources/js/bootstrap.js"></script>
 <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
-
 </body>
 </html>
