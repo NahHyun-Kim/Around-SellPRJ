@@ -1,36 +1,21 @@
-<%@ page import="poly.util.CmmUtil" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
-
-<%
-    //Controller에 저장된 세션으로 로그인할 때 생성됨
-    String SS_USER_NO = ((String) session.getAttribute("SS_USER_NO"));
-    String SS_USER_NAME = ((String) session.getAttribute("SS_USER_NAME"));
-    String SS_USER_ADDR = ((String) session.getAttribute("SS_USER_ADDR"));
-    String SS_USER_ADDR2 = ((String) session.getAttribute("SS_USER_ADDR2"));
-
-%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="include/session.jsp"%>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Around-Sell</title>
-    <!-- jquery -->
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
-    <!-- sweet alert2 -->
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Resources(amchart 차트, 워드클라우드) -->
-    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/plugins/wordCloud.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/themes/material.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
-
-    <!-- aroundsell 메인 로고 -->
-    <link href="/resources/assets/img/favicon.png" rel="icon">
+    <!-- 부트스트랩 템플릿 CSS -->
+    <%@ include file="include/cssFile.jsp"%>
 </head>
+
 <body>
+    <!-- preloader -->
+    <%@ include file="include/preloader.jsp"%>
+    <!-- preloader End -->
+
+    <!-- Header(상단 메뉴바 시작!) Start -->
+    <%@ include file="include/header.jsp"%>
+    <!-- Header End(상단 메뉴바 끝!) -->
+
 <a href="/test.do">부트스트랩 테스트</a>
 <a href="/index.do">메인 페이지</a>
 <a href="/signup.do">회원가입</a>
@@ -109,7 +94,9 @@
         swal.fire("<%=SS_USER_ADDR2%>");
     }
 </script>
-<script src="/resources/js/bootstrap.js"></script>
-<link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+
+    <!-- include JS File Start -->
+    <%@ include file="include/jsFile.jsp"%>
+    <!-- include JS File End -->
 </body>
 </html>

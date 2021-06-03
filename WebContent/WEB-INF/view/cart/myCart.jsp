@@ -2,9 +2,9 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="../include/session.jsp"%>
 <%
     List<CartDTO> rList = (List<CartDTO>) request.getAttribute("rList");
-    String user_no =(String) session.getAttribute("SS_USER_NO");
     if (rList == null) {
         rList = new ArrayList<CartDTO>();
     }
@@ -14,10 +14,19 @@
 <html>
 <head>
     <title>관심상품</title>
-    <!-- jquery -->
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
+    <!-- 부트스트랩 템플릿 CSS -->
+    <%@ include file="../include/cssFile.jsp"%>
 </head>
+
 <body>
+    <!-- preloader -->
+    <%@ include file="../include/preloader.jsp"%>
+    <!-- preloader End -->
+
+    <!-- Header(상단 메뉴바 시작!) Start -->
+    <%@ include file="../include/header.jsp"%>
+    <!-- Header End(상단 메뉴바 끝!) -->
+
 <a href="/index.do">메인으로</a>
 <a href="/searchList.do">판매글 </a>
 <a href="javascript:history.back()">뒤로가기</a>
@@ -53,7 +62,7 @@
         <% } %>
     </div>
 
-    <input type="hidden" id="user_no" value="<%=user_no%>"/>
+    <input type="hidden" id="user_no" value="<%=SS_USER_NO%>"/>
 
     <button class="btn btn-warning" onclick="deleteValue()">상품 삭제</button>
     <!--<button class="btn btn-danger" id="delAll" onclick="deleteAll()">관심상품 전체 비우기</button>-->
@@ -216,7 +225,9 @@
 </script>
 <!-- bootstrap, css 파일 -->
 <link rel="stylesheet" href="/resource/css/notice.css"/>
-<script src="/resources/js/bootstrap.js"></script>
-<link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+
+    <!-- include JS File Start -->
+    <%@ include file="../include/jsFile.jsp"%>
+    <!-- include JS File End -->
 </body>
 </html>

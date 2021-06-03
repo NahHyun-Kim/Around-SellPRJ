@@ -1,8 +1,8 @@
 <%@ page import="poly.dto.NoticeDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="../include/session.jsp"%>
 <%
     NoticeDTO rDTO = (NoticeDTO) request.getAttribute("rDTO");
-    String SS_USER_NO = (String) session.getAttribute("SS_USER_NO");
 
     if (rDTO == null) {
         rDTO = new NoticeDTO();
@@ -17,8 +17,9 @@
 <html>
 <head>
     <title>판매글 수정</title>
-    <!-- jquery -->
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
+    <!-- 부트스트랩 템플릿 CSS -->
+    <%@ include file="../include/cssFile.jsp"%>
+
     <script type="text/javascript">
         // 작성자 본인 여부 체크
         function doOnload() {
@@ -31,6 +32,13 @@
     </script>
 </head>
 <body onload="doOnload()">
+    <!-- preloader -->
+    <%@ include file="../include/preloader.jsp"%>
+    <!-- preloader End -->
+
+    <!-- Header(상단 메뉴바 시작!) Start -->
+    <%@ include file="../include/header.jsp"%>
+    <!-- Header End(상단 메뉴바 끝!) -->
 
 <div class="container">
     <!-- 판매글 수정 폼 -->
@@ -122,5 +130,9 @@
 
     <!-- 판매글 등록 시, 유효성 체크 js -->
     <script type="text/javascript" src="/resource/valid/noticeCheck.js"></script>
+
+    <!-- include JS File Start -->
+    <%@ include file="../include/jsFile.jsp"%>
+    <!-- include JS File End -->
 </body>
 </html>

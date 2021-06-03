@@ -1,15 +1,12 @@
-<%@ page import="poly.util.CmmUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    String SS_USER_NO = CmmUtil.nvl((String)session.getAttribute("SS_USER_NO"));
-    String SS_USER_NAME = CmmUtil.nvl((String)session.getAttribute("SS_USER_NAME"));
-%>
+<%@ include file="../include/session.jsp"%>
 <html>
 <head>
     <title>판매글 등록</title>
-    <!-- jquery -->
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
-<script type="text/javascript">
+    <!-- 부트스트랩 템플릿 CSS -->
+    <%@ include file="../include/cssFile.jsp"%>
+
+    <script type="text/javascript">
     function doOnload() {
 
     // 로그인여부를 체크하여, 세션이 존재하지 않으면 로그인으로 이동
@@ -66,8 +63,18 @@
     }
 </script>
 </head>
+
 <!-- body가 실행될 때, 로그인 여부를 실행하기 위해 onLoad() 함수 호출 -->
 <body onload="doOnload();">
+    <!-- preloader -->
+    <%@ include file="../include/preloader.jsp"%>
+    <!-- preloader End -->
+
+    <!-- Header(상단 메뉴바 시작!) Start -->
+    <%@ include file="../include/header.jsp"%>
+    <!-- Header End(상단 메뉴바 끝!) -->
+
+
     <div class="container">
     <!-- 판매글 등록 폼 -->
     <form name="f" action="/noticeInsert.do" method="post" onsubmit="return doSubmit();" enctype="multipart/form-data">
@@ -209,12 +216,12 @@
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services"></script>
     <script type="text/javascript" src="/resource/js/addrAPI2.js?ver=1"></script>
 
-    <!-- bootstrap, css 파일 -->
+    <!-- css 파일 -->
     <link rel="stylesheet" href="/resource/css/notice.css"/>
-    <script src="/resources/js/bootstrap.js"></script>
-    <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
-
     <!-- 판매글 등록 시, 유효성 체크 js -->
     <script type="text/javascript" src="/resource/valid/noticeCheck.js?ver=1"></script>
+
+    <!-- include JS File -->
+    <%@ include file="../include/jsFile.jsp"%>
 </body>
 </html>

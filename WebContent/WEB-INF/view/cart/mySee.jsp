@@ -3,18 +3,18 @@
 <%@ page import="java.util.Set" %>
 <%@ page import="java.util.Iterator" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<% String user_no = (String) session.getAttribute("SS_USER_NO");
-%>
+<%@ include file="../include/session.jsp"%>
 <html>
 <head>
     <title>Title</title>
-    <!-- jquery -->
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
+    <!-- 부트스트랩 템플릿 CSS -->
+    <%@ include file="../include/cssFile.jsp"%>
+
     <script type="text/javascript">
         // 페이지가 로딩될 때, 최근 본 상품을 불러옴(추후 mainPage에 로그인시 띄울까 고민중)
         $(document).ready(function() {
             // 받아온 회원 정보가 있을 경우(로그인한 사용자인 경우), 최근검색어 불러오기 진행
-            var userno = <%=user_no%>;
+            var userno = <%=SS_USER_NO%>;
             console.log("받아온 회원번호 : " + userno);
 
             if (userno != null) {
@@ -139,14 +139,24 @@
     </script>
 </head>
 <body>
+    <!-- preloader -->
+    <%@ include file="../include/preloader.jsp"%>
+    <!-- preloader End -->
+
+    <!-- Header(상단 메뉴바 시작!) Start -->
+    <%@ include file="../include/header.jsp"%>
+    <!-- Header End(상단 메뉴바 끝!) -->
+
 <div class="container">
 <%--  <div>최근 본 상품</div>--%>
     <div class="row">
         <div id="recentlyGoods"></div>
     </div>
+    <hr>
 </div>
-<!-- bootstrap, css 파일 -->
-<script src="/resources/js/bootstrap.js"></script>
-<link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+
+    <!-- include JS File Start -->
+    <%@ include file="../include/jsFile.jsp"%>
+    <!-- include JS File End -->
 </body>
 </html>

@@ -1,12 +1,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="../include/session.jsp"%>
 <html>
 <head>
     <title>Around-Sell 로그인</title>
-    <!-- jquery -->
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
+    <!-- 부트스트랩 템플릿 CSS -->
+    <%@ include file="../include/cssFile.jsp"%>
 </head>
+
 <body>
+    <!-- preloader -->
+    <%@ include file="../include/preloader.jsp"%>
+    <!-- preloader End -->
+
+    <!-- Header(상단 메뉴바 시작!) Start -->
+    <%@ include file="../include/header.jsp"%>
+    <!-- Header End(상단 메뉴바 끝!) -->
+
 <div class="container">
+
     <form action="/getLogin.do" method="POST" onsubmit="return loginChk()">
         <!-- 이메일, 비밀번호를 입력하여 로그인 -->
         <div>
@@ -44,11 +55,15 @@
 </div>
     <!-- bootstrap, css 파일 -->
     <link rel="stylesheet" href="/resource/css/user.css"/>
-    <script src="/resources/js/bootstrap.js"></script>
-    <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+    <!--<script src="/resources/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/resources/css/bootstrap.css"/>-->
 
-    <!-- 로그인 유효성 체크 js -->
+     <!-- 로그인 유효성 체크 js -->
     <script type="text/javascript" src="/resource/valid/loginCheck.js"></script>
+
+    <!-- include JS File Start -->
+    <%@ include file="../include/jsFile.jsp"%>
+    <!-- include JS File End -->
 </body>
 </html>
 

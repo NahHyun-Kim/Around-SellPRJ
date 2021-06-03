@@ -1,13 +1,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="../include/session.jsp"%>
 <html>
 <head>
     <title>Around-Sell 회원가입</title>
-    <!-- jquery -->
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
-
+    <!-- 부트스트랩 템플릿 CSS -->
+    <%@ include file="../include/cssFile.jsp"%>
 </head>
+
 <body>
+    <!-- preloader -->
+    <%@ include file="../include/preloader.jsp"%>
+    <!-- preloader End -->
+
+    <!-- Header(상단 메뉴바 시작!) Start -->
+    <%@ include file="../include/header.jsp"%>
+    <!-- Header End(상단 메뉴바 끝!) -->
+
 <div class="container">
+
     <form action="/insertUser.do" method="POST" onsubmit="return signupCheck()">
         <!-- 이메일 입력 후, ajax를 통해 이메일 중복 여부 검사 -->
         <div>
@@ -85,5 +95,8 @@
         $(".modal").fadeOut();
     });
 </script>
+
+<!-- include JS File -->
+<%@ include file="../include/jsFile.jsp"%>
 </body>
 </html>

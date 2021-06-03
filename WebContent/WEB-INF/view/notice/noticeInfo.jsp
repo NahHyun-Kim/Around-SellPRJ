@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="poly.util.CmmUtil" %>
 <%@ page import="poly.dto.NoticeDTO" %>
+<%@ page import="poly.util.CmmUtil" %>
 <%
     NoticeDTO rDTO = (NoticeDTO) request.getAttribute("rDTO");
 
@@ -16,6 +16,7 @@
     String SS_USER_NO = CmmUtil.nvl(((String) session.getAttribute("SS_USER_NO")), "-1");
     String SS_USER_ADDR = CmmUtil.nvl((String) session.getAttribute("SS_USER_ADDR"));
     String SS_USER_NAME = CmmUtil.nvl((String) session.getAttribute("SS_USER_NAME"));
+    String SS_USER_ADDR2 = CmmUtil.nvl((String) session.getAttribute("SS_USER_ADDR2"));
 
     System.out.println("세션에서 받아온 회원 주소 = " + SS_USER_ADDR);
     System.out.println("rDTO.getGoods_addr2() 주소값 꼭 받아와야 함 = " + rDTO.getGoods_addr2());
@@ -39,8 +40,9 @@
 <html>
 <head>
     <title>판매글 확인</title>
-    <!-- jquery -->
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
+    <!-- 부트스트랩 템플릿 CSS -->
+    <%@ include file="../include/cssFile.jsp"%>
+
     <script type="text/javascript">
         $(document).ready(function() {
 
@@ -426,7 +428,15 @@
 
 </head>
 <body>
-    <div class="container">
+    <!-- preloader -->
+    <%@ include file="../include/preloader.jsp"%>
+    <!-- preloader End -->
+
+    <!-- Header(상단 메뉴바 시작!) Start -->
+    <%@ include file="../include/header.jsp"%>
+    <!-- Header End(상단 메뉴바 끝!) -->
+
+<div class="container">
 
         <!-- 판매글 상세조회 -->
         <!-- 이미지 -->
@@ -514,28 +524,32 @@
         </div>
         <!-- end 지도 관련 -->
 
-        <div id="total"></div>
-        <!-- 댓글 작성란(임시) -->
-        <div class="row">
-            <div class="col">작성자 : <%=SS_USER_NAME%></div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <input type="textarea" name="comment" id="comment" onclick="validChk()" style="width: 200px; height:100px" placeholder="댓글을 입력하세요."/>
-            </div>
-            <div class="col-6">
-                <button type="button" class="btn btn-info" id="regComment" onclick="doSubmit()">댓글 등록</button>
-                <!-- 댓글 수정을 눌렀을 때만 버튼이 표시되도록 설정 -->
-                <button type="button" class="btn btn-info" id="editComment" onclick="editComment()" style="display: none">댓글 수정</button>
-            </div>
-        </div>
-
-        <div id="comment_list">해당 게시물에 대한 댓글이 없습니다.</div>
-
+    <div id="total"></div>
+    <!-- 댓글 작성란(임시) -->
+    <div class="row">
+        <div class="col">작성자 : <%=SS_USER_NAME%></div>
     </div>
+    <div class="row">
+        <div class="col-6">
+            <input type="textarea" name="comment" id="comment" onclick="validChk()" style="width: 200px; height:100px" placeholder="댓글을 입력하세요."/>
+        </div>
+        <div class="col-6">
+            <button type="button" class="btn btn-info" id="regComment" onclick="doSubmit()">댓글 등록</button>
+            <!-- 댓글 수정을 눌렀을 때만 버튼이 표시되도록 설정 -->
+            <button type="button" class="btn btn-info" id="editComment" onclick="editComment()" style="display: none">댓글 수정</button>
+        </div>
+    </div>
+
+    <div id="comment_list">해당 게시물에 대한 댓글이 없습니다.</div>
+
+    <hr>
+
 
     <input type="hidden" id="user_no" value="<%=SS_USER_NO%>"/>
     <input type="hidden" id="gn" value="<%=rDTO.getGoods_no()%>"/>
+
+</div>
+
     <script type="text/javascript">
         // 장바구니 담기 클릭 시, 함수 실행
        $("#doCart").on("click", function() {
@@ -718,10 +732,11 @@
             margin-top: 10px;
         }
     </style>
-    <script src="/resources/js/bootstrap.js"></script>
-    <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
-
     <!-- 판매글 등록 시, 유효성 체크 js -->
     <script type="text/javascript" src="/resource/valid/noticeCheck.js"></script>
+
+    <!-- include JS File Start -->
+    <%@ include file="../include/jsFile.jsp"%>
+    <!-- include JS File End -->
 </body>
 </html>

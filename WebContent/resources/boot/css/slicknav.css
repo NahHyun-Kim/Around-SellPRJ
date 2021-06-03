@@ -113,8 +113,6 @@
       background: #ccc;
       color: #fff; }
   .slicknav_nav a {
-      /* 폰트 추가(slicknav-사이즈 작을떄)*/
-    font-family: "Josefin Sans", sans-serif;
     padding: 5px 10px;
     margin: 2px 5px;
     text-decoration: none;
@@ -211,8 +209,6 @@
     background: #F79960 none repeat scroll 0 0;
     border-radius: 0;
     color: #ffffff;
-    /*나현 추가(nav)*/
-    text-decoration: none;
 }
 
 .slicknav_nav a {

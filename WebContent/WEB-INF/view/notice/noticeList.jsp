@@ -1,10 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="../include/session.jsp"%>
 <%@ page import="poly.util.CmmUtil" %>
 <%@ page import="poly.dto.NoticeDTO" %>
 <%@ page import="java.util.*" %>
 <%
-    String SS_USER_NO = (String) session.getAttribute("SS_USER_NO");
-    String SS_USER_ADDR2 = (String) session.getAttribute("SS_USER_ADDR2"); // 추후 사용, 지역구별 판매글
     List<NoticeDTO> rList = (List<NoticeDTO>) request.getAttribute("rList");
 
     // 게시판 조회 결과 보여주기(null일 경우 객체 생성)
@@ -17,27 +16,28 @@
 <html>
 <head>
     <title>판매글 목록</title>
-    <!-- jquery -->
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
-    <script src="/resources/js/bootstrap.js"></script>
-    <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+    <!-- 부트스트랩 템플릿 CSS -->
+    <%@ include file="../include/cssFile.jsp"%>
 
+    <!-- charts.jsp -->
     <%@ include file="/WEB-INF/view/include/charts.jsp"%>
+
     <script type="text/javascript">
         function doDetail(seq) {
             location.href="${pageContext.request.contextPath}/noticeInfo.do?nSeq=" + seq;
         }
     </script>
-
-    <!-- Resources(amchart 차트, 워드클라우드) -->
-    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/plugins/wordCloud.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/themes/material.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
-
 </head>
+
 <body>
+    <!-- preloader -->
+    <%@ include file="../include/preloader.jsp"%>
+    <!-- preloader End -->
+
+    <!-- Header(상단 메뉴바 시작!) Start -->
+    <%@ include file="../include/header.jsp"%>
+    <!-- Header End(상단 메뉴바 끝!) -->
+
 <div class="container">
 
     <!-- 다중 마커 -->
@@ -162,18 +162,11 @@
 </div>
 </div>
 
-<!--<style>
-    #map {
-        width: 350px;
-        height: 200px;
-        margin-top: 10px;
-        /*display: none */
-    }
-</style> -->
-<!-- bootstrap, css 파일 -->
-<!--<link rel="stylesheet" href="/resource/css/notice.css?ver=1"/>-->
-
 <!-- 판매글 등록 시, 유효성 체크 js -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/resource/valid/noticeCheck.js"></script>
+
+    <!-- include JS File Start -->
+    <%@ include file="../include/jsFile.jsp"%>
+    <!-- include JS File End -->
 </body>
 </html>

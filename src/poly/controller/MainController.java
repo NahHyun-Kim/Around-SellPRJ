@@ -48,6 +48,14 @@ public class MainController {
 	}
 
 	/*
+	@RequestMapping(value = "yh")
+	public String yh() {
+		log.info("부트스트랩 테스트 화면");
+		return "/yh";
+	} */
+
+
+	/*
 	 * @ReseponseBody를 통해 명시적으로 produces를 사용해서 utf-8로 인코딩하면, ajax에 결과값 전송 시
 	 * 오류 없이 전송된다(json 타입으로 반환할 경우에는 application/json 으로 설정하면 된다.)
 	 * 원인 : applicationContext의 MessageConverter에서 최종 다른 캐릭터셋으로 덮어씌우기 때문

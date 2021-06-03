@@ -1,19 +1,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="../include/session.jsp"%>
 <%@ page import="poly.util.CmmUtil" %>
 <%@ page import="poly.dto.NoticeDTO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="poly.dto.Criteria" %>
 <%@ page import="java.util.Iterator" %>
-<%
-    String SS_USER_NO = (String) session.getAttribute("SS_USER_NO");
-    String SS_USER_ADDR2 = (String) session.getAttribute("SS_USER_ADDR2"); // 추후 사용, 지역구별 판매글
-%>
+
 <html>
 <head>
     <title>판매글 목록(페이징)</title>
-    <!-- jquery -->
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
+    <!-- 부트스트랩 템플릿 CSS -->
+    <%@ include file="../include/cssFile.jsp"%>
+
     <script type="text/javascript">
         function doDetail(seq) {
             location.href="/noticeInfo.do?nSeq=" + seq;
@@ -108,6 +107,14 @@
     </script>
 </head>
 <body>
+<!-- preloader -->
+<%@ include file="../include/preloader.jsp"%>
+<!-- preloader End -->
+
+<!-- Header(상단 메뉴바 시작!) Start -->
+<%@ include file="../include/header.jsp"%>
+<!-- Header End(상단 메뉴바 끝!) -->
+
 <div class="container">
     <div>
         <select id="cntPerPage" name="sel" onchange="selChange()">
@@ -453,5 +460,7 @@
 <script src="/resources/js/bootstrap.js"></script>
 <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
 
+<!-- include JS File -->
+<%@ include file="../include/jsFile.jsp"%>
 </body>
 </html>

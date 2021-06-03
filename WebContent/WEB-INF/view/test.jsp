@@ -1,142 +1,21 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    // nav(top)에 공통으로 사용되는 session값
-    String SS_USER_NO = ((String) session.getAttribute("SS_USER_NO"));
-    String SS_USER_NAME = ((String) session.getAttribute("SS_USER_NAME"));
-    String SS_USER_ADDR = ((String) session.getAttribute("SS_USER_ADDR"));
-    String SS_USER_ADDR2 = ((String) session.getAttribute("SS_USER_ADDR2"));
-
-%>
-<!doctype html>
+<%@ include file="include/session.jsp"%>
+<html>
 <html class="no-js" lang="ko">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Around Sell</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="manifest" href="site.webmanifest">
-    <link rel="shortcut icon" type="image/x-icon" href="/resources/boot/img/logo/aroundsell_find.png">
-
-    <!-- jquery -->
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
-
+    <title>테스트(부트스트랩)</title>
     <!-- 부트스트랩 템플릿 CSS -->
-    <link rel="stylesheet" href="/resources/boot/css/mystyle.css?ver=1">
-    <!-- top 네비게이션 바 CSS -->
-    <link rel="stylesheet" href="/resources/boot/css/slicknav.css?ver=1">
-    <link rel="stylesheet" href="/resources/boot/css/style.css?ver=1">
-
-    <link rel="stylesheet" href="/resources/boot/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/resources/boot/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="/resources/boot/css/flaticon.css">
-    <link rel="stylesheet" href="/resources/boot/css/animate.min.css">
-    <link rel="stylesheet" href="/resources/boot/css/magnific-popup.css">
-    <link rel="stylesheet" href="/resources/boot/css/fontawesome-all.min.css">
-    <link rel="stylesheet" href="/resources/boot/css/themify-icons.css">
-    <link rel="stylesheet" href="/resources/boot/css/slick.css">
-    <link rel="stylesheet" href="/resources/boot/css/nice-select.css">
-
+    <%@ include file="include/cssFile.jsp"%>
 </head>
 
 <body>
+    <!-- preloader -->
+    <%@ include file="include/preloader.jsp"%>
+    <!-- preloader End -->
 
-<!-- Preloader(로딩 중 js) Start -->
-<div id="preloader-active">
-    <div class="preloader d-flex align-items-center justify-content-center">
-        <div class="preloader-inner position-relative">
-            <div class="preloader-circle"></div>
-            <div class="preloader-img pere-text">
-                <img src="/resources/boot/img/logo/aroundsell_find.png" alt="">
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Preloader(로딩 중 js) End -->
-
-<!------------------------------------------------------------------------------------------------------------>
-<!-- Header(상단 메뉴바 시작!) Start -->
-<header>
-    <div class="header-area">
-        <div class="main-header header-sticky">
-            <div class="container-fluid">
-                <div class="menu-wrapper">
-                    <!-- aroundSell mainPage Top(로고+돋보기(=검색창 이동) -->
-                    <div class="logo">
-                        <a href="/index.do"><img id="aroundsell" src="/resources/boot/img/logo/aroundsell_main.png" alt=""></a>
-                        <a href="/searchList.do"><img id="findlogo" src="/resources/boot/img/logo/aroundsell_find.png"/></a>
-                    </div>
-
-                    <!-- aroundSell 메인 메뉴바-->
-                    <div class="main-menu d-none d-lg-block">
-                        <nav>
-                            <ul id="navigation">
-                                <!-- 홈페이지(index), 워드클라우드와 전체 판매글을 표시한다.-->
-                                <li><a href="/index.do">Home</a></li>
-
-                                <!-- 상품 등록 검색 결과를 제공하는 shop&Search -->
-                                <li><a href="/searchList.do">Shop & Search</a>
-                                    <ul class="submenu">
-                                        <li><a href="/noticeList.do"> 상품 리스트</a></li>
-                                        <li><a href="/searchList.do"> 상품 검색</a></li>
-                                        <li><a href="/noticeForm.do"> 판매글 등록하기</a></li>
-                                    </ul>
-                                </li>
-
-                                <!-- 인기 상품 시각화 차트정보를 제공하는 Chart -->
-                                <li class="hot"><a href="#">Chart</a>
-                                    <ul class="submenu">
-                                        <li><a href="/noticeList.do"> 인기 차트</a></li>
-                                        <li><a href="/noticeList.do"> 인기 차트2</a></li>
-                                    </ul>
-                                </li>
-
-                                <!-- 관심상품과 최근 본 상품 메뉴 -->
-                                <li><a href="#">Cart</a>
-                                    <ul class="submenu">
-                                        <li><a href="/myCart.do">관심상품</a></li>
-                                        <li><a href="/mySee.do">최근 본 상품</a></li>
-                                    </ul>
-                                </li>
-
-                                <!-- 로그아웃(혹은 로그인&회원가입), 회원 정보를 제공하는 메뉴 -->
-                                <li><a href="#">MyPage</a>
-                                    <ul class="submenu">
-                                        <li><a href="/logIn.do">로그인</a></li>
-                                        <li><a href="/getUserInfo.do">나의 개인정보</a></li>
-                                        <li><a href="/myList.do">나의 판매글</a></li>
-                                        <li><a href="/noticeForm.do">판매글 등록하기</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <!-- 메뉴바 끝 -->
-
-                    <!-- Header Right -->
-                    <div class="header-right">
-                        <ul>
-                            <li>
-                                <div class="nav-search search-switch">
-                                    <span class="flaticon-search"></span>
-                                </div>
-                            </li>
-                            <li> <a href="login.html"><span class="flaticon-user"></span></a></li>
-                            <li><a href="/myCart.do"><span class="flaticon-shopping-cart"></span></a> </li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- Mobile Menu -->
-                <div class="col-12">
-                    <div class="mobile_menu d-block d-lg-none"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</header>
-<!-- Header End(상단 메뉴바 끝!) -->
-<!------------------------------------------------------------------------------------------------------------>
+    <!-- Header(상단 메뉴바 시작!) Start -->
+    <%@ include file="include/header.jsp"%>
+    <!-- Header End(상단 메뉴바 끝!) -->
 
 <main>
     <!--? slider Area Start -->
@@ -567,51 +446,9 @@
     </div>
     <!-- Footer End-->
 </footer>
-<!--? Search model Begin -->
-<div class="search-model-box">
-    <div class="h-100 d-flex align-items-center justify-content-center">
-        <div class="search-close-btn">+</div>
-        <form class="search-model-form">
-            <input type="text" id="search-input" placeholder="Searching key.....">
-        </form>
-    </div>
-</div>
-<!-- Search model end -->
 
-<!-- JS here -->
-
-<script src="/resources/boot/vendor/modernizr-3.5.0.min.js"></script>
-<!-- Jquery, Popper, Bootstrap -->
-<script src="/resources/boot/vendor/jquery-1.12.4.min.js"></script>
-<script src="/resources/boot/js/popper.min.js"></script>
-<script src="/resources/boot/js/bootstrap.min.js"></script>
-<!-- Jquery Mobile Menu -->
-<script src="/resources/boot/js/jquery.slicknav.min.js"></script>
-
-<!-- Jquery Slick , Owl-Carousel Plugins -->
-<script src="/resources/boot/js/owl.carousel.min.js"></script>
-<script src="/resources/boot/js/slick.min.js"></script>
-
-<!-- One Page, Animated-HeadLin -->
-<script src="/resources/boot/js/wow.min.js"></script>
-<script src="/resources/boot/js/animated.headline.js"></script>
-<script src="/resources/boot/js/jquery.magnific-popup.js"></script>
-
-<!-- Scrollup, nice-select, sticky -->
-<script src="/resources/boot/js/jquery.scrollUp.min.js"></script>
-<script src="/resources/boot/js/jquery.nice-select.min.js"></script>
-<script src="/resources/boot/js/jquery.sticky.js"></script>
-
-<!-- contact js -->
-<script src="/resources/boot/js/contact.js"></script>
-<script src="/resources/boot/js/jquery.form.js"></script>
-<script src="/resources/boot/js/jquery.validate.min.js"></script>
-<script src="/resources/boot/js/mail-script.js"></script>
-<script src="/resources/boot/js/jquery.ajaxchimp.min.js"></script>
-
-<!-- Jquery Plugins, main Jquery -->
-<script src="/resources/boot/js/plugins.js"></script>
-<script src="/resources/boot/js/main.js"></script>
-
+<!-- include JS File Start -->
+<%@ include file="include/jsFile.jsp"%>
+<!-- include JS File End -->
 </body>
 </html>
