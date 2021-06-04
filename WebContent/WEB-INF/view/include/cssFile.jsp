@@ -16,7 +16,7 @@
 
 <!--<link rel="stylesheet" href="/resources/boot/css/mystyle.css?ver=1">-->
 <!-- top 네비게이션 바 CSS -->
-<link rel="stylesheet" href="/resources/boot/css/slicknav.css?ver=1">
+<link rel="stylesheet" href="/resources/boot/css/slicknav.css">
 <link rel="stylesheet" href="/resources/boot/css/style.css">
 
 <link rel="stylesheet" href="/resources/boot/css/bootstrap.min.css">

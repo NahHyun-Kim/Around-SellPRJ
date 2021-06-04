@@ -21,9 +21,9 @@ ul {
     list-style: none;
 }
 
-ul li:hover{
+/*#list ul li:hover{
     background-color : lightgray;
-}
+} */
 
 .btn btn-danger {
     width: 10px;

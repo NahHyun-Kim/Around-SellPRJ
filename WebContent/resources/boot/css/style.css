@@ -2797,7 +2797,8 @@ input:hover, input:focus {
 }
 
 .header-area .main-header {
-    padding: 0px 120px
+    padding: 0px 120px;
+    background-color: #FFF9FF;
 }
 
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
@@ -3517,7 +3518,7 @@ input:hover, input:focus {
 
 .popular-items .single-popular-items .popular-img {
     overflow: hidden;
-    border-bottom: 3px solid #ff2020;
+    border-bottom: 3px solid #d0a7e4;
     margin-bottom: 19px;
     position: relative
 }
@@ -3541,7 +3542,7 @@ input:hover, input:focus {
 
 .popular-items .single-popular-items .popular-img .img-cap span {
     color: #fff;
-    background: #f81f1f;
+    background: #d0a7e4;
     padding: 20px 0;
     display: block;
     cursor: pointer
