@@ -50,13 +50,14 @@ public class CartController {
         List<CartDTO> rList = new ArrayList<CartDTO>();
         // 로그인을 하지 않은 상태라면, 로그인 창으로 이동
         try {
-            if (user_no == null) {
+            /*if (user_no == null) {
                 model.addAttribute("msg", "로그인 후 이용해 주세요.");
                 model.addAttribute("url", "logIn.do");
+                //model.addAttribute("type", "info");
                 return "/redirect";
 
                 // 로그인이 되었다면, 해당 사용자가 담은 장바구니 상품을 보여줌
-            } else {
+            } else {*/
                 CartDTO pDTO = new CartDTO();
                 pDTO.setUser_no(user_no);
 
@@ -64,7 +65,7 @@ public class CartController {
                 log.info("rDTO 값 받아왔는지 ? : " + (rList == null));
 
                 pDTO = null;
-            }
+           // }
         } catch(Exception e) {
             log.info("에러 발생!" + e.toString());
             e.printStackTrace();

@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <header>
     <div class="header-area">
-        <div class="main-header header-sticky">
+        <div class="main-header header-sticky" style="border-bottom: 1px solid #E5E5E5; box-shadow:3px 3px 4px lightgrey;">
             <div class="container-fluid">
                 <div class="menu-wrapper">
                     <!-- aroundSell mainPage Top(로고+돋보기(=검색창 이동) -->
                     <div class="logo">
-                        <a href="/index.do"><img src="/resources/boot/img/logo/aroundsell_main.png" alt=""
+                        <a href="/getIndex.do"><img src="/resources/boot/img/logo/aroundsell_main.png" alt=""
                                                  style="width:170px;height: 48px;"></a>
                         <img class="search-switch" id="findlogo" src="/resources/boot/img/logo/aroundsell_find.png"
                                         style="margin-left: 12px; width: 30px; height: 35px; padding-bottom: 3px;"/>
@@ -17,7 +17,7 @@
                         <nav>
                             <ul id="navigation">
                                 <!-- 홈페이지(index), 워드클라우드와 전체 판매글을 표시한다.-->
-                                <li><a href="/index.do">Home</a></li>
+                                <li><a href="/getIndex.do">Home</a></li>
 
                                 <!-- 상품 등록 검색 결과를 제공하는 shop&Search -->
                                 <li><a href="/searchList.do">Shop & Search</a>

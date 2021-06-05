@@ -68,7 +68,7 @@
 	
 	<!-- 도메인만 입력했을 경우, 보여주는 페이지 -->
 	<welcome-file-list>
-		<welcome-file>index.do</welcome-file>
+		<welcome-file>getIndex.do</welcome-file>
 	</welcome-file-list>
 
 	<!-- 세션 유효시간 설정 -->

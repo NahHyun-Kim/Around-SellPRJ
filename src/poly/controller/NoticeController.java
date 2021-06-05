@@ -63,7 +63,7 @@ public class NoticeController {
     /*
     * 판매글 리스트 보여주기(이미지 등록 완료, 페이징 구현중)
     * */
-    @RequestMapping(value="/noticeList", method = RequestMethod.GET)
+    @RequestMapping(value="/getIndex", method = RequestMethod.GET)
     public String noticeList(HttpServletRequest request, HttpServletResponse response,
                              ModelMap model, HttpSession session) throws Exception {
 
@@ -235,7 +235,7 @@ public class NoticeController {
             //rDTO = new NoticeDTO();
             log.info("is null");
             model.addAttribute("msg", "존재하지 않는 게시글입니다.");
-            model.addAttribute("url", "/noticeList.do");
+            model.addAttribute("url", "/searchList.do");
 
             return "/redirect";
         }

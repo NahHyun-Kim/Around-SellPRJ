@@ -22,7 +22,7 @@ import java.util.*;
 
 
 @Controller
-public class MainController {
+public class ChartController {
 
 	private Logger log = Logger.getLogger(this.getClass());
 
@@ -46,14 +46,6 @@ public class MainController {
 		log.info("부트스트랩 테스트 화면");
 		return "/test";
 	}
-
-	/*
-	@RequestMapping(value = "yh")
-	public String yh() {
-		log.info("부트스트랩 테스트 화면");
-		return "/yh";
-	} */
-
 
 	/*
 	 * @ReseponseBody를 통해 명시적으로 produces를 사용해서 utf-8로 인코딩하면, ajax에 결과값 전송 시

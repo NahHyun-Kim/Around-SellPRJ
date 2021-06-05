@@ -4,17 +4,28 @@
 <%
     String msg = CmmUtil.nvl((String)request.getAttribute("msg"));
     String url = CmmUtil.nvl((String)request.getAttribute("url"));
+    //String type = CmmUtil.nvl(((String)request.getAttribute("type")),"0");
 %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title></title>
     <!-- jquery -->
     <script src="/resource/js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript">
-        alert("<%=msg%>");
-        location.href="<%=url%>";
+        $(document).ready(function() {
+            Swal.fire({
+                title: "<%=msg%>",
+                icon: 'success',
+                buttons: true
+            }).then(val => {
+                if (val) {
+                    location.href = "<%=url%>";
+                }
+            });
+        })
     </script>
 
 </head>

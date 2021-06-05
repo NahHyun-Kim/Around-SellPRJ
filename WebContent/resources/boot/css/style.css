@@ -363,7 +363,7 @@ input:focus::-moz-placeholder {
 }
 
 .btn {
-    background: #ff2020;
+    background: #d0a7e4;
     font-family: "Josefin Sans", sans-serif;
     text-transform: uppercase;
     color: #fff;
@@ -394,7 +394,7 @@ input:focus::-moz-placeholder {
     top: 0;
     width: 100%;
     height: 100%;
-    background: #4a4a4b;
+    /*background: #4a4a4b; 나현 삭제(hover시 계속 회색됨)*/
     z-index: 1;
     transition: transform 0.5s;
     transition-timing-function: ease;
@@ -2194,20 +2194,20 @@ input:focus::-moz-placeholder {
 }
 
 .section-padding30 {
-    padding-top: 200px;
+    padding-top: 120px;
     padding-bottom: 170px
 }
 
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
     .section-padding30 {
-        padding-top: 200px;
+        padding-top: 120px;
         padding-bottom: 170px
     }
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
     .section-padding30 {
-        padding-top: 150px;
+        padding-top: 120px;
         padding-bottom: 120px
     }
 }
@@ -2348,42 +2348,42 @@ input:focus::-moz-placeholder {
 }
 
 .footer-padding {
-    padding-top: 150px;
-    padding-bottom: 120px
+    padding-top: 30px;
+    padding-bottom: 30px
 }
 
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
     .footer-padding {
-        padding-top: 150px;
-        padding-bottom: 120px
+        padding-top: 30px;
+        padding-bottom: 30px
     }
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
     .footer-padding {
-        padding-top: 100px;
-        padding-bottom: 70px
+        padding-top: 30px;
+        padding-bottom: 30px
     }
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
     .footer-padding {
-        padding-top: 100px;
-        padding-bottom: 70px
+        padding-top: 30px;
+        padding-bottom: 30px
     }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 767px) {
     .footer-padding {
-        padding-top: 70px;
-        padding-bottom: 70px
+        padding-top: 30px;
+        padding-bottom: 30px
     }
 }
 
 @media (max-width: 575px) {
     .footer-padding {
-        padding-top: 70px;
-        padding-bottom: 70px
+        padding-top: 30px;
+        padding-bottom: 30px
     }
 }
 
@@ -2798,7 +2798,7 @@ input:hover, input:focus {
 
 .header-area .main-header {
     padding: 0px 120px;
-    background-color: #FFF9FF;
+    background-color: #FAF8FA;
 }
 
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
@@ -3020,7 +3020,7 @@ input:hover, input:focus {
     vertical-align: middle;
 }
 .header-area .main-header .menu-wrapper .header-right .header-chk a:hover {
-    color: black;
+    /*color: black; hover 주석처리*/
     text-decoration: none;
 }
 
@@ -3079,7 +3079,8 @@ input:hover, input:focus {
 
 .mobile_menu .slicknav_menu .slicknav_nav a:hover {
     background: transparent;
-    color: #d0a7e4
+    color: #d0a7e4;
+    text-decoration: none;
 }
 
 .mobile_menu .slicknav_menu .slicknav_nav a {
@@ -4528,12 +4529,12 @@ input:hover, input:focus {
 }
 
 .footer-area .footer-tittle ul li a:hover {
-    color: #ff2020;
+    color: #d0a7e4;
     padding-left: 5px
 }
 
 .footer-copy-right {
-    padding-top: 50px
+    padding-top: 5px
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
@@ -4696,7 +4697,7 @@ input:hover, input:focus {
 }
 
 .blog_area a:hover, .blog_area a :hover {
-    background: -webkit-linear-gradient(131deg, #ff2020 0%, #ff2020 99%);
+    background: -webkit-linear-gradient(131deg, #d0a7e4 0%, #d0a7e4 99%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-decoration: none;
@@ -5143,7 +5144,7 @@ input:hover, input:focus {
 }
 
 .blog_details a:hover {
-    color: #ff2020
+    color: #d0a7e4
 }
 
 .blog_details h2 {
@@ -5399,7 +5400,7 @@ input:hover, input:focus {
 }
 
 .blog_right_sidebar .tag_cloud_widget ul li a:hover {
-    background: #ff2020;
+    background: #d0a7e4;
     color: #fff !important;
     -webkit-text-fill-color: #fff;
     text-decoration: none;
@@ -5606,7 +5607,7 @@ input:hover, input:focus {
 }
 
 .single-post-area .blog-author a:hover {
-    color: #ff2020
+    color: #d0a7e4
 }
 
 .single-post-area .blog-author p {
@@ -7625,7 +7626,7 @@ b, sup, sub, u, del {
 }
 
 .blog-area .single-blog .blog-caption .blog-cap-mid p a:hover {
-    color: #ff2020
+    color: #d0a7e4
 }
 
 .blog-area .single-blog .blog-caption .blog-cap-bottom {
@@ -8038,7 +8039,7 @@ input:focus {
 }
 
 .single_product_item h3 a:hover {
-    color: #2577fd
+    color: #d0a7e4
 }
 
 .single_product_item p {
@@ -8563,7 +8564,7 @@ input:focus {
 
 .single-product .product-img .p_icon a:hover {
     color: #fff;
-    background: #2577fd
+    background: #d0a7e4
 }
 
 .single-product .product-btm {
@@ -10593,7 +10594,7 @@ input:focus {
 }
 
 .card_area .social_icon a:hover {
-    background-color: #2577fd
+    background-color: #d0a7e4
 }
 
 .card_area .social_icon .tw {
@@ -10803,7 +10804,7 @@ input:focus {
 }
 
 .new_arrival .single_arrivel_item .hover_text .social_icon a:hover {
-    background-color: #2577fd;
+    background-color: #d0a7e4;
     color: #fff
 }
 

@@ -115,7 +115,7 @@ public class UserController {
             session.setAttribute("SS_USER_ADDR2", addr2);
             log.info("session.setAttribute 완료");
 
-            url = "/index.do"; //로그인 성공 후 리턴할 페이지
+            url = "/getIndex.do"; //로그인 성공 후 리턴할 페이지
 
             // 관리자 권한으로 로그인 시, 관리자 페이지로 이동
             if (user_no.equals("0")) {
@@ -143,7 +143,7 @@ public class UserController {
         log.info("logOut Start!");
 
         String msg = "로그아웃 되었습니다.";
-        String url = "/index.do";
+        String url = "/getIndex.do";
 
         // 세션 삭제(user_name, user_no) - invalidate() 또는 removeAttribute 함수 사용
         session.removeAttribute("SS_USER_NAME");
@@ -244,7 +244,7 @@ public class UserController {
             msg = "회원정보를 확인 후 가입을 진행해 주세요.";
         }
 
-        url = "/index.do";
+        url = "/getIndex.do";
         log.info("model.addAttribute");
         model.addAttribute("msg", msg);
         model.addAttribute("url", url);
@@ -597,7 +597,7 @@ public class UserController {
             msg = "인증에 성공했습니다.";
         }
         else {
-            url = "/index.do";
+            url = "/getIndex.do";
             msg = "인증에 실패했습니다. 다시 시도해 주세요.";
         }
         model.addAttribute("msg", msg);

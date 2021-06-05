@@ -5,59 +5,16 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="poly.dto.Criteria" %>
-<%@ page import="java.util.Iterator" %>
 
 <html>
 <head>
     <title>판매글 목록(페이징)</title>
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp" %>
+    <link rel="stylesheet" href="/resources/boot/css/nice-select.css">
 
     <script type="text/javascript">
-        function doDetail(seq) {
-            location.href = "/noticeInfo.do?nSeq=" + seq;
-        }
 
-        function selChange() {
-            // 한 페이지당 게시물 보기 개수를 세팅하여 전달
-            // 기존의 보기 개수 + 검색어에 대한 페이징을 수행하기 위해 searchType, keyword를 함께 받아온다.
-
-            var sel = document.getElementById('cntPerPage').value;
-
-            // 선택한 option 값 받아오기
-            var s = document.getElementById("searchType");
-            var searchType = s.options[s.selectedIndex].value;
-
-            console.log("searchType(선택한 옵션 값) : " + searchType);
-
-            var keyword = document.getElementById("keyword").value;
-            console.log("가져온 키워드(Controller 검색 결과 또는 검색결과에서 페이징용) : " + keyword);
-
-            // 정렬된 상태로 페이징 하는 경우를 위해 정렬값을 받아옴
-            var od = document.getElementById('odType');
-            var odType = od.options[od.selectedIndex].value;
-
-            console.log("선택한 정렬 값 : " + odType);
-            console.log("정렬 null ? : " + (odType == ""));
-
-            // 검색어가 없이 페이징만 요청하는 경우에는, 불필요한 @param(검색 관련) 을 붙이지 않고 페이징 쿼리만 전송
-            if (searchType == "" || keyword == "") {
-                location.href = "/searchList.do?nowPage=${paging.nowPage}&cntPerPage=" + sel;
-            }
-            // 검색어가 있는 상태로 페이징 변경을 요청했다면, 검색타입과 검색어를 함께 요청하여 새로 페이징함
-            else if (searchType != "" || keyword != "") {
-                // 정렬 타입이 지정되지 않았다면, 검색 결과값을 페이징 요청
-                if (odType == "") {
-                    location.href = "/searchList.do?nowPage=${paging.nowPage}&cntPerPage=" + sel + "&searchType=" + searchType + "&keyword=" + keyword;
-                }
-                // 정렬 타입이 지정되었다면, 정렬 요청한 결과값을 페이징 요청
-                else if (odType != "") {
-                    location.href = "/searchList.do?nowPage=${paging.nowPage}&cntPerPage=" + sel + "&searchType=" + searchType + "&keyword=" + keyword + "&odType=" + odType;
-                }
-
-            }
-
-        }
     </script>
     <%
         // 페이징 처리를 위해 필요한 페이지, 숫자값 pDTO에서 받아오기(+검색타입, 키워드)
@@ -206,7 +163,7 @@
                 <!-- 상품 이미지 -->
                 <div class="popular-img">
                     <img src="/resource/images/<%=rDTO.getImgs()%>" alt=""
-                         style="width:200px; height:200px; object-fit: contain;">
+                         style="width:240px; height:240px; object-fit: contain;">
                     <div class="img-cap">
                         <span>Click Me!</span>
                     </div>
@@ -237,29 +194,28 @@
 
                 <!-- paging button 시작 -->
                 <div id="paging">
-                    <ul>
+                    <div class="row">
                         <%if (startPage != 1) { %>
-                        <li><a href="/searchList.do?nowPage=<%=startPage - 1%>&cntPerPage=<%=cntPerPage%>">&lt;</a>
+                        <div class="col-1"><a href="/searchList.do?nowPage=<%=startPage - 1%>&cntPerPage=<%=cntPerPage%>">&lt;</a></div>
                                 <%
                             }
                             %> <% for (int i = startPage; i <= endPage; i++) { %> <%
                             if (i == nowPage) { %>
-                        <li class="active"><span><%=i%></span></li>
+                        <div class="col-1"><span><%=i%></span></div>
                         <%
                             }
                         %>
                         <%
                             if (i != nowPage) {
                         %>
-                        <li><a href="/searchList.do?nowPage=<%=i%>&cntPerPage=<%=cntPerPage%>"><%=i%>
-                        </a></li>
+                        <div class="col-1"><a href="/searchList.do?nowPage=<%=i%>&cntPerPage=<%=cntPerPage%>"><%=i%>
+                        </a></div>
                         <%}%>
                         <%}%>
                         <%if (endPage != lastPage) { %>
-                        <li><a href="/searchList.do?nowPage=<%=endPage + 1%>&cntPerPage=<%=cntPerPage%>">&gt;</a></li>
+                        <div class="col-1"><a href="/searchList.do?nowPage=<%=endPage + 1%>&cntPerPage=<%=cntPerPage%>">&gt;</a></div>
                         <%}%>
 
-                    </ul>
                 </div>
 
                 <!-- paging button 끝 -->
@@ -272,131 +228,67 @@
 </div>
 <!-- 상품 리스트 + 검색 section 끝 -->
 
-
 <!--? Shop Method Start-->
 <div class="shop-method-area">
     <div class="container">
         <div class="method-wrapper">
-            <div class="row d-flex justify-content-between">
-                <div class="col-xl-4 col-lg-4 col-md-6">
-                    <div class="single-method mb-40">
-                        <i class="ti-package"></i>
-                        <h6>Free Shipping Method</h6>
-                        <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-lg-4 col-md-6">
-                    <div class="single-method mb-40">
-                        <i class="ti-unlock"></i>
-                        <h6>Secure Payment System</h6>
-                        <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-lg-4 col-md-6">
-                    <div class="single-method mb-40">
-                        <i class="ti-reload"></i>
-                        <h6>Secure Payment System</h6>
-                        <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>
 <!-- Shop Method End-->
 </main>
-<footer>
-    <!-- Footer Start-->
-    <div class="footer-area footer-padding">
-        <div class="container">
-            <div class="row d-flex justify-content-between">
-                <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6">
-                    <div class="single-footer-caption mb-50">
-                        <div class="single-footer-caption mb-30">
-                            <!-- logo -->
-                            <div class="footer-logo">
-                                <a href="index.html"><img src="/resources/boot/img/logo/logo2_footer.png" alt=""></a>
-                            </div>
-                            <div class="footer-tittle">
-                                <div class="footer-pera">
-                                    <p>Asorem ipsum adipolor sdit amet, consectetur adipisicing elitcf sed do eiusmod
-                                        tem.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-2 col-lg-3 col-md-3 col-sm-5">
-                    <div class="single-footer-caption mb-50">
-                        <div class="footer-tittle">
-                            <h4>Quick Links</h4>
-                            <ul>
-                                <li><a href="#">About</a></li>
-                                <li><a href="#"> Offers & Discounts</a></li>
-                                <li><a href="#"> Get Coupon</a></li>
-                                <li><a href="#"> Contact Us</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-4 col-sm-7">
-                    <div class="single-footer-caption mb-50">
-                        <div class="footer-tittle">
-                            <h4>New Products</h4>
-                            <ul>
-                                <li><a href="#">Woman Cloth</a></li>
-                                <li><a href="#">Fashion Accessories</a></li>
-                                <li><a href="#"> Man Accessories</a></li>
-                                <li><a href="#"> Rubber made Toys</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-5 col-sm-7">
-                    <div class="single-footer-caption mb-50">
-                        <div class="footer-tittle">
-                            <h4>Support</h4>
-                            <ul>
-                                <li><a href="#">Frequently Asked Questions</a></li>
-                                <li><a href="#">Terms & Conditions</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-                                <li><a href="#">Report a Payment Issue</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Footer bottom -->
-            <div class="row align-items-center">
-                <div class="col-xl-7 col-lg-8 col-md-7">
-                    <div class="footer-copy-right">
-                        <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;<script>document.write(new Date().getFullYear());</script>
-                            All rights reserved | This template is made with <i class="fa fa-heart"
-                                                                                aria-hidden="true"></i> by <a
-                                    href="https://colorlib.com" target="_blank">Colorlib</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
-                    </div>
-                </div>
-                <div class="col-xl-5 col-lg-4 col-md-5">
-                    <div class="footer-copy-right f-right">
-                        <!-- social -->
-                        <div class="footer-social">
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="https://www.facebook.com/sai4ull"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-behance"></i></a>
-                            <a href="#"><i class="fas fa-globe"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Footer End-->
-</footer>
-
+    <!-- end Main -->
+</div>
 
     <script type="text/javascript">
+        // 게시글 상세보기(상품번호를 전달받아 상세보기 페이지로 이동)
+        function doDetail(seq) {
+            location.href = "/noticeInfo.do?nSeq=" + seq;
+        }
+
+        function selChange() {
+            // 한 페이지당 게시물 보기 개수를 세팅하여 전달
+            // 기존의 보기 개수 + 검색어에 대한 페이징을 수행하기 위해 searchType, keyword를 함께 받아온다.
+
+            var sel = document.getElementById('cntPerPage').value;
+
+            // 선택한 option 값 받아오기
+            var s = document.getElementById("searchType");
+            var searchType = s.options[s.selectedIndex].value;
+
+            console.log("searchType(선택한 옵션 값) : " + searchType);
+
+            var keyword = document.getElementById("keyword").value;
+            console.log("가져온 키워드(Controller 검색 결과 또는 검색결과에서 페이징용) : " + keyword);
+
+            // 정렬된 상태로 페이징 하는 경우를 위해 정렬값을 받아옴
+            var od = document.getElementById('odType');
+            var odType = od.options[od.selectedIndex].value;
+
+            console.log("선택한 정렬 값 : " + odType);
+            console.log("정렬 null ? : " + (odType == ""));
+
+            // 검색어가 없이 페이징만 요청하는 경우에는, 불필요한 @param(검색 관련) 을 붙이지 않고 페이징 쿼리만 전송
+            if (searchType == "" || keyword == "") {
+                location.href = "/searchList.do?nowPage=${paging.nowPage}&cntPerPage=" + sel;
+            }
+            // 검색어가 있는 상태로 페이징 변경을 요청했다면, 검색타입과 검색어를 함께 요청하여 새로 페이징함
+            else if (searchType != "" || keyword != "") {
+                // 정렬 타입이 지정되지 않았다면, 검색 결과값을 페이징 요청
+                if (odType == "") {
+                    location.href = "/searchList.do?nowPage=${paging.nowPage}&cntPerPage=" + sel + "&searchType=" + searchType + "&keyword=" + keyword;
+                }
+                // 정렬 타입이 지정되었다면, 정렬 요청한 결과값을 페이징 요청
+                else if (odType != "") {
+                    location.href = "/searchList.do?nowPage=${paging.nowPage}&cntPerPage=" + sel + "&searchType=" + searchType + "&keyword=" + keyword + "&odType=" + odType;
+                }
+
+            }
+
+        }
+
+        // 페이지가 로딩될 때 (검색, 페이징 등을 위한 정보 저장)
         $(document).ready(function () {
             //console.log("세션 null(로그인 상태?) : " + (<%=SS_USER_ADDR2%>) != null);
             var res = document.getElementById("searchResult");
@@ -614,6 +506,9 @@
     </script>
     <!-- bootstrap, css 파일 -->
     <link rel="stylesheet" href="/resource/css/notice.css?ver=1"/>
+
+    <!-- include Footer -->
+    <%@ include file="../include/footer.jsp"%>
 
     <!-- include JS File -->
     <%@ include file="../include/jsFile.jsp" %>

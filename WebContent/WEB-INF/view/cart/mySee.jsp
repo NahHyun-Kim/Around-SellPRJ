@@ -155,6 +155,9 @@
     <hr>
 </div>
 
+    <!-- include Footer -->
+    <%@ include file="../include/footer.jsp"%>
+
     <!-- include JS File Start -->
     <%@ include file="../include/jsFile.jsp"%>
     <!-- include JS File End -->

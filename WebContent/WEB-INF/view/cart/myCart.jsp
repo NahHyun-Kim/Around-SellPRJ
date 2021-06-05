@@ -16,6 +16,7 @@
     <title>관심상품</title>
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp"%>
+
 </head>
 
 <body>
@@ -27,9 +28,25 @@
     <%@ include file="../include/header.jsp"%>
     <!-- Header End(상단 메뉴바 끝!) -->
 
-<a href="/index.do">메인으로</a>
-<a href="/searchList.do">판매글 </a>
-<a href="javascript:history.back()">뒤로가기</a>
+    <!-- 관심상품 표시하는 란 -->
+    <div class="slider-area ">
+        <div class="single-slider slider-height2 d-flex align-items-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="hero-cap text-center">
+                            <h2>Watch Shop</h2>
+                            <hr>
+                            <a href="/searchList.do">판매글 보기</a>
+                            <a href="javascript:history.back()">뒤로가기</a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 관심상품 문구 End -->
 
 <div class="container">
 
@@ -69,6 +86,23 @@
 </div>
 
 <script type="text/javascript">
+
+    $(document).ready(function() {
+        var user_no = <%=SS_USER_NO%>;
+        console.log("user_no : " + user_no);
+
+        if (user_no == null) {
+            Swal.fire({
+                title: "로그인 후 이용해 주세요!",
+                icon: 'info'
+            }).then((value) => {
+                if (value) {
+                    location.href = "/logIn.do";
+                }
+            });
+        }
+    })
+
     var res = document.getElementById("cartCnt");
     var total = (<%=total%>);
 
@@ -178,53 +212,12 @@
         }
     }
 
-    // 전체 상품 비우기를 눌렀을 때 함수 실행
-    /*function deleteAll() {
-
-        console.log("삭제할 회원 번호(관심상품) : " + user_no);
-        if (user_no != null) {
-
-            var chkConfirm = confirm("정말 관심상품을 모두 삭제하시겠습니까?");
-
-            if (chkConfirm) {
-                $.ajax({
-                    url: "/delCart.do",
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        // 해당하는 회원 번호를 장바구니 전체 삭제를 위해 보냄
-                        "user_no": user_no
-                    },
-                    success: function (data) {
-                        // 삭제에 성공했다면,
-                        var delConfirm = confirm("관심상품 목록을 비웠습니다. 상품을 보러 가시겠습니까?");
-
-                        if (data > 0) {// 삭제된 수만큼 data를 반환하여, data==1이 아니라 data>0으로 한다.
-                            if (delConfirm) {
-                                location.href = "/searchList.do";
-                            } else {
-                                window.location.reload();
-                            }
-                        } else if (data == 0) {
-                            alert("삭제에 실패했습니다.");
-                            window.location.reload();
-                        }
-                    },
-
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert("에러 발생! \n" + textStatus + ":" + errorThrown);
-                        console.log(errorThrown);
-                    }
-                })
-            }
-        } else {
-            // 취소 누를 시, 전체상품 체크 해제
-            $("input[name='allCheck']").checked = false;
-        }
-    }*/
 </script>
 <!-- bootstrap, css 파일 -->
 <link rel="stylesheet" href="/resource/css/notice.css"/>
+
+    <!-- include Footer -->
+    <%@ include file="../include/footer.jsp"%>
 
     <!-- include JS File Start -->
     <%@ include file="../include/jsFile.jsp"%>
