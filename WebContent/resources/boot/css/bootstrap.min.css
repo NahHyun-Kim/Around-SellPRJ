@@ -157,8 +157,9 @@ a {
     -webkit-text-decoration-skip: objects
 }
 
+/* 전체 hover 변경(purple) */
 a:hover {
-    color: #0056b3;
+    color: purple;
     text-decoration: none
 }
 

@@ -20,9 +20,9 @@
 <!--<link rel="stylesheet" href="/resources/boot/css/mystyle.css?ver=1">-->
 <!-- top 네비게이션 바 CSS -->
 <link rel="stylesheet" href="/resources/boot/css/slicknav.css">
-<link rel="stylesheet" href="/resources/boot/css/style.css">
+<link rel="stylesheet" href="/resources/boot/css/style.css?ver=1">
 
-<link rel="stylesheet" href="/resources/boot/css/bootstrap.min.css?ver=1">
+<link rel="stylesheet" href="/resources/boot/css/bootstrap.min.css?ver=2">
 <link rel="stylesheet" href="/resources/boot/css/owl.carousel.min.css">
 <link rel="stylesheet" href="/resources/boot/css/flaticon.css">
 <link rel="stylesheet" href="/resources/boot/css/animate.min.css">

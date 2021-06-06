@@ -158,8 +158,9 @@ a {
   background-color: transparent;
 }
 
+/* hover 전체 변경*/
 a:hover {
-  color: #0056b3;
+  color: purple;
   text-decoration: underline;
 }
 

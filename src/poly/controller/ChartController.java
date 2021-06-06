@@ -222,5 +222,37 @@ public class ChartController {
 		return rList;
 	}
 
+	// 로그인/회원가입 시 디자인용으로 띄울 워드 클라우드
+	@ResponseBody
+	@RequestMapping(value = "/titleAll", produces = "application/json; charset=utf8")
+	public String titleAll(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
+
+		log.info("titleAll Start!");
+
+		// 지역구가 있다면 지역구에 해당하는 판매 글을 불러오고, 로그인 상태가 아니라면 전체 판매글을 불러옴
+		String addr2 = CmmUtil.nvl((String) session.getAttribute("SS_USER_ADDR2"), "none");
+		log.info("로그인 안하면 'none'으로 뜸, 로그인 하면 지역구 표시 : " + addr2);
+
+		NoticeDTO pDTO = new NoticeDTO();
+		pDTO.setAddr2(addr2);
+
+		// 판매글 리스트를 가져온다.
+		List<NoticeDTO> rList = noticeService.getNoticeList(pDTO);
+
+		log.info("rList 가져왔는지(isNull) ? : " + (rList == null));
+
+		// 판매글 중 상품명을 담을 변수와 리스트 배열 생성
+		String title = "";
+		//String titles = "";
+
+		for (NoticeDTO i : rList) {
+			// 상품명에 문자가 아닌 기호가 있다면, 제거
+			title += i.getGoods_title().replace(":", "").replace("(", "").replace(")", "").replace(":", "") + " ";
+		}
+
+		log.info("title 모음 : " + title);
+
+		return title;
+	}
 
 }

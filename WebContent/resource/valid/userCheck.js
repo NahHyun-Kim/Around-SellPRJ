@@ -159,13 +159,11 @@ function signupCheck() {
     if (emailJ.test($(umail).val()) == false || nameJ.test($(uname).val()) == false
     || ($(pwd1).val() != $(pwd2).val()) || pwJ.test($(pwd1).val()) == false || phoneJ.test($(phnum).val()) == false ||
     $(addr).val() == "") {
-        $(".modal-body").text("입력한 정보를 다시 한 번 확인해 주세요.");
-        $(".modal-title").text("Around-Sell 회원가입");
-        $(".modal").fadeIn();
+
+        Swal.fire('','입력한 정보를 다시 한 번 확인해 주세요.','warning');
+
         return false;
-        /*
-        alert("입력한 정보를 다시 한 번 확인해 주세요.")
-        return false; */
+
     }
 
 

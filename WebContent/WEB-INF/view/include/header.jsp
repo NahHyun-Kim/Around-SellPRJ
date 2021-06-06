@@ -1,7 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <header>
     <div class="header-area">
-        <div class="main-header header-sticky" style="border-bottom: 1px solid #E5E5E5; box-shadow:3px 3px 4px lightgrey;">
+        <div class="main-header header-sticky" style="box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);">
+        <!--<div class="main-header header-sticky" style="border-bottom: 1px solid #E5E5E5; box-shadow:3px 3px 4px lightgrey;">-->
             <div class="container-fluid">
                 <div class="menu-wrapper">
                     <!-- aroundSell mainPage Top(로고+돋보기(=검색창 이동) -->
@@ -68,12 +69,12 @@
                     <!-- 메뉴바 끝 -->
 
                     <!-- Header Right(Flaticon 메뉴바 검색) -->
-                    <div class="header-right" style="padding-top:5px;">
+                    <div class="header-right" style="padding-top:10px;">
                         <ul id="headers">
                             <li>
                                 <% if (SS_USER_NAME != null) { %>
                                 <div class="header-chk">
-                                    <%=CmmUtil.nvl(SS_USER_NAME)%>님 환영합니다!
+                                    <%=CmmUtil.nvl(SS_USER_NAME)%>님&nbsp;(<%=CmmUtil.nvl(SS_USER_ADDR2)%>)
                                 </div>
                                 <% } else { %>
                                 <div class="header-chk"><a id="getLogin" href="/logIn.do">로그인 후 이용하세요</a></div>

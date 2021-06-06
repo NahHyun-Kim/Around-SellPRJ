@@ -58,6 +58,12 @@
                 <!-- Section tittle1 (지역정보, 날씨정보 표시) -->
                 <div class="row justify-content-center">
                     <div class="col-xl-7 col-lg-8 col-md-10">
+
+                        <div class="section-tittle mb-70 text-center" >
+                            <!-- 다중 마커 -->
+                            <div id="map" style="width: 500px; height:300px; margin: 0 auto; border-radius: 10%; z-index: 2;">지도</div>
+                        </div>
+
                         <div class="section-tittle mb-70 text-center" >
 
                             <hr/>
@@ -72,7 +78,10 @@
                             <% } else { %>
                             <h2><%=SS_USER_ADDR2%> &nbsp;</h2>
                             <div id="weather"></div>
-                            </hr>
+
+                            <button class="btn btn-info" style="background-color: #d0a7e4; border-style: none; margin-right: 10px;" value="내일">내일 날씨</button>
+                            <button class="btn btn-info" style="background-color: #d0a7e4; border-style: none" value="모레">모레 날씨</button>
+                            <hr/>
                             <% } %>
 
                         </div>
@@ -91,11 +100,17 @@
 
                 <div class="row">
                     <%
-                        for(int i=0; i<9; i++) {
+                        for(int i=0; i<rList.size(); i++) {
                             NoticeDTO rDTO = rList.get(i);
 
                             if (rDTO == null) {
                                 rDTO = new NoticeDTO();
+                            }
+
+                            // 메인 페이지에는 9개의 게시글만 보여줌, (view more로 모든 게시물 확인 가능)
+                            // for문을 9개로 돌리면 적은 갯수의 게시물이 있을경우 오류가 발생하여 전체로 돌리고 9개 이상이면 break 처리함
+                            if (i>=9) {
+                                break;
                             }
                     %>
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
@@ -103,21 +118,31 @@
                             <!-- 상품 이미지 -->
                             <div class="popular-img">
                                 <img src="/resource/images/<%=rDTO.getImgs()%>" alt=""
-                                     style="width:240px; height:240px; object-fit: contain;">
+                                     style="width:240px; height:240px; object-fit: contain; cursor: pointer" onclick="doDetail(<%=rDTO.getGoods_no()%>)">
+
+                                <!-- hover 적용, 마우스 올릴 시 click me! 문구 표시 -->
                                 <div class="img-cap">
                                     <span>Click Me!</span>
                                 </div>
+
+                                <!-- 하트 표시를 누르면 관심상품 유효성 체크 + 등록 진행 -->
                                 <div class="favorit-items">
-                                    <span class="flaticon-heart" onclick="addCart()"></span>
+                                    <span class="flaticon-heart" onclick="addCart(<%=rDTO.getGoods_no()%>, <%=rDTO.getUser_no()%>)"></span>
                                 </div>
                             </div>
+
                             <div class="popular-caption">
+                                <!-- 상품명 -->
                                 <h3><a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');">
                                     <%=CmmUtil.nvl(rDTO.getGoods_title())%>
                                 </a></h3>
-                                <!--<span style="font-size: 15px;"><%=CmmUtil.nvl(rDTO.getGoods_addr())%></span>-->
-                                <span><%=CmmUtil.nvl(rDTO.getGoods_price())%></span>
 
+                                <!-- 가격 -->
+                                <!--<span style="font-size: 15px;"><%=CmmUtil.nvl(rDTO.getGoods_addr())%></span>-->
+                                <h3><a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');"><%=CmmUtil.nvl(rDTO.getGoods_price())%></a></h3>
+
+                                <!-- 상호명 -->
+                                <h5><a style="color: #d0a7e4;" href="javascript:searchLocation('<%=CmmUtil.nvl(rDTO.getGoods_addr())%>', <%=rDTO.getGoods_no()%>)"><%=CmmUtil.nvl(rDTO.getGoods_addr())%></a></h5>
                             </div>
                         </div>
                     </div>
@@ -138,78 +163,16 @@
 
     </main>
 
-    <script type="text/javascript">
-        function addCart() {
-
-
-        }
-    </script>
     <div class="section-tittle mb-70 text-center" >
         <h2>MY FAVORITE CATEGORY</h2>
     </div>
     <hr/>
     <!-- 동적 파이차트 HTML -->
     <div id="chartdiv2" style="height: 400px; margin: 0 auto;"></div>
-    <hr/>
 
-    <!-- index -->
-    <a href="/test.do">부트스트랩 테스트</a>
-    <a href="/index.do">메인 페이지</a>
-    <a href="/signup.do">회원가입</a>
-    <% if (SS_USER_NO == null) { %> <!--세션이 설정되지 않은 경우(=로그인되지 않은 경우) 로그인 표시-->
-    <a href="/logIn.do">로그인</a>
-    <% } else { %> <!--세션이 설정된 경우에는, 이름 + 로그아웃 표시-->
-    <%=SS_USER_NO%>번 회원 <%=SS_USER_NAME %>님 환영합니다~
-    <span><%=SS_USER_ADDR2%></span>
-    <br>
-
-    <button class="btn-info" value="내일">내일 날씨</button>
-    <button class="btn-info" value="모레">모레 날씨</button>
     <input type="hidden" id="getAddr2" value="<%=SS_USER_ADDR2%>"/>
-    <a href="/logOut.do">로그아웃</a>
-    <% } %>
-    <a href="/adminPage.do">관리자 페이지</a>
-    <a href="/userSearch.do">이메일/비밀번호 찾기</a>
-    <br />
-    <a href="/noticeForm.do">판매글 등록하기</a>
-    <a href="/noticeList.do">판매글 리스트(일반)</a>
-    <br/>
-    <a href="/searchList.do">페이징+검색 판매글 페이지</a>
-    <a href="/myPage.do">마이페이지</a>
-    <a href="/myCart.do">관심상품</a>
-    <a href="/mySee.do">최근 본 상품</a>
     <input type="hidden" id="ss_no" value="<%=SS_USER_NO%>">
-    <button type="button" onclick="alertTest()">swal 테스트</button>
-    <!-- 오피니언 마이닝 테스트 -->
-    <input type="text" id="text_message" name="text_message" style="width:400px"/>
-    <input type="submit" onclick="doNlp()" value="전송" />
-    <div id="nlpRes"></div>
 
-
-    <script type="text/javascript">
-
-        function doNlp() {
-            var text_message = document.getElementById("text_message").value;
-            console.log("입력한 text값" + text_message);
-
-            $.ajax({
-                url : "nlpAnalysis.do",
-                type : "post",
-                dataType : "text",
-                data : {
-                    "text_message" : text_message
-                },
-                success: function(res) {
-                    console.log("res : " + res);
-                    document.getElementById("nlpRes").innerHTML = res;
-                    document.getElementById("text_message").value = "";
-                }
-            })
-        }
-    </script>
-
-        <!-- 다중 마커 -->
-        <div id="map" style="width: 300px; height:300px;">지도</div>
 
         <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services"></script>
         <script>

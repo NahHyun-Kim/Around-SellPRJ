@@ -2434,7 +2434,7 @@ input:hover, input:focus {
 }
 
 .section_padding {
-    padding: 200px 0px
+    padding: 30px 0px
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1200px) {
@@ -2861,7 +2861,7 @@ input:hover, input:focus {
     -moz-transition: all .3s ease-out 0s;
     -ms-transition: all .3s ease-out 0s;
     -o-transition: all .3s ease-out 0s;
-    transition: all .3s ease-out 0s
+    transition: all .3s ease-out 0s;
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
@@ -2929,7 +2929,7 @@ input:hover, input:focus {
     -moz-transition: all .2s ease-out 0s;
     -ms-transition: all .2s ease-out 0s;
     -o-transition: all .2s ease-out 0s;
-    transition: all .2s ease-out 0s
+    transition: all .2s ease-out 0s;
 }
 
 .header-area .main-header .menu-wrapper .main-menu ul ul.submenu > li {
@@ -3066,7 +3066,7 @@ input:hover, input:focus {
 }
 
 .mobile_menu .slicknav_menu .slicknav_btn {
-    top: -35px;
+    top: -40px;
 }
 
 .mobile_menu .slicknav_menu .slicknav_btn .slicknav_icon-bar {
@@ -4530,7 +4530,8 @@ input:hover, input:focus {
 
 .footer-area .footer-tittle ul li a:hover {
     color: #d0a7e4;
-    padding-left: 5px
+    padding-left: 5px;
+    text-decoration: none;
 }
 
 .footer-copy-right {
@@ -7425,15 +7426,16 @@ b, sup, sub, u, del {
     color: #ff2020
 }
 
+/*나현 수정, 로그인 버튼*/
 .btn_3 {
     display: inline-block;
     padding: 18px 36px;
     border-radius: 5px;
-    background-color: transparent;
-    border: 1px solid #2577fd;
+    background-color: #d0a7e4;
+    border: 1px solid #d0a7e4;
     font-size: 15px;
     font-weight: 700;
-    color: #2577fd;
+    color: white;
     text-transform: uppercase;
     font-weight: 400;
     -webkit-transition: .5s;
@@ -7442,9 +7444,12 @@ b, sup, sub, u, del {
     transition: .5s
 }
 
+/* hover 수정 */
 .btn_3:hover {
-    background-color: #2577fd;
-    color: #fff
+    background-color: lightblue;
+    font-weight: bold;
+    color: purple;
+    cursor: pointer;
 }
 
 .btn_2 {
@@ -10368,8 +10373,9 @@ input:focus {
     color: #000
 }
 
+/* 로그인폼 padding 수정 */
 .login_part .login_part_text, .login_part .login_part_form {
-    padding: 80px 70px;
+    padding: 30px 30px;
     height: 600px;
     display: table
 }
@@ -10377,7 +10383,8 @@ input:focus {
 @media (max-width: 991px) {
     .login_part .login_part_text, .login_part .login_part_form {
         padding: 30px;
-        height: 400px
+        height: 400px;
+
     }
 }
 
@@ -10388,16 +10395,19 @@ input:focus {
     }
 }
 
+/* padding-top 수정(로그인폼)*/
 .login_part .login_part_text .login_part_text_iner, .login_part .login_part_text .login_part_form_iner, .login_part .login_part_form .login_part_text_iner, .login_part .login_part_form .login_part_form_iner {
     display: table-cell;
-    vertical-align: middle
+    vertical-align: middle;
+    padding-top: 5px;
 }
 
+/* 나현 수정(워드클라우드 용)*/
 .login_part .login_part_text {
-    background-image: -moz-linear-gradient(90deg, #B08EAD 0%, #4B3049 64%, #B08EAD 100%);
+    /*background-image: -moz-linear-gradient(90deg, #B08EAD 0%, #bf26b5 64%, #B08EAD 100%);
     background-image: -webkit-linear-gradient(90deg, #B08EAD 0%, #4B3049 64%, #B08EAD 100%);
     background-image: linear-gradient(90deg, #B08EAD 0%, #4B3049 64%, #B08EAD 100%);
-    background-size: 200% auto
+    background-size: 200% auto */
 }
 
 .login_part .login_part_text h2 {
@@ -10422,8 +10432,9 @@ input:focus {
 }
 
 .login_part .login_part_text .btn_3:hover {
-    background-color: #fff;
-    color: #ff2020 !important
+    background-color: transparent;
+    text-decoration: none;
+    color: white !important
 }
 
 @media (max-width: 991px) {
@@ -10475,13 +10486,25 @@ input:focus {
 .login_part .form-group .btn_3 {
     display: block;
     width: 100%;
-    margin: 30px 0 17px
+    font-weight: bold;
+    margin: 30px 0 17px;
+    background-color: #d0a7e4;
 }
 
 .login_part .lost_pass {
-    color: #777;
+    color: #d0a7e4;
+    text-align: right;
+    font-weight: bold;
+    float: right;
+    text-transform: capitalize
+}
+
+.login_part .lost_pass:hover {
+    color: purple;
     text-align: right;
     float: right;
+    font-weight: bold;
+    text-decoration: none;
     text-transform: capitalize
 }
 
