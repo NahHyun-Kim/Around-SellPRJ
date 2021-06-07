@@ -91,6 +91,10 @@ public class UserController {
         if (rDTO == null) {
             msg = "로그인에 실패했습니다. 다시 시도해 주세요.";
             url = "/logIn.do"; //재 로그인
+            model.addAttribute("msg", msg);
+            model.addAttribute("url", url);
+
+            return "/info";
         }
         // 로그인 성공한 경우(rDTO != null)
         else {
@@ -122,6 +126,7 @@ public class UserController {
                 log.info("adminPage Start!");
                 url = "/adminPage.do";
             }
+
         }
 
         model.addAttribute("msg", msg);
@@ -484,28 +489,36 @@ public class UserController {
         String phone_no = CmmUtil.nvl(request.getParameter("inputPhone"));
         log.info("phone_no : " + phone_no);
 
-        UserDTO pDTO = new UserDTO();
-        pDTO.setPhone_no(phone_no);
-
-        UserDTO rDTO = userService.findEmail(pDTO);
-        log.info("res : " + rDTO.getUser_email());
-
-        String email = CmmUtil.nvl(EncryptUtil.decAES128CBC(rDTO.getUser_email()));
-        log.info("복호화한 email : " + email);
-
-        // 이메일 복호화
-        rDTO.setUser_email(email);
 
         String url = "";
         String msg = "";
 
+        UserDTO pDTO = new UserDTO();
+        pDTO.setPhone_no(phone_no);
+
+        UserDTO rDTO = userService.findEmail(pDTO);
+
         if (rDTO == null) {
             msg = "일치하는 회원 정보가 없습니다.";
             url = "/userSearch.do";
+
+            model.addAttribute("msg", msg);
+            model.addAttribute("url", url);
+            return "/info";
+
         } else { //값이 존재한다면
+            log.info("res : " + rDTO.getUser_email());
+
+            String email = CmmUtil.nvl(EncryptUtil.decAES128CBC(rDTO.getUser_email()));
+            log.info("복호화한 email : " + email);
+
+            // 이메일 복호화
+            rDTO.setUser_email(email);
+
             msg = "회원님의 이메일은 : " + email + " 입니다.";
             url = "/userSearch.do";
         }
+
         model.addAttribute("msg", msg);
         model.addAttribute("url", url);
 
@@ -519,62 +532,88 @@ public class UserController {
             NoSuchAlgorithmException, BadPaddingException, InvalidKeyException, IllegalBlockSizeException {
         log.info("인증번호 발송 시작!");
 
-        String email = EncryptUtil.encAES128CBC(CmmUtil.nvl(request.getParameter("inputEmail")));
-        session.setAttribute("SS_EMAIL", email);
+        String user_email = CmmUtil.nvl(EncryptUtil.encAES128CBC(request.getParameter("inputEmail")));
+        log.info("user_email : " + user_email);
+
+        log.info("userService.emailCheck Start!");
+        UserDTO rDTO = userService.emailCheck(user_email);
+
+        log.info("rDTO null? : " + (rDTO==null));
 
         String auth = "";
         String msg = "";
         String url = "";
 
-        // 랜덤한 8자 인증번호값 담기
-        auth = TemppwdUtil.SendTemporaryMail();
-
-        log.info("인증번호 : " + auth);
-        MailDTO mDTO = new MailDTO();
-
-        try {
-            email = EncryptUtil.decAES128CBC(email);
-            log.info("디코딩한 이메일 : " + email);
-
-            // 인증번호 발송 관련 정보를 mailDTO 에 세팅
-            mDTO.setToMail(email);
-            mDTO.setTitle("AroundSell 인증 번호입니다.");
-            mDTO.setContents("인증번호는 : " + auth + "입니다. 인증번호 입력 후, 비밀번호를 변경해 주세요.");
-
-            // 세팅한 정보로 메일 발송
-            mailService.doSendMail(mDTO);
-
-            msg = "이메일로 인증번호를 발송하였습니다. 인증번호 입력 후, 비밀번호를 변경해 주세요.";
-
-            model.addAttribute("msg", msg);
-            session.setAttribute("SS_AUTH", auth);
-
-            // 변수와 메모리 초기화
-            msg = "";
-            url = "";
-            mDTO = null;
-
-            log.info("인증번호 메일 발송 끝!");
-
-            return "/user/findPwChk";
-
-        } catch (Exception e) {
-            msg = "이메일 발송 실패 : " + e.toString();
-            url = "/";
-            log.info(email.toString());
-            e.printStackTrace();
+        if (rDTO == null) {
+            msg = "일치하는 이메일이 없습니다. 재 시도해 주세요.";
+            url = "/userSearch.do";
 
             model.addAttribute("msg", msg);
             model.addAttribute("url", url);
-        } finally {
-            // 변수, 메모리 초기화
-            msg = "";
-            url = "";
-            mDTO = null;
-        }
 
+            return "/info";
+
+        } else {
+            String email = EncryptUtil.encAES128CBC(CmmUtil.nvl(request.getParameter("inputEmail")));
+            session.setAttribute("SS_EMAIL", email);
+
+
+            // 랜덤한 8자 인증번호값 담기
+            auth = TemppwdUtil.SendTemporaryMail();
+
+            log.info("인증번호 : " + auth);
+            MailDTO mDTO = new MailDTO();
+
+            try {
+                email = EncryptUtil.decAES128CBC(email);
+                log.info("디코딩한 이메일 : " + email);
+
+                // 인증번호 발송 관련 정보를 mailDTO 에 세팅
+                mDTO.setToMail(email);
+                mDTO.setTitle("AroundSell 인증 번호입니다.");
+                mDTO.setContents("인증번호는 : " + auth + "입니다. 인증번호 입력 후, 비밀번호를 변경해 주세요.");
+
+                // 세팅한 정보로 메일 발송
+                mailService.doSendMail(mDTO);
+
+                msg = "이메일로 발송된 인증번호를 입력 후, 비밀번호를 변경해 주세요.";
+                url = "/findPwChk.do";
+                model.addAttribute("msg", msg);
+                model.addAttribute("url", url);
+                session.setAttribute("SS_AUTH", auth);
+
+                // 변수와 메모리 초기화
+                msg = "";
+                url = "";
+                mDTO = null;
+
+                log.info("인증번호 메일 발송 끝!");
+
+                return "/redirect";
+
+            } catch (Exception e) {
+                msg = "이메일 발송 실패 : " + e.toString();
+                url = "/getIndex.do";
+                log.info(email.toString());
+                e.printStackTrace();
+
+                model.addAttribute("msg", msg);
+                model.addAttribute("url", url);
+            } finally {
+                // 변수, 메모리 초기화
+                msg = "";
+                url = "";
+                mDTO = null;
+            }
+        }
         log.info("인증번호 발송 끝!");
         return "/redirect";
+    }
+
+    // 인증번호 검사 폼
+    @RequestMapping(value="/findPwChk")
+    public String findPwChk(HttpServletRequest request, HttpServletResponse response) {
+        return "/user/findPwChk";
     }
 
     // 인증번호 검사
@@ -597,8 +636,11 @@ public class UserController {
             msg = "인증에 성공했습니다.";
         }
         else {
-            url = "/getIndex.do";
+            url = "/userSearch.do";
             msg = "인증에 실패했습니다. 다시 시도해 주세요.";
+            model.addAttribute("msg", msg);
+            model.addAttribute("url", url);
+            return "/info";
         }
         model.addAttribute("msg", msg);
         model.addAttribute("url", url);
@@ -657,7 +699,7 @@ public class UserController {
 
         } catch (Exception e) {
             msg = "실패하였습니다. : " + e.toString();
-            url = "/";
+            url = "/getIndex.do";
 
 
             log.info(e.toString());
@@ -665,6 +707,8 @@ public class UserController {
 
             model.addAttribute("msg", msg);
             model.addAttribute("url", url);
+
+            return "/info";
 
         } finally {
             // 변수와 메모리 초기화

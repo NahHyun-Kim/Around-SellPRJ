@@ -7,16 +7,24 @@
     <%@ include file="../include/cssFile.jsp"%>
 
     <script type="text/javascript">
-    function doOnload() {
+        $(document).ready(function() {
+            console.log("userno : " + <%=SS_USER_NO%>);
 
-    // 로그인여부를 체크하여, 세션이 존재하지 않으면 로그인으로 이동
-    var user_no = "<%=SS_USER_NO%>";
+            var user_no = "<%=SS_USER_NO%>";
 
-    if (user_no == "") {
-        alert("로그인 후 이용해 주세요.");
-        top.location.href = "/logIn.do";
-    }
-    }
+            if (user_no == "") {
+                Swal.fire({
+                    title: 'Around-Sell',
+                    text: '로그인한 사용자만 판매글을 등록할 수 있습니다. 로그인 하시겠습니까?',
+                    icon: "success",
+                    confirmButtonText: "네!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.href = "/logIn.do"
+                    }
+                })
+
+            }})
 
     //전송시 유효성 체크
     function doSubmit(f){
@@ -65,7 +73,7 @@
 </head>
 
 <!-- body가 실행될 때, 로그인 여부를 실행하기 위해 onLoad() 함수 호출 -->
-<body onload="doOnload();">
+<body>
     <!-- preloader -->
     <%@ include file="../include/preloader.jsp"%>
     <!-- preloader End -->
@@ -200,11 +208,10 @@
                     console.log("위도값 : " + result[0].y + " 경도값 : " +  result[0].x);
 
                     // 위도, 경도값을 input value 값에 추가
-                    $('input[name=latY]').attr('value',result[0].y);
+                    /*$('input[name=latY]').attr('value',result[0].y);
                     console.log("위도값 : " + result[0].y);
                     $('input[name=longX]').attr('value',result[0].x);
-                    //document.getElementById("longX").value = results[0].x;
-                    console.log("경도값 : " + result[0].x);
+                    console.log("경도값 : " + result[0].x);*/
 
                 }
             })
@@ -218,6 +225,8 @@
 
     <!-- css 파일 -->
     <link rel="stylesheet" href="/resource/css/notice.css"/>
+    <link rel="stylesheet" href="/resources/boot/css/nice-select.css"/>
+
     <!-- 판매글 등록 시, 유효성 체크 js -->
     <script type="text/javascript" src="/resource/valid/noticeCheck.js?ver=1"></script>
 

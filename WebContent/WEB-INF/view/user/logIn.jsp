@@ -16,62 +16,8 @@
     <%@ include file="../include/header.jsp"%>
     <!-- Header End(상단 메뉴바 끝!) -->
 
-    <!-- Resources -->
-    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/plugins/wordCloud.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
-
-    <!-- Chart code -->
-    <script>
-        $(document).ready(function() {
-
-            $.ajax({
-                url: "/titleAll.do",
-                type: "post",
-//서버에서 전송받을 데이터 형식 JSON 으로 받아야함
-                dataType: "text",
-                success(res) {
-                    console.log("타이틀 : " + res);
-// Themes begin
-                    am4core.useTheme(am4themes_animated);
-// Themes end
-
-                    var chart = am4core.create("chartdivLogin", am4plugins_wordCloud.WordCloud);
-                    var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
-
-                    series.accuracy = 4;
-                    series.step = 15;
-                    series.rotationThreshold = 0.7;
-                    series.maxCount = 200;
-                    series.minWordLength = 2;
-                    series.labels.template.margin(4, 4, 4, 4);
-                    series.maxFontSize = am4core.percent(30);
-
-                    series.text = res;
-
-                    series.randomness = 0;
-                    series.colors = new am4core.ColorSet();
-                    series.colors.passOptions = {}; // makes it loop
-
-//series.labelsContainer.rotation = 45;
-                    series.angles = [0, -90];
-                    series.fontWeight = "700"
-
-                    // setInterval(function () {
-                    //     series.dataItems.getIndex(Math.round(Math.random() * (series.dataItems.length - 1))).setValue("value", Math.round(Math.random() * 10));
-                    // }, 10000)
-
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert("에러 발생! \n" + textStatus + ":" + errorThrown);
-                    console.log(errorThrown);
-                }
-            })
-        }); // end Document.ready()
-
-    </script>
-
+    <!-- wordCloud 디자인용(로그인, 회원가입, 비밀번호 찾기 시 사용) -->
+    <%@ include file="../include/wordcloudForDesign.jsp"%>
     <main>
 
         <!-- 로그인 area -->
@@ -79,23 +25,11 @@
         <section class="login_part section_padding ">
             <div class="container">
                 <div class="row align-items-center">
-                    <!--<div class="col-lg-6 col-md-6">
-                        <div class="login_part_text text-center">
-                            <div class="login_part_text_iner" style="margin-top: 10px;">
-                                <h2>New to our Shop?</h2>
-                                <p>Around-Sell은 가입한 지역구에 대한 판매글 정보를 받아볼 수 있는 웹 서비스입니다. 회원가입 시, 지역구 설정과 관심상품 등의 서비스 이용이 가능합니다.</p>
-                                <a href="/signup.do" class="btn_3">Around-Sell 회원가입</a>
-                            </div>
-                        </div>
-                    </div>-->
-                    <div class="col-lg-1 col-md-1">
-                    </div>
 
-                    <!--<div class="col-lg-6 col-md-6"> -->
-                    <div class="col-lg-5 col-md-5"  style="border-right: 1px dotted #d0a7e4;">
+                    <div class="col-lg-6 col-md-6"  style="border-right: 1px dotted #d0a7e4;">
                         <div class="login_part_text text-center">
                             <div class="login_part_text_iner" style="margin-top: 5px;">
-                                <div id="chartdivLogin" style="width: 420px; height: 380px;"></div>
+                                <div id="chartdivLogin"></div>
                             </div>
                         </div>
                     </div>
@@ -143,9 +77,6 @@
         </section>
         <!--================login_part end =================-->
     </main>
-
-    <!-- bootstrap, css 파일 -->
-    <link rel="stylesheet" href="/resource/css/user.css"/>
 
      <!-- 로그인 유효성 체크 js -->
     <script type="text/javascript" src="/resource/valid/loginCheck.js"></script>

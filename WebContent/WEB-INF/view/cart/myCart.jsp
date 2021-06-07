@@ -30,15 +30,12 @@
 
     <!-- 관심상품 표시하는 란 -->
     <div class="slider-area ">
-        <div class="single-slider slider-height2 d-flex align-items-center">
+        <div class="single-slider slider-height2 d-flex align-items-center" style="margin-top:2px;">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="hero-cap text-center">
-                            <h2>Watch Shop</h2>
-                            <hr>
-                            <a href="/searchList.do">판매글 보기</a>
-                            <a href="javascript:history.back()">뒤로가기</a>
+                            <h2> MY FAVORITE! </h2>
 
                         </div>
                     </div>
@@ -48,60 +45,86 @@
     </div>
     <!-- 관심상품 문구 End -->
 
-<div class="container">
+    <main>
 
-    <div id="cartCnt"></div>
-    <div id="chk"><input name="allCheck" type="checkbox" id="allCheck"/>전체 선택></div>
-    <div class="row">
-        <% for (int i=0; i<rList.size(); i++) {
-            CartDTO rDTO = rList.get(i);
+        <!-- 장바구니 목록 보여주기 시작 -->
+        <div class="popular-items section-padding30">
+            <!-- container 시작 -->
+            <div class="container">
 
-            if (rDTO == null) {
-                rDTO = new CartDTO();
-            }
+                <!-- Section tittle2 (New 아이템 표시!) -->
+                <div class="row justify-content-center">
+                    <div class="col-xl-7 col-lg-8 col-md-10">
+                        <div class="section-tittle mb-70 text-center" >
 
-            total++;
+                            <h2><img src="/resources/boot/img/logo/aroundsell_sub.png" alt=""
+                                     style="width:300px;height: 75px;"></h2>
+                            <h3><div id="cartCnt"></div></h3>
+                            <div id="chk" style="font-size: 18px; font-weight: bold;"><input name="allCheck" type="checkbox" id="allCheck"/>&nbsp;전체 선택</div>
+                        </div>
+                    </div>
+                </div>
 
-         %>
-        <div class="col">
-            <input name="RowCheck" type="checkbox" id="del" value="<%=rDTO.getGoods_no()%>"/>
-            <a href="/noticeInfo.do?nSeq=<%=rDTO.getGoods_no()%>">
-                <img src="/resource/images/<%=rDTO.getImgs()%>" style="width: 150px; object-fit: contain" alt="이미지 불러오기 실패"/>
-            </a>
-            <a href="/noticeInfo.do?nSeq=<%=rDTO.getGoods_no()%>">
-                <%=rDTO.getGoods_title()%>
-            </a>
-            <a href="/noticeInfo.do?nSeq=<%=rDTO.getGoods_no()%>">
-                <%=rDTO.getGoods_price()%>원
-            </a>
+                <div class="row">
+                    <%
+                        for(int i=0; i<rList.size(); i++) {
+                            CartDTO rDTO = rList.get(i);
+
+                            if (rDTO == null) {
+                                rDTO = new CartDTO();
+                            }
+
+                            total++;
+                    %>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                        <div class="single-popular-items mb-50 text-center">
+
+                            <!-- 상품 이미지 -->
+                            <div class="popular-img">
+                                <img src="/resource/images/<%=rDTO.getImgs()%>" alt=""
+                                     style="width:240px; height:240px; object-fit: contain; cursor: pointer" onclick="doDetail(<%=rDTO.getGoods_no()%>)">
+
+                                <!-- hover 적용, 마우스 올릴 시 click me! 문구 표시 -->
+                                <div class="img-cap">
+                                    <span>Favorite!</span>
+                                </div>
+
+                            </div>
+
+                            <div class="popular-caption">
+                                <!-- 상품명 -->
+                                <h3><a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');">
+                                    <%=CmmUtil.nvl(rDTO.getGoods_title())%>
+                                </a></h3> check!&nbsp;<input name="RowCheck" type="checkbox" id="del" value="<%=rDTO.getGoods_no()%>"/>
+
+                                <!-- 가격 -->
+                                <h3><a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');"><%=CmmUtil.nvl(rDTO.getGoods_price())%></a></h3>
+
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+
+                </div>
+                <!-- end row -->
+
+                <!-- 관심상품 삭제 Button -->
+                <div class="row justify-content-center">
+                    <div class="room-btn pt-70" style="padding-top: 5px;">
+                        <a href="javascript:deleteValue()" class="btn view-btn1">상품 삭제!</a>
+                        <a href="/searchList.do" class="btn view-btn1">판매글 보기</a>
+
+                    </div>
+                </div>
+
+            </div>
         </div>
+        <!-- 상품 목록 일부 보여주기(index) 끝 -->
 
-        <% } %>
-    </div>
-
-    <input type="hidden" id="user_no" value="<%=SS_USER_NO%>"/>
-
-    <button class="btn btn-warning" onclick="deleteValue()">상품 삭제</button>
-    <!--<button class="btn btn-danger" id="delAll" onclick="deleteAll()">관심상품 전체 비우기</button>-->
-</div>
+        <input type="hidden" id="user_no" value="<%=SS_USER_NO%>"/>
+    </main>
 
 <script type="text/javascript">
-
-    $(document).ready(function() {
-        var user_no = <%=SS_USER_NO%>;
-        console.log("user_no : " + user_no);
-
-        if (user_no == null) {
-            Swal.fire({
-                title: "로그인 후 이용해 주세요!",
-                icon: 'info'
-            }).then((value) => {
-                if (value) {
-                    location.href = "/logIn.do";
-                }
-            });
-        }
-    })
 
     var res = document.getElementById("cartCnt");
     var total = (<%=total%>);
@@ -178,7 +201,7 @@
 
         // 선택된 값이 없다면,
         if (valueArr.length == 0) {
-            alert("선택된 관심상품이 없습니다.");
+            Swal.fire('선택된 관심상품이 없습니다.','','warning');
         }
         else {
             var chk = confirm("정말 삭제하시겠습니까?");

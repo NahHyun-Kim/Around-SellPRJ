@@ -61,7 +61,7 @@
 
                         <div class="section-tittle mb-70 text-center" >
                             <!-- 다중 마커 -->
-                            <div id="map" style="width: 500px; height:300px; margin: 0 auto; border-radius: 10%; z-index: 2;">지도</div>
+                            <div id="maps" style="width: 500px; height:300px; margin: 0 auto; border-radius: 10%; z-index: 2;">지도</div>
                         </div>
 
                         <div class="section-tittle mb-70 text-center" >
@@ -70,7 +70,7 @@
                             <!-- 로그인 안 한 상태로 인덱스페이지 접근 시, 로고 보여주기 -->
                             <% if (SS_USER_ADDR2 == null) { %>
                             <h2><img src="/resources/boot/img/logo/aroundsell_sub.png" alt=""
-                                     style="width:200px;height: 48px;"></h2>
+                                     style="width:200px;height: 55px;"></h2>
                             <p>우리 동네, 집 주변 판매하는 상품 찾기 웹 서비스 <br/>
                             <a href="/logIn.do">로그인</a> 후 설정한 지역구의 판매 상품 정보를 받아보세요!</p>
                             <hr/>
@@ -177,7 +177,7 @@
         <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services"></script>
         <script>
             // 다중마커 예제, 지도 생성 및 리스트 형태로 지도를 검색하여 마커 찍기
-            var mapContainer = document.getElementById('map');
+            var mapContainer = document.getElementById('maps');
             var mapOption = {
                 center: new kakao.maps.LatLng(33.450701, 126.570667),
                 level: 7

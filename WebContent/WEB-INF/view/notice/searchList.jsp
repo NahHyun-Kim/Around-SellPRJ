@@ -168,7 +168,7 @@
                         <span>Click Me!</span>
                     </div>
                     <div class="favorit-items">
-                        <span class="flaticon-heart"></span>
+                        <span class="flaticon-heart" onclick="addCart(<%=rDTO.getGoods_no()%>,<%=rDTO.getUser_no()%>)"></span>
                     </div>
                 </div>
                 <div class="popular-caption">
@@ -329,6 +329,9 @@
 
                 var totalMent = "전체 <span style='color:blue'>" + total + "</span> 건의 상품";
 
+                // nice-select 디자인에 속성이 바뀌어서 카테고리/정렬/페이징 순의 1번째 인덱스(0,1,2) 인 정렬을 숨김 처리
+                // eq(index) -> 해당하는 인덱스 요소에 대해서만 적용, .odd / even(짝.홀수) / :first/last(처음.마지막)
+                $(".nice-select:eq(1)").hide();
                 res.innerHTML = totalMent;
             } else if (keyword != "null" && (searchType == "주소지" || searchType == "카테고리")) {
 
@@ -498,11 +501,6 @@
 
         }
 
-        /*$("li").hover(function() {
-            $(this).css("background-color", "yellow");
-        }, function() {
-            $(this).css("background-color", "pink");
-        }) */
     </script>
     <!-- bootstrap, css 파일 -->
     <link rel="stylesheet" href="/resource/css/notice.css?ver=1"/>

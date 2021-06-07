@@ -3197,10 +3197,17 @@ input:hover, input:focus {
 }
 
 .slider-height2 {
-    background-image: url(../img/hero/about_hero.png);
-    min-height: 500px;
+    /*background-image: url(../img/hero/about_hero.png);*/
+    /*나현 수정 배경색*/
+    /*background-image: url(../../assets/img/background.PNG);*/
+    background-image: url(../img/hero/background-purple.jpeg);
+    /*background-color: #d0a7e4;*/
+    min-height: 450px;
     background-repeat: no-repeat;
-    background-position: center center
+    background-size: cover;
+    background-position: center center;
+    z-index: auto;
+    box-shadow: 0 0 8px 8px white inset;
 }
 
 @media (max-width: 575px) {

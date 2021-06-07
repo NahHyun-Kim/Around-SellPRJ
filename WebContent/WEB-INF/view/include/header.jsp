@@ -23,8 +23,7 @@
                                 <!-- 상품 등록 검색 결과를 제공하는 shop&Search -->
                                 <li><a href="/searchList.do">Shop & Search</a>
                                     <ul class="submenu">
-                                        <li><a href="/noticeList.do"> 상품 리스트</a></li>
-                                        <li><a href="/searchList.do"> 상품 검색</a></li>
+                                        <li><a href="/searchList.do"> 상품 찾기</a></li>
                                         <li><a href="/noticeForm.do"> 판매글 등록하기</a></li>
                                     </ul>
                                 </li>
@@ -40,8 +39,11 @@
                                 <!-- 관심상품과 최근 본 상품 메뉴 -->
                                 <li><a href="#">Cart</a>
                                     <ul class="submenu">
+                                        <!--
                                         <li><a href="/myCart.do">관심상품</a></li>
-                                        <li><a href="/mySee.do">최근 본 상품</a></li>
+                                        <li><a href="/mySee.do">최근 본 상품</a></li>-->
+                                        <li><a href="javascript:cartChk()">관심상품</a></li>
+                                        <li><a href="javascript:seeChk()">최근 본 상품</a></li>
                                     </ul>
                                 </li>
 

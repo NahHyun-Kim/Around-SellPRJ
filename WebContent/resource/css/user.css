@@ -6,3 +6,16 @@
     margin-top: 10px;
     display: none
 }
+
+#chartdivLogin {
+    width: 420px;
+    height: 380px;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    #chartdivLogin {
+        width: 300px;
+        height: 250px;
+    }
+}

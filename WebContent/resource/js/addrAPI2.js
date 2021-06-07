@@ -37,6 +37,21 @@
                     // 해당 주소에 대한 좌표를 받아서
                     var coords = new daum.maps.LatLng(result.y, result.x);
 
+                    // 마커 이미지의 이미지 주소
+                    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+                    // 마커 이미지의 이미지 크기
+                    var imageSize = new kakao.maps.Size(24, 35);
+
+                    // 마커 이미지를 생성
+                    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+                    var marker = new kakao.maps.Marker({
+                        map: map,
+                        position: coords,
+                        image : markerImage //마커 이미지
+                    });
+
                     // 지도를 보여준다.
                     mapContainer.style.display = "block";
                     map.relayout();

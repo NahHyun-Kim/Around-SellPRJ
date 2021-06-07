@@ -4,7 +4,6 @@
 <%
     String msg = CmmUtil.nvl((String)request.getAttribute("msg"));
     String url = CmmUtil.nvl((String)request.getAttribute("url"));
-    //String type = CmmUtil.nvl(((String)request.getAttribute("type")),"0");
 %>
 <!DOCTYPE html>
 <html>
@@ -17,7 +16,8 @@
     <script type="text/javascript">
         $(document).ready(function() {
             Swal.fire({
-                title: "<%=msg%>",
+                title: 'Around-Sell',
+                text: "<%=msg%>",
                 icon: 'success',
                 buttons: true
             }).then(val => {

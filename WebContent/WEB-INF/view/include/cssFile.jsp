@@ -31,3 +31,4 @@
 <link rel="stylesheet" href="/resources/boot/css/themify-icons.css">
 <link rel="stylesheet" href="/resources/boot/css/slick.css">
 
+<link rel="stylesheet" href="/resource/css/user.css?ver=1"/>

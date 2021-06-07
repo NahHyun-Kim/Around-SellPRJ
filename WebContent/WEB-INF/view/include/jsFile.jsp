@@ -154,4 +154,54 @@
             }
         })
     }
+
+    // 관심상품, 최근 본 상품(회원에게만 제공되어 로그인 여부 유효성을 체크함)
+    var user_no = <%=SS_USER_NO%>;
+    function cartChk() {
+
+        console.log("user_no : " + user_no);
+
+        if (user_no == null) {
+            Swal.fire({
+                title: 'Around-Sell',
+                text: '관심상품 이용은 회원만 가능합니다. 로그인 하시겠습니까?',
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonText: "네! 로그인",
+                cancelButtonText: "아니오"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.href = "/myCart.do"
+                } else if (result.isCancled) {
+                    return false;
+                }
+            })
+        } else {
+            location.href = "/myCart.do";
+        }
+    }
+
+    function seeChk() {
+
+        console.log("user_no : " + user_no);
+
+        if (user_no == null) {
+            Swal.fire({
+                title: 'Around-Sell',
+                text: '최근 본 상품 조회는 회원만 가능합니다. 로그인 하시겠습니까?',
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonText: "네! 로그인",
+                cancelButtonText: "아니오"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.href = "/logIn.do";
+                }
+
+            });
+        } else {
+            location.href = "/mySee.do";
+        }
+
+    }
 </script>

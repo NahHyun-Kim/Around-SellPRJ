@@ -1,4 +1,13 @@
 // 체크 버튼에 따라 이메일 찾기/비밀번호 찾기 기능이 달라진다.
+
+// 비밀번호 변경 시(임시 비밀번호 -> 비밀번호 변경) 유효성 체크
+var pw1 = document.getElementById("password1");
+var pw2 = document.getElementById("password2");
+
+// 비밀번호 변경 시, 유효성 체크를 실시간으로 하도록 표시
+var pw1chk = document.getElementById("pwd1_check");
+var pw2chk = document.getElementById("pwd2_check");
+
 function search_check(num) {
     if (num == '1') {
         // 이메일 찾기인 경우, 비밀번호 찾기 div를 감춤
@@ -10,26 +19,25 @@ function search_check(num) {
          }
 }
 
+    // 이메일 찾기 시 유효성 검증 함수
     function emailSearch() {
     if ($("#inputPhone").val() == "") {
-        $(".modal-body").text("핸드폰 번호를 입력해 주세요.");
-        $(".modal-title").text("Around-Sell 이메일 찾기");
-        $(".modal").fadeIn();
+        Swal.fire('핸드폰 번호를 입력해 주세요!','','info');
         return false;
-    } /* else { // 값이 존재하는 경우
-        $(".modal-body").text("회원님의 이메일은 : " );
-        $(".modal-title").text("Around-Sell 이메일 찾기");
-        $(".modal").fadeIn();
-    } */
+    }
     }
 
-// 비밀번호 변경 시(임시 비밀번호 -> 비밀번호 변경) 유효성 체크
-var pw1 = document.getElementById("password1");
-var pw2 = document.getElementById("password2");
+    // 이메일 유효성 검증 추가(null이 아니고, 이메일 존재하는 경우에만 비밀번호 찾기 진행)
+    function pwSearch() {
+        console.log("사용자 입력 이메일 : " + $("#inputEmail").val());
 
-// 비밀번호 변경 시, 유효성 체크를 실시간으로 하도록 표시
-var pw1chk = document.getElementById("pwd1_check");
-var pw2chk = document.getElementById("pwd2_check");
+        if ($("#inputEmail").val() == "") {
+            Swal.fire('이메일을 입력해 주세요!','','info');
+            return false;
+            // null이 아니라면, 등록된 이메일인 경우에만 비밀번호 찾기 진행
+        }
+    }
+
 
 var pwJ = /^[a-zA-Z0-9]{4,20}$/;
 
