@@ -5,6 +5,25 @@
     <title>Around-Sell 로그인</title>
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp"%>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var user_no = <%=SS_USER_NO%>;
+
+            if (user_no != null) {
+                Swal.fire({
+                    title: '이미 로그인 상태입니다.',
+                    icon: 'warning',
+                    showConfirmButton: false,
+                    timer: 2500
+                }).then(val => {
+                    if (val) {
+                        location.href = "javascript:history.back();";
+                    }
+                });
+            }
+        })
+    </script>
+
 </head>
 
 <body>

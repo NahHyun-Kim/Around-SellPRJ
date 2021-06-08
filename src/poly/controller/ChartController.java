@@ -33,13 +33,29 @@ public class ChartController {
 	@Resource(name = "NoticeService")
 	private INoticeService noticeService;
 
-	//홈페이지(index) 화면
-	@RequestMapping(value = "index")
-	public String Index() {
-		log.info(this.getClass());
+	// 워드클라우드 보여주는 화면
+	@RequestMapping(value="/wordCloud")
+	public String wordCloud() {
+		log.info(this.getClass().getName() + ".워드클라우드 페이지 시작1");
 
-		return "/index";
+		return "/chart/wordCloud";
 	}
+
+	// 인기 차트 보여주는 화면
+	@RequestMapping(value="/chart")
+	public String chart() {
+		log.info(this.getClass().getName() + ".차트 페이지 시작1");
+
+		return "/chart/chart";
+	}
+
+	//홈페이지(index) 화면
+//	@RequestMapping(value = "index")
+//	public String Index() {
+//		log.info(this.getClass());
+//
+//		return "/index";
+//	}
 
 	@RequestMapping(value = "test")
 	public String test() {

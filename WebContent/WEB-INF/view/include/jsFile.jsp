@@ -84,7 +84,7 @@
                     console.log("중복이면 1, 아니면 0 : " + res);
 
                     if (res > 0) {
-                        Swal.fire("", '이미 등록된 상품입니다.', 'warning');
+                        Swal.fire('이미 등록된 상품입니다.', '', 'warning');
                         return false;
                     } else if (res == 0)// 등록되지 않은 상품이라면,
                     { // insert 실행
@@ -196,6 +196,8 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     location.href = "/logIn.do";
+                } else if (result.isCancled) {
+                    return false;
                 }
 
             });

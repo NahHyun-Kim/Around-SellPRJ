@@ -35,7 +35,7 @@
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="hero-cap text-center">
-                            <h2> MY FAVORITE! </h2>
+                            <h2 style="font-family: 'Do Hyeon', sans-serif; color: #3d1a63;"> MY FAVORITE! </h2>
 
                         </div>
                     </div>
@@ -135,8 +135,9 @@
     // 검색 결과가 없다면, 검색 결과가 없다는 멘트와 함께 상품 보러가기 페이지로 이동 링크를 띄운다.
     if (total == 0) {
 
-        var resultMent = "<span style='color:#ff0000'>" + "검색 결과가 없습니다."  + "</span>"
-        + "<br/>" + "<span style='color: blue'>" + "<a href='/searchList.do'>상품 보러가기</a>";
+        var resultMent = "<hr/><span style='font-family: Do Hyeon;'><br/>" + "관심상품이 없습니다."  + "<br/><br/></span>"
+         + "<span style='color: blue'>" +
+            '<div class="row justify-content-center"><div class="room-btn pt-70" style="padding-top: 5px;"><a href="/searchList.do" class="btn view-btn1">상품 보러가기</a></span> </div>  </hr>';
 
         console.log("관심상품 멘트 : " + resultMent);
 
@@ -204,34 +205,42 @@
             Swal.fire('선택된 관심상품이 없습니다.','','warning');
         }
         else {
-            var chk = confirm("정말 삭제하시겠습니까?");
-            if (chk) {
-            $.ajax({
-                url: "/deleteCart.do",
-                type: "post",
-                // 배열 형태를 넘기기 위해 사용(traditional 속성)
-                // tranditional: true,
-                data: {
-                    "valueArr" : valueArr
-                },
-                // 삭제에 성공했다면, 삭제 성공 알림 및 상품을 다시 보러 갈 것을 confirm
-                success: function(data) {
-                    if (data == 1) {
-                        var delConfirm = confirm("관심상품을 삭제하였습니다. 다른 상품을 보러 가시겠습니까?");
-                        if (delConfirm) {
-                            location.href = "/searchList.do";
-                        } else {
-                            window.location.reload();
+
+            Swal.fire({
+                title: '정말 삭제하시겠습니까?',
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "네!",
+                cancelButtonText: "아니오"
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        url: "/deleteCart.do",
+                        type: "post",
+                        // 배열 형태를 넘기기 위해 사용(traditional 속성)
+                        // tranditional: true,
+                        data: {
+                            "valueArr" : valueArr
+                        },
+                        // 삭제에 성공했다면, 삭제 성공 알림 및 상품을 다시 보러 갈 것을 confirm
+                        success: function(data) {
+                            if (data == 1) {
+                                var delConfirm = confirm("관심상품을 삭제하였습니다. 다른 상품을 보러 가시겠습니까?");
+                                if (delConfirm) {
+                                    location.href = "/searchList.do";
+                                } else {
+                                    window.location.reload();
+                                }
+                            } else {
+                                alert("삭제에 실패했습니다.");
+                            }
                         }
-                    } else {
-                        alert("삭제에 실패했습니다.");
-                    }
+                    });
+                } else if (result.isCancled) {
+                    return false;
                 }
-            });
-        } else {
-                // 취소를 누른 경우, 삭제를 진행하지 않음
-                return false;
-            }
+            })
         }
     }
 

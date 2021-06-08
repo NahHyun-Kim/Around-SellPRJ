@@ -2842,7 +2842,7 @@ input:hover, input:focus {
 .header-area .main-header .menu-wrapper .main-menu ul li {
     display: inline-block;
     position: relative;
-    z-index: 1
+    z-index: 4;
 }
 
 .header-area .main-header .menu-wrapper .main-menu ul li a {

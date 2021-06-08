@@ -1,5 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Poor+Story&family=Roboto+Mono:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+
 <!-- Resources -->
 <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
@@ -34,6 +37,7 @@
 
                 series.text = res;
 
+                series.fontFamily = 'Poor Story';
                 series.randomness = 0;
                 series.colors = new am4core.ColorSet();
                 series.colors.passOptions = {}; // makes it loop

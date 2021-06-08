@@ -19,7 +19,8 @@
                 title: 'Around-Sell',
                 text: "<%=msg%>",
                 icon: 'success',
-                buttons: true
+                showConfirmButton: false,
+                timer: 2500
             }).then(val => {
                 if (val) {
                     location.href = "<%=url%>";

@@ -19,8 +19,8 @@
 
 <!--<link rel="stylesheet" href="/resources/boot/css/mystyle.css?ver=1">-->
 <!-- top 네비게이션 바 CSS -->
-<link rel="stylesheet" href="/resources/boot/css/slicknav.css">
-<link rel="stylesheet" href="/resources/boot/css/style.css?ver=1">
+<link rel="stylesheet" href="/resources/boot/css/slicknav.css?ver=1">
+<link rel="stylesheet" href="/resources/boot/css/style.css">
 
 <link rel="stylesheet" href="/resources/boot/css/bootstrap.min.css?ver=2">
 <link rel="stylesheet" href="/resources/boot/css/owl.carousel.min.css">
@@ -31,4 +31,6 @@
 <link rel="stylesheet" href="/resources/boot/css/themify-icons.css">
 <link rel="stylesheet" href="/resources/boot/css/slick.css">
 
-<link rel="stylesheet" href="/resource/css/user.css?ver=1"/>
+<link rel="stylesheet" href="/resource/css/user.css?ver=2"/>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&family=Noto+Sans+KR:wght@500&family=Poor+Story&family=Roboto+Mono:ital,wght@0,600;1,500&display=swap" rel="stylesheet">

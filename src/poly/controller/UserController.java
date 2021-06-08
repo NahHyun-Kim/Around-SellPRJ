@@ -472,6 +472,29 @@ public class UserController {
         return "/user/myInfo";
     }
 
+    @ResponseBody
+    @RequestMapping(value="/getUserAjax")
+    public UserDTO getUserAjax(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
+        // 로그인한 세션의 회원 번호로 상세정보 조회를 위해 회원번호를 저장함
+        String user_no = (String) session.getAttribute("SS_USER_NO");
+
+        UserDTO pDTO = new UserDTO();
+        pDTO.setUser_no(user_no);
+        log.info("회원 정보 조회를 위한 user_no : " + pDTO.getUser_no());
+
+        // 회원번호에 해당하는 회원 정보를 가져옴
+        UserDTO rDTO = userService.getUserDetail(pDTO);
+        log.info("rDTO null? : " + (rDTO == null));
+
+        if (rDTO == null) {
+            rDTO = new UserDTO();
+        }
+
+        log.info(this.getClass().getName() + ".getUser End!");
+
+        return rDTO;
+    }
+
     // 이메일, 비밀번호 찾기 폼
     @RequestMapping(value = "/userSearch")
     public String userSearchPage(HttpServletRequest request, HttpServletResponse response, ModelMap model)

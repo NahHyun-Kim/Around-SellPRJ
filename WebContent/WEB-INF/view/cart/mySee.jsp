@@ -10,6 +10,7 @@
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp"%>
 
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <script type="text/javascript">
         // 페이지가 로딩될 때, 최근 본 상품을 불러옴(추후 mainPage에 로그인시 띄울까 고민중)
         $(document).ready(function() {
@@ -36,17 +37,13 @@
 
                         let recentlyGoods = "";
 
-                        /** 최근 본 상품을 5개만 출력하려면, 역순으로(최근) 출력하기 때문에 data.length-1에서 data.length-5 (=cnt) 만큼 출력하면 된다.
-                         * 그러나 5개 이하인 데이터를 불러오면 index가 0이하가 된다. (데이터가 4개인데 5개를 요청하고 없는 데이터에 파싱을 요청함, 따라서)
-                         *
-                         * // 오류? Unexpected token u in JSON at position 0 at JSON.parse -> 파싱할 마지막 데이터 존재하지 않아 undefined, parsing 불가)
-                         * 따라서 data.length(ex.4개) < cnt(출력할 개수) 일 경우에는, 전체를 출력하도록 for문을 작성한다.(전체길이에서 0까지 모두!)
-                         *
-                         * data.length = 5라면 5개부터는 data.length-1(=4)부터 data.length-cnt(0)까지 4,3,2,1,0 인덱스의 맞는 데이터 개수를 불러오므로 유효함
-                         * **/
                         // 최근 본 상품을 출력할 개수(적은 데이터에 대한 오류를 잡기위해 임의로 5개로 정함-> 추후 변경할 수도)
                         var cnt = 5;
                         var len = data.length;
+
+                        // recentlyGoods += '<div class="slider-area "><div class="single-slider slider-height2 d-flex align-items-center" style="margin-top:2px;"> <div class="container">';
+                        // recentlyGoods += '<div class="row"> <div class="col-xl-12"><div class="hero-cap text-center">';
+                        // recentlyGoods += '<h2> 최근 본 상품 </h2> </div> </div></div></div></div></div>';
 
                         // 표시하고자 하는 5개의 목록보다 데이터가 많으면, 5개만 표시
                         if (len > 0 && len >= cnt) {
@@ -69,9 +66,9 @@
                                     // 데이터가 5개가 넘었을 경우, 총 건수에서 최근 5건만 표시되었음을 알림
                                     if (cnt < len) {
                                         recentlyGoods += "<div>최근 본 상품</div> ";
-                                        recentlyGoods += "<div>총 " + len + "건의 결과, 최근 " + cnt + "건을 표시합니다.</div>";
+                                        recentlyGoods += "<div>총 " + len + "건의 결과, 최근 " + cnt + "건을 표시합니다.</div> <hr/>";
                                     } else {
-                                        recentlyGoods += "<div>최근 본 상품</div> ";
+                                        recentlyGoods += "<div>최근 본 상품</div> <hr/> ";
                                     }
                                 }
 
@@ -79,10 +76,10 @@
 
 
                                 //  recentlyGoods += '<div>최근 본 상품</div> <br>';
-                                recentlyGoods += '<div class="col">';
-                                recentlyGoods += '<a href="/noticeInfo.do?nSeq=' + obj.goods_no + '">';
-                                recentlyGoods +=  '<img src="${pageContext.request.contextPath}/resource/images/' + obj.imgs + '" style="width: 150px; object-fit: contain" alt="이미지 불러오기 실패"/>';
-                                recentlyGoods += obj.goods_title + "</a> </div>";
+                                recentlyGoods += '<div class="col" style="margin: 0 auto;">';
+                                recentlyGoods += '<a class="title" href="/noticeInfo.do?nSeq=' + obj.goods_no + '">';
+                                recentlyGoods +=  '<img src="${pageContext.request.contextPath}/resource/images/' + obj.imgs + '" style="width: 150px; height: 150px; object-fit: contain" alt="이미지 불러오기 실패"/>';
+                                recentlyGoods += '<br/>' + obj.goods_title + "</a> </div> <hr/>";
 
                             }
                             console.log("불러오기 성공! searchList : " + recentlyGoods);
@@ -106,10 +103,10 @@
                                 }
 
                               //recentlyGoods += '<div>최근 본 상품</div> <br>';
-                                recentlyGoods += '<div class="col">';
-                                recentlyGoods += '<a href="/noticeInfo.do?nSeq=' + obj.goods_no + '">';
+                                recentlyGoods += '<div class="col" style="margin: 0 auto;">';
+                                recentlyGoods += '<a class="title" href="/noticeInfo.do?nSeq=' + obj.goods_no + '">';
                                 recentlyGoods +=  '<img src="${pageContext.request.contextPath}/resource/images/' + obj.imgs + '" style="width: 150px; object-fit: contain" alt="이미지 불러오기 실패"/>';
-                                recentlyGoods += obj.goods_title + "</a> </div>";
+                                recentlyGoods += '<br/>' + obj.goods_title + "</a> </div>  <hr/>";
 
                             }
                             console.log("불러오기 성공! searchList : " + recentlyGoods);
@@ -147,19 +144,69 @@
     <%@ include file="../include/header.jsp"%>
     <!-- Header End(상단 메뉴바 끝!) -->
 
-<div class="container">
-<%--  <div>최근 본 상품</div>--%>
-    <div class="row">
-        <div id="recentlyGoods"></div>
-    </div>
-    <hr>
-</div>
+    <!-- 관심상품 표시하는 란 -->
+    <div class="slider-area ">
+        <div class="single-slider slider-height2 d-flex align-items-center" style="margin-top:2px;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="hero-cap text-center">
+                            <h2 style="color: #3d1a63; font-family: 'Do Hyeon', sans-serif;"> 최근 본 상품 </h2>
 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main>
+
+        <!-- 상품 목록 일부 보여주기(index) 시작 -->
+        <div class="popular-items section-padding30">
+            <!-- container 시작 -->
+            <div class="container">
+
+                <!-- Section tittle1 (지역정보, 날씨정보 표시) -->
+                <div class="row justify-content-center">
+                    <div class="col-xl-7 col-lg-8 col-md-10">
+
+                        <div class="section-tittle mb-70 text-center" >
+                            <h2><img src="/resources/boot/img/logo/aroundsell_sub.png" alt=""
+                                     style="width:300px;height: 75px;"></h2>
+                            <div id="recentlyGoods" style="margin: 0 auto;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Button -->
+                <div class="row justify-content-center">
+                    <div class="room-btn pt-70" style="padding-top: 5px;">
+                        <a href="/searchList.do" class="btn view-btn1">상품 보러가기</a>
+                    </div>
+                </div>
+    </main>
+<%--  <div>최근 본 상품</div>--%>
+<%--        <div id="recentlyGoods" style="margin: 0 auto;"></div>--%>
+
+    <style>
+        .title {
+            color: black;
+            font-family: 'Do Hyeon', sans-serif;
+        }
+
+        #recentlyGoods {
+            color: black;
+            font-family: 'Do Hyeon', sans-serif;
+            font-size: 18px;
+        }
+    </style>
     <!-- include Footer -->
     <%@ include file="../include/footer.jsp"%>
 
     <!-- include JS File Start -->
     <%@ include file="../include/jsFile.jsp"%>
     <!-- include JS File End -->
+
 </body>
 </html>

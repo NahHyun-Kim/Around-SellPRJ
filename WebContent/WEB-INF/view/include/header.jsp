@@ -31,8 +31,8 @@
                                 <!-- 인기 상품 시각화 차트정보를 제공하는 Chart -->
                                 <li class="hot"><a href="#">Chart</a>
                                     <ul class="submenu">
-                                        <li><a href="/noticeList.do"> 인기 차트</a></li>
-                                        <li><a href="/noticeList.do"> 인기 차트2</a></li>
+                                        <li><a href="/wordCloud.do"> 워드 클라우드</a></li>
+                                        <li><a href="/chart.do"> 인기 차트 </a></li>
                                     </ul>
                                 </li>
 
@@ -56,11 +56,11 @@
                                     </ul>
                                 </li>
                                 <% } else { %>
-                                <li><a href="#">MyPage</a>
+                                <li><a href="/myList.do">MyPage</a>
                                     <ul class="submenu">
                                         <li><a href="/logOut.do">로그아웃</a></li>
                                         <li><a href="/getUserInfo.do">개인정보 수정</a></li>
-                                        <li><a href="/myList.do">나의 판매글</a></li>
+                                        <li><a href="/myList.do">마이페이지</a></li>
                                         <li><a href="/noticeForm.do">판매글 등록하기</a></li>
                                     </ul>
                                 </li>
@@ -70,7 +70,7 @@
                     </div>
                     <!-- 메뉴바 끝 -->
 
-                    <!-- Header Right(Flaticon 메뉴바 검색) -->
+                    <!-- Header Right -->
                     <div class="header-right" style="padding-top:10px;">
                         <ul id="headers">
                             <li>
@@ -79,7 +79,7 @@
                                     <%=CmmUtil.nvl(SS_USER_NAME)%>님&nbsp;(<%=CmmUtil.nvl(SS_USER_ADDR2)%>)
                                 </div>
                                 <% } else { %>
-                                <div class="header-chk"><a id="getLogin" href="/logIn.do">로그인 후 이용하세요</a></div>
+                                <div class="header-chk"><a id="getLogin" class="header-chk" href="/logIn.do">로그인 후 이용하세요</a></div>
                                 <% } %>
                             </li>
                             <!--<li><a href="/myCart.do"><span class="flaticon-shopping-cart"></span></a> </li>-->
@@ -105,3 +105,9 @@
     </div>
     <!-- Search model end -->
 </header>
+
+<style>
+    .header-chk {
+        font-family: 'Noto Sans KR';
+    }
+</style>

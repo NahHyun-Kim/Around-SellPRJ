@@ -28,12 +28,6 @@ public class WeatherController {
     private IWeatherService weatherService;
 
     private Logger log = Logger.getLogger(this.getClass());
-    // 크롤링한 결과를 실시간으로 보여주는 페이지 임시 작성
-    @RequestMapping(value = "/crawlingRes")
-    public String crawlingRes() {
-        log.info("crawlingRes 결과 페이지 Start!");
-        return "/weather/crawlingRes";
-    }
 
     // 날씨정보를 가져와서, responsebody로 넘기기
     @ResponseBody

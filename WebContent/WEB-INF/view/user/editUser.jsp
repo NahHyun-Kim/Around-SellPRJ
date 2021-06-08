@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="../include/session.jsp" %>
 <%@ page import="static poly.util.CmmUtil.nvl" %>
 <%@ page import="java.util.List" %>
 <%@ page import="poly.dto.UserDTO" %>
@@ -7,7 +7,6 @@
 <%@ page import="poly.util.EncryptUtil" %>
 <%@ page import="poly.util.CmmUtil" %>
 <% UserDTO rDTO = (UserDTO) request.getAttribute("rDTO");
-    String SS_USER_NO = (String) session.getAttribute("SS_USER_NO");
     if (rDTO == null) {
         rDTO = new UserDTO();
     }
@@ -23,7 +22,9 @@
 <html>
 <head>
     <title>Around-Sell 회원정보 수정</title>
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
+    <!-- 부트스트랩 템플릿 CSS -->
+    <%@ include file="../include/cssFile.jsp" %>
+
     <style>
         #map {
             width: 350px;
@@ -44,6 +45,14 @@
     </script>
 </head>
 <body onload="doOnload()">
+<!-- preloader -->
+<%@ include file="../include/preloader.jsp" %>
+<!-- preloader End -->
+
+<!-- Header(상단 메뉴바 시작!) Start -->
+<%@ include file="../include/header.jsp" %>
+<!-- Header End(상단 메뉴바 끝!) -->
+
 회원정보 수정 폼(테스트)
 <a href="javascript:history.back();">뒤로가기</a>
 <a href="/index.do">홈으로</a>
@@ -166,17 +175,18 @@
         };
     </script>
 </div>
-<script type="text/javascript" src="/resource/valid/userCheck.js"></script>
 
-<!-- bootstrap, css 파일 -->
-<link rel="stylesheet" href="/resource/css/user.css"/>
-<script src="/resources/js/bootstrap.js"></script>
-<link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+<!-- include Footer -->
+<%@ include file="../include/footer.jsp"%>
+
+<!-- include JS File -->
+<%@ include file="../include/jsFile.jsp" %>
 
 <!-- 도로명주소 API js 파일-->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services"></script>
 <script type="text/javascript" src="/resource/js/addrAPI2.js"></script>
 
+<script type="text/javascript" src="/resource/valid/userCheck.js"></script>
 </body>
 </html>
