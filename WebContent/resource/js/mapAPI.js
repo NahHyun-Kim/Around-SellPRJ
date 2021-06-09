@@ -69,7 +69,7 @@ $(document).ready(function() {
             console.log("가져온 상호명 : " + mystore);
 
             var infowindow = new kakao.maps.InfoWindow({
-                content: '<div style="width:150px;text-align:center;padding:6px 0;">' + mystore + '</div>'
+                content: '<div style="width:150px; text-align:center;padding:6px 0px 6px 0px; margin-left: 5px; font-family: \'Noto Sans KR\'">' + mystore + '</div>'
             });
             infowindow.open(map, marker);
 
@@ -124,14 +124,6 @@ $(document).ready(function() {
 
 })
 
-/* var la1 = document.getElementById("lat1").innerText;
-var lo1 = document.getElementById("lon1").innerText;
-var la2 = document.getElementById("lat2").innerText;
-var lo2 = document.getElementById("lon2").innerText;
-console.log("가져온 위도값 : " + la1);
-console.log(lo1);
-console.log(la2);
-console.log(lo2); */
 
 $(document).on('load', function(){
     console.log("로드 완료");

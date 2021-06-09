@@ -181,7 +181,7 @@
         <!-- Button -->
         <div class="row justify-content-center">
             <div class="room-btn pt-70">
-                <a href="catagori.html" class="btn view-btn1">View More Products</a>
+                <a href="/myCart.do" class="btn view-btn1">MY Favorite</a>
 
                 <!-- paging button 시작 -->
                 <div id="paging">
@@ -333,18 +333,18 @@
             // 검색어나 타입이 존재하지 않으면, 검색이 실행되지 않고 입력하기를 알림 띄움
         } else if (searchType == "" && keyword == "") {
             console.log("검색 타입과 검색어를 입력해 주세요.");
-            alert("검색 타입과 검색어를 입력해 주세요.");
+            Swal.fire('Input Something','검색 타입과 검색어를 입력해 주세요!','warning');
             document.getElementsByName("searchType")[0].focus();
             return false;
             // 검색 타입만 존재하지 않는 경우
         } else if (searchType == "") {
             console.log("검색 타입을 지정해 주세요.");
-            alert("검색 타입을 지정해 주세요.");
+            Swal.fire('Check SearchType','검색 타입을 지정해 주세요!','warning');
             document.getElementsByName("searchType")[0].focus();
             return false;
         } else if (keyword == "") {
             console.log("검색어를 입력해 주세요.");
-            alert("검색어를 입력해 주세요.");
+            Swal.fire('Check Keyword','검색어를 입력해 주세요!','warning');
             document.getElementById("keyword").focus();
             return false;
         }
@@ -370,7 +370,7 @@
             console.log("정렬 쿼리 보냄!");
             location.href = "/searchList.do?nowPage=1&cntPerPage=9&searchType=" + searchType + "&keyword=" + keyword + "&odType=" + odType;
         } else {
-            alert("실패했습니다!");
+            Swal.fire("실패했습니다!",'','error');
             return false;
         }
     })

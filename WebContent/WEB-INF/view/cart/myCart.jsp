@@ -111,8 +111,8 @@
                 <!-- 관심상품 삭제 Button -->
                 <div class="row justify-content-center">
                     <div class="room-btn pt-70" style="padding-top: 5px;">
-                        <a href="javascript:deleteValue()" class="btn view-btn1">상품 삭제!</a>
-                        <a href="/searchList.do" class="btn view-btn1">판매글 보기</a>
+                        <a href="javascript:deleteValue()" class="btn view-btn1 font">상품 삭제!</a>
+                        <a href="/searchList.do" class="btn view-btn1 font">판매글 보기</a>
 
                     </div>
                 </div>
@@ -226,14 +226,23 @@
                         // 삭제에 성공했다면, 삭제 성공 알림 및 상품을 다시 보러 갈 것을 confirm
                         success: function(data) {
                             if (data == 1) {
-                                var delConfirm = confirm("관심상품을 삭제하였습니다. 다른 상품을 보러 가시겠습니까?");
-                                if (delConfirm) {
-                                    location.href = "/searchList.do";
-                                } else {
-                                    window.location.reload();
-                                }
+
+                                Swal.fire({
+                                    title : 'Around-Sell',
+                                    text : '관심상품을 삭제하였습니다. 다른 상품을 보러 가시겠습니까?',
+                                    icon : "success",
+                                    showCancelButton : true,
+                                    confirmButtonText : "네! 로그인",
+                                    cancelButtonText : "아니오, 그냥 볼래요"
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.href = "/searchList.do"
+                                    } else {
+                                        window.location.reload();
+                                    }
+                                })
                             } else {
-                                alert("삭제에 실패했습니다.");
+                                Swal.fire('삭제에 실패했습니다.','','error');
                             }
                         }
                     });

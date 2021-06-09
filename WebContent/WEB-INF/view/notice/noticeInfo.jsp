@@ -12,11 +12,14 @@
         rDTO = new NoticeDTO();
     }*/
 
+
     // 게시글 수정, 삭제 시 로그인&본인 여부 확인을 위한 세션값 받아오기
     String SS_USER_NO = CmmUtil.nvl(((String) session.getAttribute("SS_USER_NO")), "-1");
     String SS_USER_ADDR = CmmUtil.nvl((String) session.getAttribute("SS_USER_ADDR"));
     String SS_USER_NAME = CmmUtil.nvl((String) session.getAttribute("SS_USER_NAME"));
     String SS_USER_ADDR2 = CmmUtil.nvl((String) session.getAttribute("SS_USER_ADDR2"));
+
+    System.out.println("세션 주소값 : " + SS_USER_NAME);
 
     System.out.println("세션에서 받아온 회원 주소 = " + SS_USER_ADDR);
     System.out.println("rDTO.getGoods_addr2() 주소값 꼭 받아와야 함 = " + rDTO.getGoods_addr2());
@@ -67,7 +70,7 @@
                         if (data > 0) {
                             console.log("최근 본 상품 insert 성공!");
                         } else if (data == 0) {
-                            alert("(최근 본 상품 insert) 실패!");
+                            console.log("(최근 본 상품 insert) 실패!");
                         }
                     }
                 })
@@ -81,9 +84,21 @@
         // 댓글창(textarea) 클릭 시, 유효성 체크
         function validChk() {
             if ((<%=edit%>) == 3) { //로그인 하지 않은 사용자라면
-                if (confirm("댓글 작성은 로그인한 사용자만 가능합니다. 로그인 후 이용 하시겠습니까?")) {
-                    location.href = "/logIn.do";
-                }
+                Swal.fire({
+                    title : 'Login Plz',
+                    text: '댓글 작성은 로그인한 사용자만 가능합니다. 로그인 하시겠습니까?',
+                    icon : "question",
+                    confirmButtonText : "네!",
+                    confirmButtonColor : 'skyblue',
+                    showCancelButton: true,
+                    cancelButtonText: '아니오'
+
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.href = "/logIn.do"
+
+                    }
+                })
             }
         }
 
@@ -94,13 +109,13 @@
 
             // 댓글이 입력되지 않았다면,
             if (comment == "") {
-                alert("댓글을 입력해 주세요.");
+                Swal.fire('댓글을 입력해 주세요','','warning');
                 $("#comment").focus();
                 return false;
             }
 
             if (calBytes(comment) > 3000) {
-                alert("댓글은 최대 3000Bytes 까지 입력 가능합니다.");
+                Swal.fire('Too Long','댓글은 최대 3000Byte까지 입력이 가능합니다.','warning');
                 $("#comment").focus();
                 return false;
             }
@@ -115,7 +130,7 @@
                 success : function(res) {
                     console.log("댓글 몇개? : " + res);
                     if (res == 3) {
-                        alert("한 게시물에 댓글은 3개까지 달 수 있습니다.");
+                        Swal.fire('댓글 제한','한 게시물에 댓글은 3개까지 달 수 있습니다.','info');
                         return false;
 
                         // 댓글이 3개 이하라면, 댓글 등록 진행
@@ -133,7 +148,7 @@
                             },
                             success: function (data) {
                                 if (data == 1) { //등록에 성공했다면
-                                    alert("댓글이 등록되었습니다.");
+                                    Swal.fire('댓글이 등록되었습니다!','','success');
 
                                     // 댓글이 등록되었다면, 기존 입력창에 썼던 내용을 초기화(placeholder만 남는다.)
                                     document.getElementById("comment").value = "";
@@ -222,10 +237,10 @@
                         if ((<%=SS_USER_NO%>) == (json[i].user_no))
                         {
                             console.log("SS_USER_NO == user_no(삭제 가능!)" + (json[i].user_no));
-                            comment_list += '<button type="button" class="btn btn-info" onclick="editForm(' + comment_no + ')">수정</button><br>';
-                            comment_list += '<button type="button" class="btn btn-danger" onclick="delComment(' + comment_no + ')">X</button><br>';
+                            comment_list += '<button type="button" class="btn view-btn3 font ml-2" onclick="editForm(' + comment_no + ')">수정</button> &nbsp;';
+                            comment_list += '<button type="button" class="btn view-btn3 font" onclick="delComment(' + comment_no + ')">X</button><br>';
                         }
-                        comment_list += '</div>';
+                        comment_list += '</div><hr/>';
                     }
                     $("#total").html(totalMent);
                     $("#comment_list").html(comment_list);
@@ -239,39 +254,47 @@
         function delComment(comment_no) {
 
             console.log("삭제할 댓글 번호(comment_no) : " + comment_no);
-            var delConfirm = "댓글을 삭제하시겠습니까?";
 
-            if (confirm(delConfirm)) {
-                // 본인이 작성한 댓글에 대해서만 수정, 삭제 버튼이 표시되기 때문에 바로 ajax 삭제 진행
-                $.ajax({
-                    url : "delComment.do",
-                    type : "post",
-                    // 서버로 전송할 data(댓글번호)
-                    data :
-                        {
-                            "comment_no" : comment_no
+            Swal.fire({
+                title : '댓글을 삭제하시겠습니까?',
+                icon : "question",
+                confirmButtonText : "네!",
+                confirmButtonColor : 'skyblue',
+                showCancelButton: true,
+                cancelButtonText: '아니오'
+
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // 본인이 작성한 댓글에 대해서만 수정, 삭제 버튼이 표시되기 때문에 바로 ajax 삭제 진행
+                    $.ajax({
+                        url : "delComment.do",
+                        type : "post",
+                        // 서버로 전송할 data(댓글번호)
+                        data :
+                            {
+                                "comment_no" : comment_no
+                            },
+
+                        // 삭제에 성공했다면(data==1)
+                        success: function(data) {
+                            if (data == 1) {
+                                Swal.fire('삭제에 성공했습니다.','','success');
+                                // 댓글 목록 불러오기
+                                getComment();
+
+                            } else if (data == 0) {
+                                Swal.fire('삭제에 실패했습니다.','','error');
+                            }
                         },
 
-                    // 삭제에 성공했다면(data==1)
-                    success: function(data) {
-                        if (data == 1) {
-                            alert("삭제에 성공했습니다.");
-                            // 댓글 목록 불러오기
-                            getComment();
-
-                        } else if (data == 0) {
-                            alert("삭제에 실패했습니다.");
+                        // error catch!
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                            console.log(errorThrown);
                         }
-                    },
-
-                    // error catch!
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert("에러 발생! \n" + textStatus + ":" + errorThrown);
-                        console.log(errorThrown);
-                    }
-                }) // ajax 끝
-
-            } // confirm 끝
+                    }) // ajax 끝
+                }
+            })
 
         }
 
@@ -329,13 +352,13 @@
 
             // 댓글이 입력되지 않았다면,
             if (comment == "") {
-                alert("댓글을 입력해 주세요.");
+                Swal.fire('Input Comment','댓글을 입력해 주세요!','warning');
                 $("#comment").focus();
                 return false;
             }
 
             if (calBytes(comment) > 3000) {
-                alert("댓글은 최대 3000Bytes 까지 입력 가능합니다.");
+                Swal.fire('Too Long','댓글은 최대 3000Byte까지 입력이 가능합니다.','warning');
                 $("#comment").focus();
                 return false;
             }
@@ -356,7 +379,7 @@
                         console.log("수정 성공! data가 1이라면 성공" + data);
 
                         if (data == 1) {
-                            alert("댓글을 수정했습니다.");
+                            Swal.fire('댓글을 수정했습니다!','','success');
                             // 댓글 목록 새로 가져오기
                             getComment();
 
@@ -369,7 +392,7 @@
                             document.getElementById("comment").value = "";
 
                         } else if (data == 0) {
-                            alert("댓글 수정에 실패했습니다.");
+                            Swal.fire('댓글 수정에 실패했습니다.','','error');
                             return false;
                         }
                     },
@@ -392,11 +415,20 @@
                 location.href="/noticeEditInfo.do?nSeq=<%=rDTO.getGoods_no()%>";
                 // 로그인이 안 된 상태라면
             } else if ((<%=edit%>) == 3) {
-                alert("로그인 후 이용해 주세요.");
-                location.href="/logIn.do";
+                Swal.fire({
+                    title : '로그인 후 이용해 주세요',
+                    icon : "info",
+                    showCancelButton : true,
+                    confirmButtonText : "로그인",
+                    cancelButtonText : "그냥 볼래요"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.href = "/logIn.do"
+                    }
+                })
 
             } else { // 본인이 아니라면(edit=1)
-                alert("본인이 작성한 글만 수정이 가능합니다.");
+                Swal.fire("본인이 작성한 글만 수정이 가능합니다.",'','warning');
 
             }
         }
@@ -407,14 +439,24 @@
             console.log(typeof (<%=edit%>));
             // 본인이라면(2), 삭제 확인을 물어본 후(confirm) 삭제
             if ((<%=edit%>) == 2) {
-                if(confirm("판매글을 삭제하시겠습니까?")) {
-                    location.href = "/noticeDelete.do?nSeq=<%=rDTO.getGoods_no()%>";
-                }
+                Swal.fire({
+                    title : 'Around-Sell',
+                    text : '판매글을 삭제하시겠습니까?',
+                    icon : "question",
+                    showCancelButton : true,
+                    confirmButtonText : "네! 삭제할래요",
+                    cancelButtonText : "아니오"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.href = "/noticeDelete.do?nSeq=<%=rDTO.getGoods_no()%>";
+                    }
+                })
+
              }  else if ((<%=edit%>) == 3) { // 로그인이 안 된 상태라면
-                alert("로그인 후 이용해 주세요.");
+                Swal.fire("로그인 후 이용해 주세요.",'','warning');
 
         } else if ((<%=edit%>) == 1) { // 본인이 아니라면(edit=1) 삭제 불가능
-            alert("본인이 작성한 글만 삭제가 가능합니다.");
+            Swal.fire("본인이 작성한 글만 삭제가 가능합니다.",'','warning');
         }
         }
 
@@ -432,197 +474,385 @@
     <%@ include file="../include/preloader.jsp"%>
     <!-- preloader End -->
 
-    <!-- Header(상단 메뉴바 시작!) Start -->
-    <%@ include file="../include/header.jsp"%>
-    <!-- Header End(상단 메뉴바 끝!) -->
+    <header>
+        <div class="header-area">
+            <div class="main-header header-sticky" style="box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);">
+                <!--<div class="main-header header-sticky" style="border-bottom: 1px solid #E5E5E5; box-shadow:3px 3px 4px lightgrey;">-->
+                <div class="container-fluid">
+                    <div class="menu-wrapper">
+                        <!-- aroundSell mainPage Top(로고+돋보기(=검색창 이동) -->
+                        <div class="logo">
+                            <a href="/getIndex.do"><img src="/resources/boot/img/logo/aroundsell_main.png" alt=""
+                                                        style="width:170px;height: 48px;"></a>
+                            <img class="search-switch" id="findlogo" src="/resources/boot/img/logo/aroundsell_find.png"
+                                 style="margin-left: 12px; width: 30px; height: 35px; padding-bottom: 3px;"/>
+                        </div>
 
-<div class="container">
+                        <!-- aroundSell 메인 메뉴바-->
+                        <div class="main-menu d-none d-lg-block" style="height:106px;">
+                            <nav>
+                                <ul id="navigation">
+                                    <!-- 홈페이지(index), 워드클라우드와 전체 판매글을 표시한다.-->
+                                    <li><a href="/getIndex.do">Home</a></li>
 
-        <!-- 판매글 상세조회 -->
-        <!-- 이미지 -->
-        <div class="row">
-            <div class="col">
-        <img class="thumb" src="/resource/images/<%=rDTO.getImgs()%>" style="width:350px;" alt="이미지 불러오기 실패">
-            </div>
-        </div>
+                                    <!-- 상품 등록 검색 결과를 제공하는 shop&Search -->
+                                    <li><a href="/searchList.do">Shop & Search</a>
+                                        <ul class="submenu">
+                                            <li><a href="/searchList.do"> 상품 찾기</a></li>
+                                            <li><a href="/noticeForm.do"> 판매글 등록하기</a></li>
+                                        </ul>
+                                    </li>
 
-        <!-- 조회수 -->
-        <div class="row">
-            <div class="col">
-                <%=rDTO.getHit()%>
-            </div>
-        </div>
-        <!-- 카테고리 -->
-        <div class="row">
-            <div class="col">
-                <%=rDTO.getCategory()%>
-            </div>
-        </div>
+                                    <!-- 인기 상품 시각화 차트정보를 제공하는 Chart -->
+                                    <li class="hot"><a href="#">Chart</a>
+                                        <ul class="submenu">
+                                            <li><a href="/wordCloud.do"> 워드 클라우드</a></li>
+                                            <li><a href="/chart.do"> 인기 차트 </a></li>
+                                        </ul>
+                                    </li>
 
-        <!-- 상품명 -->
-        <div class="row">
-            <div class="col">
-                <%=rDTO.getGoods_title()%>
-            </div>
-        </div>
+                                    <!-- 관심상품과 최근 본 상품 메뉴 -->
+                                    <li><a href="#">Cart</a>
+                                        <ul class="submenu">
+                                            <li><a href="javascript:cartChk()">관심상품</a></li>
+                                            <li><a href="javascript:seeChk()">최근 본 상품</a></li>
+                                        </ul>
+                                    </li>
 
-        <!-- 상품 가격 -->
-        <div class="row">
-            <div class="col">
-                <%=rDTO.getGoods_price()%>원
-            </div>
-        </div>
+                                    <!-- 로그아웃(혹은 로그인&회원가입), 회원 정보를 제공하는 메뉴 -->
+                                    <% if (SS_USER_NAME == null) { %>
+                                    <li><a href="#">LogIn / SignUp</a>
+                                        <ul class="submenu">
+                                            <li><a href="/logIn.do">로그인</a></li>
+                                            <li><a href="/signup.do">회원가입</a></li>
+                                            <li><a href="/userSearch.do">FIND ID/PW</a></li>
+                                        </ul>
+                                    </li>
+                                    <% } else if (SS_USER_NAME != null && !SS_USER_NO.equals("0")){ %>
+                                    <li><a href="/myList.do">MyPage</a>
+                                        <ul class="submenu">
+                                            <li><a href="/logOut.do">로그아웃</a></li>
+                                            <li><a href="javascript:doPassword()">개인정보 수정</a></li>
+                                            <li><a href="/myList.do">마이페이지</a></li>
+                                            <li><a href="/noticeForm.do">판매글 등록하기</a></li>
+                                        </ul>
+                                    </li>
+                                    <% } else if (SS_USER_NAME != null && SS_USER_NO.equals("0")) {%>
+                                    <li><a href="/getUser.do">관리자 페이지</a>
+                                        <ul class="submenu">
+                                            <li><a href="/logOut.do">로그아웃</a></li>
+                                            <li><a href="javascript:doPassword()">관리자 정보수정</a></li>
+                                            <li><a href="/myList.do">마이페이지</a></li>
+                                            <li><a href="/getUser.do">관리자 페이지</a></li>
+                                        </ul>
+                                    </li>
+                                    <% } %>
+                                </ul>
+                            </nav>
+                        </div>
+                        <!-- 메뉴바 끝 -->
 
-        <!-- 상호명 -->
-        <div class="row">
-            <div class="col">
-                <%=rDTO.getGoods_addr()%>
-            </div>
-        </div>
-
-        <!-- 상품 설명 -->
-        <div class="row">
-            <div class="col">
-                <%=rDTO.getGoods_detail()%>
-            </div>
-        </div>
-
-        <!-- 지도, 상호명, 위치, 거리 표시 -->
-        <div class="row">
-            <div class="col-6" id="map"></div>
-            <div class="col-6">
-                <div class="row">
-                    <div class="col" id="goods_addr">
-                        <%=rDTO.getGoods_addr()%>
+                        <!-- Header Right -->
+                        <div class="header-right" style="padding-top:10px;">
+                            <ul id="headers">
+                                <li>
+                                    <% if (!SS_USER_NO.equals("-1")) { %>
+                                    <div class="header-chk font" style="color: #d0a7e4;">
+                                        <%=CmmUtil.nvl(SS_USER_NAME)%>님&nbsp;(<%=CmmUtil.nvl(SS_USER_ADDR2)%>)
+                                    </div>
+                                    <% } else { %>
+                                    <div class="header-chk"><a id="getLogin" href="/logIn.do">로그인 후 이용하세요</a></div>
+                                    <% } %>
+                                </li>
+                                <!--<li><a href="/myCart.do"><span class="flaticon-shopping-cart"></span></a> </li>-->
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Mobile Menu -->
+                    <div class="col-12">
+                        <div class="mobile_menu d-block d-lg-none"></div>
                     </div>
                 </div>
-                <div class="row">
-                    <!-- 거리 계산, 지도에 장소 표시를 위해 선언 -->
-                    <div class="col" id="goods_addr2"><%=rDTO.getGoods_addr2()%></div>
-                    <div class="col" style="display: none" id="user_addr"><%=SS_USER_ADDR%></div>
-                    <div class="col" style="display: none"id="lat1"></div>
-                    <div class="col" style="display: none" id="lon1"></div>
-                    <div class="col" style="display: none" id="lat2"></div>
-                    <div class="col" style="display: none" id="lon2"></div>
+            </div>
+        </div>
+
+        <!--? Search model Begin -->
+        <div class="search-model-box">
+            <div class="h-100 d-flex align-items-center justify-content-center">
+                <div class="search-close-btn">+</div>
+                <div class="search-model-form">
+                    <input type="text" id="search-input" placeholder="찾고싶은 상품을 입력하세요" onkeydown="if (event.keyCode == 13) search()"/>
                 </div>
-                <div class="row">
-                    <div class="col" id="distance">
-                        <input type="button" id="searchD" onclick="return search()" value="거리 검색"/>
-                        <button type="button" id="findroad" onclick="return road()">길찾기</button>
+            </div>
+        </div>
+        <!-- Search model end -->
+    </header>
+
+    <style>
+        .header-chk #getLogin {
+            font-family: 'Noto Sans KR';
+        }
+
+        .imgStyle {
+            width: 500px; height: 500px; display: block; margin-left: auto; margin-right: auto;
+            box-shadow: 2px 2px 3px 3px rgba(0, 0, 0, 0.2);
+        }
+        @media (max-width: 892px) {
+            .imgStyle {
+                margin-top: 200px;
+            }
+        }
+
+        #map {
+            width: 500px; height: 300px; display: block; margin: 0 auto;
+        }
+
+        .dotOverlay distanceInfo {
+            font-family: "Noto Sans KR";
+        }
+    </style>
+
+    <main>
+
+        <!--================Single Product Area =================-->
+        <div class="product_image_area">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-12">
+                            <div class="single_product_img">
+                                <img src="/resource/images/<%=rDTO.getImgs()%>" alt="이미지 불러오기 실패!" class="img-fluid imgStyle"/>
+                            </div>
                     </div>
-                    <div class="col" id="findpath"></div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <button class="btn btn-info" type="button" id="doCart">관심상품 등록</button>
-                        <input type="button" onclick="return doEdit();" value="수정"/>
-                        <input type="button" onclick="return doDelete();" value="삭제"/>
-                        <input type="button" onclick="return doList();" value="목록으로"/>
+                    <div class="col-lg-8">
+                        <div class="single_product_text text-center">
+
+                            <hr/>
+                            <div class="blog_right_sidebar">
+                                <aside class="single_sidebar_widget post_category_widget">
+                                    <br/>
+                                    <h3 class="widget_title mt-10 fontPoor"><%=rDTO.getGoods_title()%></h3>
+                                    <br/>
+                                    <div id="infoInput"></div>
+
+                                    <!-- 판매상품 정보 출력 -->
+                                    <div class="col-md-12 form-group p_star">
+                                        <label for="goods_price" class="font">판매 가격</label>
+                                        <input class="form-control font Center" id="goods_price" type="text"
+                                               value="<%=rDTO.getGoods_price()%>원" readOnly/>
+                                    </div>
+
+                                    <!-- 상호명 -->
+                                    <div class="col-md-12 form-group p_star">
+                                        <label for="StoreName" class="font Center">상호명</label>
+                                        <input class="form-control font Center" id="StoreName" type="text"
+                                               value="<%=rDTO.getGoods_addr()%>" readOnly/>
+                                    </div>
+
+                                    <!-- 상세 주소지 -->
+                                    <div class="col-md-12 form-group p_star">
+                                        <label for="FullAddr" class="font Center">주소지</label>
+                                        <input class="form-control font Center" id="FullAddr" type="text"
+                                               value="<%=rDTO.getGoods_addr2()%>" readOnly/>
+                                    </div>
+
+                                    <!-- 카테고리 -->
+                                    <div class="col-md-12 form-group p_star">
+                                        <label for="categories" class="font Center">카테고리</label>
+                                        <input class="form-control font Center" id="categories" type="text"
+                                               value="<%=rDTO.getCategory()%>" readOnly/>
+                                    </div>
+
+                                </aside>
+                            </div>
+
+                                    <hr/>
+                            <p class="font">상품 설명<br/>
+                                <%=rDTO.getGoods_detail()%></p>
+                            <br/>
+                            <hr/>
+                            <div class="col" style="display: none" id="user_addr"><%=SS_USER_ADDR%></div>
+                            <div class="col" style="display: none" id="lat1"></div>
+                            <div class="col" style="display: none" id="lon1"></div>
+                            <div class="col" style="display: none" id="lat2"></div>
+                            <div class="col" style="display: none" id="lon2"></div>
+
+                            <div class="col font" id="goods_addr" style="display: none;"><%=rDTO.getGoods_addr()%></div>
+                            <div class="col font" id="goods_addr2" style="display: none;"><%=rDTO.getGoods_addr2()%></div>
+                            <div class="col font" id="category" style="display: none;"><%=rDTO.getCategory()%></div>
+
+                            <h2><img src="/resources/boot/img/logo/aroundsell_sub.png" alt=""
+                                     style="width:300px;height: 85px;"></h2>
+                            <br/>
+                            <div id="map"></div>
+                            </p>
+                            <div class="card_area">
+                                <div class="add_to_cart">
+                                    <a href="javascript:doCart('<%=rDTO.getGoods_no()%>', <%=rDTO.getUser_no()%>)" class="btn_3 font" id="doCart" style="font-family: 'Noto Sans KR'; color: white;">관심상품 등록</a>
+                                    <a href="javascript:road()" class="btn_3 font" id="findroad">길찾기</a>
+                                    <a href="javascript:searchDistance()" class="btn_3 font" id="searchD">거리 계산하기</a>
+                                    <div class="font" id="distance"></div>
+                                    <br/>
+
+                                    <!-- 작성자 본인일 때만 수정, 삭제 표시 -->
+                                    <% if (SS_USER_NO.equals(rDTO.getUser_no())) { %>
+                                    <div class="col-md-12 form-group">
+
+                                        <a class="lost_pass font" href="javascript:doEdit()">판매글 수정</a>
+                                        <br/>
+                                        <a class="lost_pass font" href='javascript:doDelete()'>판매글 삭제하기</a>
+
+                                    </div>
+                                    <% } %>
+                                <hr/>
+                                    <!--<div class="font" id="findpath"></div>-->
+                                </div>
+
+                                <h3 class="widget_title mt-10 fontPoor">댓글</h3>
+                                <!-- 댓글 작성란(임시) -->
+                                <div class="row">
+                                    <div class="col font">작성자 : <%=SS_USER_NAME%></div>
+                                </div>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-1"></div>
+                                    <div class="col-7">
+                                        <input class="form-control" type="textarea" name="comment" id="comment" onclick="validChk()" style="width: 300px; height:100px; margin: 0 auto;" placeholder="댓글을 입력하세요."/>
+                                    </div>
+                                    <div class="col-4">
+                                        <br/>
+                                        <button type="button" class="btn view-btn3 font" id="regComment" onclick="doSubmit()">댓글 등록</button>
+                                        <!-- 댓글 수정을 눌렀을 때만 버튼이 표시되도록 설정 -->
+                                        <button type="button" class="btn view-btn3 font" id="editComment" onclick="editComment()" style="display: none">댓글 수정</button>
+                                    </div>
+                                </div>
+                                <hr/>
+<%--                                <div class="comment-list">--%>
+<%--                                    <div class="single-comment justify-content-between d-flex">--%>
+<%--                                        <div class="user justify-content-between d-flex">--%>
+<%--                                            <div class="thumb">--%>
+<%--                                                <img src="resources/boot/img/comment/comment_1.png" alt="">--%>
+<%--                                                <button type="button">버튼</button>--%>
+<%--                                            </div>--%>
+<%--                                            <div class="desc">--%>
+<%--                                                <p class="comment">--%>
+<%--                                                    Multiply sea night grass fourth day sea lesser rule open subdue female fill which them--%>
+<%--                                                    Blessed, give fill lesser bearing multiply sea night grass fourth day sea lesser--%>
+<%--                                                </p>--%>
+
+<%--                                            </div>--%>
+<%--                                        </div>--%>
+<%--                                    </div>--%>
+<%--                                </div>--%>
+                                <div class="font" id="comment_list">해당 게시물에 대한 댓글이 없습니다.</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- end 지도 관련 -->
 
-    <div id="total"></div>
-    <!-- 댓글 작성란(임시) -->
-    <div class="row">
-        <div class="col">작성자 : <%=SS_USER_NAME%></div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <input type="textarea" name="comment" id="comment" onclick="validChk()" style="width: 200px; height:100px" placeholder="댓글을 입력하세요."/>
-        </div>
-        <div class="col-6">
-            <button type="button" class="btn btn-info" id="regComment" onclick="doSubmit()">댓글 등록</button>
-            <!-- 댓글 수정을 눌렀을 때만 버튼이 표시되도록 설정 -->
-            <button type="button" class="btn btn-info" id="editComment" onclick="editComment()" style="display: none">댓글 수정</button>
-        </div>
-    </div>
-
-    <div id="comment_list">해당 게시물에 대한 댓글이 없습니다.</div>
-
-    <hr>
+        <input type="hidden" id="user_no" value="<%=SS_USER_NO%>"/>
+        <input type="hidden" id="gn" value="<%=rDTO.getGoods_no()%>"/>
+        <!-- subscribe part end -->
+    </main>
 
 
-    <input type="hidden" id="user_no" value="<%=SS_USER_NO%>"/>
-    <input type="hidden" id="gn" value="<%=rDTO.getGoods_no()%>"/>
-
-</div>
 
     <script type="text/javascript">
-        // 장바구니 담기 클릭 시, 함수 실행
-       $("#doCart").on("click", function() {
 
-           var goods_nm = document.getElementById("gn").value;
-           var user_no = document.getElementById("user_no").value;
-
-           console.log("edit value(로그인 3이면 안함), 2면 본인(불가), 1이면 가능 : " + (<%=edit%>));
-           console.log("받아온 상품 번호 : " + goods_nm);
-           console.log("받아온 회원 번호 : " + user_no);
-
-           // 로그인 안 한 사용자라면, 로그인 후 관심상품 담기를 유도
-           if ((<%=edit%>) == 3) {
-               alert("로그인 후 이용해 주세요.");
-               location.href="/logIn.do";
-               return false;
-           } else if ((<%=edit%>) == 2) {
-               alert("본인이 작성한 글은 관심상품 등록이 불가능합니다.");
-               return false;
-           } else { // 로그인 한 작성자 본인이 아닌 일반 구매자라면, 관심상품 등록 허용
-               // 로그인 한 사용자라면, 이미 등록되었는지 확인 후 등록되지 않은 상품이면 등록 진행
-
-               $.ajax({
-                   url: "/cartChk.do",
-                   type: "post",
-                   data: {
-                   "gn": goods_nm,
-                       "user_no" : user_no
-                   },
-               dataType: "JSON",
-                   success: function(res) {
-
-                       console.log("중복이면 1, 아니면 0 : " + res);
-
-                    if (res > 0) {
-                        alert("이미 등록된 상품입니다.");
-                        return false;
-                    } else if(res == 0)// 등록되지 않은 상품이라면,
-                    { // insert 실행
-                        $.ajax({
-                        url: "/insertCart.do",
-                        type: "post",
-                        data: {
-                           "gn": goods_nm
-                           //$("#gn").val
-                        },
-                       dataType: "JSON",
-                       success: function (data) {
-                           // insertCart가 성공했을 경우, res에 1을 반환
-                           if (data == 1) {
-                               // 예를 누를 경우, 관심상품 페이지로 이동
-                               if (confirm("관심상품 등록에 성공했습니다. 지금 확인하시겠습니까?") == true) {
-                                   location.href = "/myCart.do";
-                               } else {
-                                   return false;
-                               }
-                           } else {
-                               alert("등록에 실패했습니다.");
-                               return false;
-                           }
-                       },
-                       // error catch
-                       error: function (jqXHR, textStatus, errorThrown) {
-                           alert("에러 발생! \n" + textStatus + ":" + errorThrown);
-                           console.log(errorThrown);
-                       }
-                   })
-               }
-           }
-        })
-        }})
     </script>
     <script type="text/javascript">
+
+        function doCart(goods_no, user_no) {
+
+                console.log("받아온 상품번호 : " + goods_no);
+                console.log("게시글 올린 회원번호 : " + user_no);
+
+                var ss_user_no = <%=SS_USER_NO%>;
+
+                // 로그인하지 않은 상태로 장바구니 담기를 클릭했다면
+                if (ss_user_no == "-1") {
+                    Swal.fire({
+                        title : 'Around-Sell',
+                        text : '관심상품 담기는 로그인한 회원만 가능합니다. 로그인 후 이용하시겠습니까?',
+                        icon : "warning",
+                        showCancelButton : true,
+                        confirmButtonText : "네! 로그인",
+                        cancelButtonText : "아니오, 그냥 볼래요"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.href = "/logIn.do"
+                        } else if (result.isCancled) {
+                            return false;
+                        }
+                    })
+
+                } else if (user_no == <%=SS_USER_NO%>) {
+                    Swal.fire('본인이 등록한 상품은 관심상품 등록이 불가능합니다','','warning');
+                } else {
+
+                    console.log("장바구니 담기 진행!");
+                    $.ajax({
+                        url: "/cartChk.do",
+                        type: "post",
+                        data: {
+                            "gn": goods_no,
+                            "user_no": ss_user_no
+                        },
+                        dataType: "JSON",
+                        success: function (res) {
+
+                            console.log("중복이면 1, 아니면 0 : " + res);
+
+                            if (res > 0) {
+                                Swal.fire('이미 등록된 상품입니다.', '', 'warning');
+                                return false;
+                            } else if (res == 0)// 등록되지 않은 상품이라면,
+                            { // insert 실행
+                                $.ajax({
+                                    url: "/insertCart.do",
+                                    type: "post",
+                                    data: {
+                                        "gn": goods_no
+                                        //$("#gn").val
+                                    },
+                                    dataType: "JSON",
+                                    success: function (data) {
+                                        // insertCart가 성공했을 경우, res에 1을 반환
+                                        if (data == 1) {
+
+                                            Swal.fire({
+                                                title: 'Around-Sell',
+                                                text: '관심상품 등록에 성공했습니다. 지금 확인하시겠습니까?',
+                                                icon: "success",
+                                                showCancelButton: true,
+                                                confirmButtonText: "네! 확인할래요",
+                                                cancelButtonText: "나중에 볼래요"
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    location.href = "/myCart.do"
+                                                } else if (result.isCancled) {
+                                                    return false;
+                                                }
+                                            })
+
+                                        } else {
+                                            Swal.fire("등록에 실패했습니다", '', 'error');
+                                            return false;
+                                        }
+                                    },
+                                    // error catch
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                                        console.log(errorThrown);
+                                    }
+                                })
+                            }
+                        }
+
+                    })
+                }
+        }
 
         var lat1 = document.getElementById("lat1").innerText;
         var lon1 = document.getElementById("lon1").innerText;
@@ -637,14 +867,24 @@
             window.open(url, '_blank');
         }
 
-        function search() {
+        function searchDistance() {
+
             var adr = "<%=SS_USER_ADDR%>";
             console.log("세션 주소 : " + adr);
 
         if (adr == "") {
-            if (confirm("로그인한 사용자만 거리를 확인할 수 있습니다. 로그인 하시겠습니까?")) {
-                location.href = "/logIn.do";
-            }
+            Swal.fire({
+                title : 'Around-Sell',
+                text : '로그인 후 거리를 확인할 수 있습니다. 로그인 하시겠습니까?',
+                icon : "info",
+                showCancelButton : true,
+                confirmButtonText : "네! 로그인",
+                cancelButtonText : "아니오, 그냥 볼래요"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.href = "/logIn.do"
+                }
+            })
         } else {
         console.log("동작 확인(판매 위도) : " + lat1);
         console.log("동작 확인(유저 위도) : " + lat2);
@@ -653,7 +893,7 @@
         var res = Math.ceil(calcDistance(lat1, lon1, lat2, lon2));
 
         console.log("우리집-판매 장소와의 거리 : " + res + "m");
-        $("#distance").text("우리집으로부터의 거리는 : " + res + "m 입니다.");
+        //$("#distance").text("우리집으로부터의 거리는 : " + res + "m 입니다.");
 
         // 위, 경도 좌표값을 받아와 거리를 계산하는 함수
         function calcDistance(lat1, lon1, lat2, lon2)
@@ -698,15 +938,15 @@
             bycicleMin = '<span class="number">' + bycicleTime % 60 + '</span>분'
 
             // 거리와 도보 시간, 자전거 시간을 가지고 HTML Content를 만들어 리턴
-            var content = '<ul class="dotOverlay distanceInfo">';
+            var content = '<ul class="dotOverlay distanceInfo font">';
             content += '    <li>';
-            content += '        <span class="label">총거리</span><span class="number">' + res + '</span>m';
+            content += '        <span class="label font">총거리 </span><span class="number">' + res + '</span>m<br/>';
             content += '    </li>';
             content += '    <li>';
-            content += '        <span class="label">도보</span>' + walkHour + walkMin;
+            content += '        <span class="label font">도보 </span>' + walkHour + walkMin +'<br/>';
             content += '    </li>';
             content += '    <li>';
-            content += '        <span class="label">자전거</span>' + bycicleHour + bycicleMin;
+            content += '        <span class="label font">자전거 </span>' + bycicleHour + bycicleMin +'<br/>';
             content += '    </li>';
             content += '</ul>'
 
@@ -716,25 +956,34 @@
         var content = getTimeHTML(res);
         console.log("content : " + content);
 
-        $("#findpath").html(content);
+        //$("#findpath").html(content);
+
+        Swal.fire({
+            title: '우리집과의 거리는?',
+            icon: 'info',
+            html: content,
+            showCancelButton: true,
+            showConfirmButton: true,
+            confirmButtonText: '길찾기로 안내!',
+            cancelButtonText: '잘 알았어요'
+        }).then(value => {
+            if (value.isConfirmed) {
+                road();
+            }
+        })
 
         } }
     </script>
     <!-- 카카오지도 API js 파일-->
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services,clusterer,drawing"></script>
-    <script type="text/javascript" src="/resource/js/mapAPI.js?ver=1"></script>
+    <script type="text/javascript" src="/resource/js/mapAPI.js?ver=2"></script>
 
     <!-- bootstrap, css 파일 -->
-    <style>
-        #map {
-            width: 350px;
-            height: 200px;
-            margin-top: 10px;
-        }
-    </style>
+
     <!-- 판매글 등록 시, 유효성 체크 js -->
     <script type="text/javascript" src="/resource/valid/noticeCheck.js"></script>
 
+    <%@ include file="../include/footer.jsp"%>
     <!-- include JS File Start -->
     <%@ include file="../include/jsFile.jsp"%>
     <!-- include JS File End -->

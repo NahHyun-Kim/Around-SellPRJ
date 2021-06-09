@@ -108,7 +108,7 @@ public class NoticeController {
 
 
         String msg = "";
-        // String url = "";
+        String url = "";
 
         try {
 
@@ -188,18 +188,23 @@ public class NoticeController {
             
             //등록이 실패되면 오류 메세지를 보여줌
             msg = "게시글 등록에 실패하였습니다. 다시 시도해 주세요. : " + e.toString();
+            url = "/getIndex.do";
+
+            model.addAttribute("msg", msg);
+            model.addAttribute("url", url);
+
             log.info(e.toString());
             e.printStackTrace();
+            return "/info";
         } finally {
             log.info(this.getClass().getName() + ".noticeInsert(게시글 등록 실행) End!");
 
-            // 결과 메세지를 model로 전달
-            model.addAttribute("msg", msg);
-            //아직 리스트 보기가 구현되지 않아, 임시로 url을 index.do로 보냄
-            // model.addAttribute("url", "/index.do");
-        }
 
-        return "/notice/MsgToList";
+        }
+        // 결과 메세지를 model로 전달
+        model.addAttribute("msg", msg);
+        model.addAttribute("url", "/searchList.do");
+        return "/redirect";
     }
 
     // 게시글 상세보기
@@ -239,30 +244,6 @@ public class NoticeController {
 
             return "/redirect";
         }
-
-        // 로그인 상태의 회원이 상품을 조회했을 경우, 최근 본 상품에 저장
-        /*try {
-            if (SS_USER_NO != null) {
-                log.info("최근 본 상품 저장 시작!");
-                NoticeDTO cDTO = new NoticeDTO();
-
-                //상품명, 사진, 회원번호를 저장함
-                cDTO.setUser_no(SS_USER_NO);
-                cDTO.setImgs(rDTO.getImgs());
-                cDTO.setGoods_title(rDTO.getGoods_title());
-                cDTO.setGoods_no(goods_no);
-
-                log.info("최근 본 상품에 저장할 데이터 : " + rDTO.getImgs() + rDTO.getGoods_title());
-
-                searchService.insertGoods(cDTO);
-
-                log.info("최근 본 상품 저장 성공!");
-            }
-
-        } catch(Exception e) {
-            log.info("최근 본 상품 저장 실패!" + e.toString());
-            e.printStackTrace();
-        } */
 
 
         log.info("getNoticeInfo Success!");
@@ -490,6 +471,7 @@ public class NoticeController {
         String user_no = (String) session.getAttribute("SS_USER_NO");
 
         String msg = "";
+        String url = "";
 
         try {
             String goods_no = CmmUtil.nvl(request.getParameter("nSeq")); //글번호
@@ -521,22 +503,32 @@ public class NoticeController {
             noticeService.deleteNoticeInfo(pDTO);
 
             msg = "삭제가 완료되었습니다.";
+            url = "/searchList.do";
 
             // 메모리 효율화를 위한 변수 초기화
             pDTO = null;
         } catch (Exception e) {
             msg = "실패하였습니다." + e.toString();
+            url = "/getIndex.do";
+
+            // 결과 메시지 model에 전달
+            model.addAttribute("msg", msg);
+            model.addAttribute("url", url);
+
             log.info("삭제 실패! : " + e.toString());
             e.printStackTrace();
+
+            return "/info";
 
         } finally {
             log.info(this.getClass().getName() + ".noticeDelete End!");
 
             // 결과 메시지 model에 전달
             model.addAttribute("msg", msg);
+            model.addAttribute("url", url);
         }
 
-        return "/notice/MsgToList";
+        return "/redirect";
 
     }
 }

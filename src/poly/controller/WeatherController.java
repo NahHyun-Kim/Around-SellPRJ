@@ -3,17 +3,30 @@ package poly.controller;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import poly.dto.WeatherDTO;
 import poly.service.IMailService;
 import poly.service.INoticeService;
 import poly.service.IUserService;
 import poly.service.IWeatherService;
+import poly.util.CmmUtil;
+import poly.util.privateUtil;
+import test.Test;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class WeatherController {
@@ -90,5 +103,75 @@ public class WeatherController {
         }
 
         return rDTO;
+    }
+
+    @RequestMapping(value="apiTest")
+    public String apiTest(HttpServletRequest request, HttpServletResponse response) {
+        return "/weather/apiTest";
+    }
+
+    //통합대기환경지수 페이지 호출
+    @ResponseBody
+    @RequestMapping(value="getAir", method= RequestMethod.GET)
+    public List<WeatherDTO> getCaiList(HttpServletRequest request, HttpServletResponse response) throws Exception{
+
+        log.info(this.getClass().getName() + "getAir start!!");
+
+        WeatherDTO pDTO = new WeatherDTO();
+        List<WeatherDTO> rList = new ArrayList<>();
+
+        try{
+
+            while(true){
+                // parsing할 url 지정(API 키 포함해서)
+                String url = "http://openAPI.seoul.go.kr:8088/" + privateUtil.openApi + "/xml/ListAirQualityByDistrictService/1/25/";
+                log.info("인증키 포함 url : " + url);
+
+                DocumentBuilderFactory dbFactoty = DocumentBuilderFactory.newInstance();
+                DocumentBuilder dBuilder = dbFactoty.newDocumentBuilder();
+                Document doc = dBuilder.parse(url);
+
+                // root tag
+                doc.getDocumentElement().normalize();
+                System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+                // 파싱할 tag
+                NodeList nList = doc.getElementsByTagName("row");
+
+                System.out.println("파싱할 리스트 수 : "+ nList.getLength());
+
+                for(int temp = 0; temp < nList.getLength(); temp++){
+                    Node nNode = nList.item(temp);
+                    if(nNode.getNodeType() == Node.ELEMENT_NODE){
+
+                        Element eElement = (Element) nNode;
+                        System.out.println("######################");
+
+                        pDTO.setMsrstename(CmmUtil.nvl(Test.getTagValue("MSRSTENAME", eElement))); //측정소명(자치구)
+                        pDTO.setGrade(CmmUtil.nvl(Test.getTagValue("GRADE", eElement)));//지수등급
+                        pDTO.setPm10(CmmUtil.nvl(Test.getTagValue("PM10", eElement))); //미세먼지
+                        pDTO.setPm25(CmmUtil.nvl(Test.getTagValue("PM25", eElement))); //초미세먼지
+
+
+                        rList.add(pDTO); // 측정 정보 List 형태로 저장
+
+                        // pDTO 변수 초기화
+                        pDTO = null;
+
+                        if(pDTO == null) {
+                            pDTO = new WeatherDTO();
+                        }
+                    }
+                }
+                break;
+            }
+
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return rList;
+
     }
 }

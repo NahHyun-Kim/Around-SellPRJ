@@ -27,14 +27,17 @@
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp"%>
 
-    <!-- charts.jsp -->
-<%--    <%@ include file="/WEB-INF/view/include/charts.jsp"%>--%>
-
     <script type="text/javascript">
         function doDetail(seq) {
             location.href="${pageContext.request.contextPath}/noticeInfo.do?nSeq=" + seq;
         }
     </script>
+    <style>
+        #weather {
+            font-family: "Poor Story";
+            font-weight: 600;
+        }
+    </style>
 </head>
 
 <body>
@@ -61,7 +64,8 @@
 
                         <div class="section-tittle mb-70 text-center" >
                             <!-- 다중 마커 -->
-                            <div id="maps" style="width: 500px; height:300px; margin: 0 auto; border-radius: 10%; z-index: 2;">지도</div>
+                            <div id="maps" style="width: 500px; height:300px; margin: 0 auto; border-radius: 10%; z-index: 2;
+box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);">지도</div>
                         </div>
 
                         <div class="section-tittle mb-70 text-center" >
@@ -76,11 +80,13 @@
                             <hr/>
                             <!-- 로그인 했다면 지역구 날씨 보여주기 -->
                             <% } else { %>
-                            <h2><%=SS_USER_ADDR2%> &nbsp;</h2>
+                            <h2 class="fontPoor"><%=SS_USER_ADDR2%> &nbsp;</h2>
                             <div id="weather" class="font"></div>
 
-                            <button class="btn btn-info font" style="background-color: #d0a7e4; border-style: none; margin-right: 10px;" value="내일">내일 날씨</button>
-                            <button class="btn btn-info font" style="background-color: #d0a7e4; border-style: none" value="모레">모레 날씨</button>
+                            <button class="btn btn-info fontPoor" style="background-color: #d0a7e4; border-style: none; margin-right: 10px;" value="내일">내일 날씨</button>
+                            <button class="btn btn-info fontPoor" style="background-color: #d0a7e4; border-style: none" value="모레">모레 날씨</button>
+                            <br/>
+                            <div id="apiRes"></div>
                             <hr/>
                             <% } %>
 
@@ -216,7 +222,7 @@
                         var iwRemoveable = true;
 
                         var infowindow = new kakao.maps.InfoWindow({
-                            content: '<div style="width:150px;text-align:center;padding:6px 0;">' + listData[index] + '<button class="btn btn-info" id="btn">검색</button></div>',
+                            content: '<div style="width:150px;text-align:center;padding:6px 0; font-family: \'Poor Story\'">' + listData[index] + '<button class="btn view-btn3 fontPoor ml-1" id="btn"> 검색</button></div>',
                             disableAutoPan: true,
                             removable : iwRemoveable
                         });
@@ -243,24 +249,15 @@
             });
         </script>
 
-<%--    <!-- 워드클라우드 HTML -->--%>
-<%--    <div id="chartdiv"></div>--%>
-
-
-
-<%--    <!-- 일반 파이차트 HTML(고민중) -->--%>
-<%--    <div id="chartdiv3"></div>--%>
-<%--    <hr/>--%>
-
-<%--    <!-- 이미지 넣은 차트(고민중) -->--%>
-<%--    <div id="chartdiv4"></div>--%>
-<%--    <hr/>--%>
 
 </div>
 
     <!-- 카테고리별 pie Chart 제공 -->
     <script type="text/javascript">
         $(document).ready(function() {
+
+            // 날씨 정보 호출
+            getAir();
         //slice, draggable 차트(url 추가해야 함..추후) ---------------------------------------------------
         $.ajax({
             url: "/cateCount2.do",
@@ -546,6 +543,56 @@
         })
         })
         //end piechart2
+
+        // 실시간 대기환경정보 가져오기
+        function getAir() {
+
+
+            // session이 존재할 때만 실행(가입한 지역구 기반으로 대기정보 가져옴)
+            if ('<%=SS_USER_NO%>' != null) {
+                // 문자열 형태로 받아서 넘겨야 변수를 인식함
+                var user_addr = '<%=SS_USER_ADDR2%>';
+                console.log("회원 세션 지역구 : " + user_addr);
+
+                $.ajax({
+                    url: "/getAir.do",
+                    type: "get",
+                    dataType: "json",
+                    success: function (json) {
+                        console.log("json 받아오기 성공!" + json);
+
+                        var resHTML = "";
+                        var cnt = 0;
+
+                        for (var i = 0; i < json.length; i++) {
+
+                            if (json[i].msrstename == user_addr) {
+                                resHTML += '<br/><div class="fontPoor">전반적인 대기환경 상태 : <a class="fontPoor" href="https://cleanair.seoul.go.kr/" target="_blank">' + json[i].grade + '(click! 더 알아보기)</a>';
+                                resHTML += '<br/> 미세먼지 & 초미세먼지 농도 : ' + json[i].pm10 + ' / ' + json[i].pm25 + ' 입니다. (단위:㎍/㎥)</div>';
+                                cnt++;
+                            }
+
+                        }
+
+                        console.log("총 결과 수 : " + cnt);
+
+                        // 지역구에 해당하는 대기정보를 가져왔다면, 결과를 보여줌
+                        if (cnt > 0) {
+                            $("#apiRes").html(resHTML);
+                        } else if (cnt == 0) {
+                            // 서울시에 해당하지 않는 지역의 경우에는 불러오지 못했다는 문구를 대신 띄움
+                            $("#apiRes").html("대기 정보를 불러오지 못했습니다 :(");
+                        }
+
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                        console.log(errorThrown);
+                    }
+                })
+            }
+        }
     </script>
 
     <!-- 로그인 한 유저의 지역구 날씨 크롤링 -->

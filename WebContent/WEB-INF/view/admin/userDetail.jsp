@@ -13,6 +13,14 @@
     if (nList == null) {
         nList = new ArrayList<NoticeDTO>();
     }
+    int edit = 1; //1이면 회원 아님, 2이면 관리자 아님, 3이면 관리자
+    if (SS_USER_NO == null) {
+        edit = 1;
+    } else if (SS_USER_NO.equals("0")) {
+        edit = 3;
+    } else {
+        edit = 2;
+    }
 %>
 <html>
 <head>

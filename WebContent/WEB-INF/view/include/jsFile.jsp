@@ -67,7 +67,7 @@
             })
 
         } else if (user_no == <%=SS_USER_NO%>) {
-            Swal.fire('','본인이 등록한 상품은 관심상품 등록이 불가능합니다','warning');
+            Swal.fire('본인이 등록한 상품은 관심상품 등록이 불가능합니다','','warning');
         } else {
 
             console.log("장바구니 담기 진행!");

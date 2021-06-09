@@ -31,6 +31,8 @@
              aroundsell.comment
         WHERE
             GOODS_NO = #{goods_no}
+        ORDER BY
+            COMMENT_NO DESC
     </select>
 
     <!-- 댓글 삭제하기(댓글번호 comment_no)를 전달받아 삭제 진행 -->

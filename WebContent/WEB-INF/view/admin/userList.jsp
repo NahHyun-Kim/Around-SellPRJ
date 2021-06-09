@@ -96,7 +96,7 @@
                                               style="width:300px;height: 75px;"></h3>
                     <table class="table table-borderless">
                         <thead>
-                        <tr class="toCenter">
+                        <tr class="toCenter fontPoor toBold">
                             <th scope="col"><input name="allCheck" type="checkbox" id="allCheck"/>&nbsp; 전체 선택</th>
                             <th scope="col">회원 번호</th>
                             <th scope="col">회원명</th>
@@ -109,10 +109,10 @@
                             for(UserDTO r : rList) { %>
                         <tr class="toCenter">
                             <th><input name="RowCheck" type="checkbox" id="del" value="<%=r.getUser_no()%>"/></th>
-                            <th><%=CmmUtil.nvl(r.getUser_no())%></th>
-                            <th><a class="toPurple" href="/getUserDetail.do?no=<%=r.getUser_no()%>"><%=CmmUtil.nvl(r.getUser_name()) %></a></th>
-                            <th><%=CmmUtil.nvl(r.getReg_dt()) %></th>
-                            <th><%=CmmUtil.nvl(r.getAddr2()) %></th>
+                            <th class="fontPoor"><%=CmmUtil.nvl(r.getUser_no())%></th>
+                            <th class="fontPoor"><a class="toPurple fontPoor" href="/getUserDetail.do?no=<%=r.getUser_no()%>"><%=CmmUtil.nvl(r.getUser_name()) %></a></th>
+                            <th class="fontPoor"><%=CmmUtil.nvl(r.getReg_dt()) %></th>
+                            <th class="fontPoor"><%=CmmUtil.nvl(r.getAddr2()) %></th>
                         </tr>
                         <% } %>
                         </tbody>
@@ -232,6 +232,10 @@
 
     .toPurple:hover {
         color: gray;
+    }
+
+    .toBold {
+        font-width: bold;
     }
 </style>
 <!-- include Footer -->

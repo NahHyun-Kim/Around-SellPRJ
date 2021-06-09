@@ -63,7 +63,7 @@
             FROM aroundsell.user_info
         WHERE <![CDATA[USER_NO > 0]]>
             ORDER BY REG_DT DESC,
-                     USER_NO ASC
+                     USER_NO DESC
     </select>
 
     <!-- 회원 상세정보 조회 -->

@@ -46,7 +46,7 @@
                     chart.fontWeight = 600;
                     var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
                     series.randomness = 0.1;
-                    series.rotationThreshold = 0.5;
+                    series.rotationThreshold = 1.0;
 
                     series.data = res;
 
@@ -58,7 +58,7 @@
                     series.heatRules.push({
                         "target": series.labels.template,
                         "property": "fill",
-                        "min" : am4core.color("#d0a7e4"),
+                        "min" : am4core.color("skyblue"),
                         "max": am4core.color("purple"),
                         // "min": am4core.color("#0000CC"),
                         // "max": am4core.color("#CC00CC"),

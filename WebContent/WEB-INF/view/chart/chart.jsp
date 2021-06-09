@@ -295,8 +295,8 @@
 <style>
     /* 파이차트 */
     #chartdiv3 {
-        width: 500px;
-        height: 500px;
+        width: 700px;
+        height: 700px;
         margin: 0 auto;
     }
 

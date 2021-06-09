@@ -3113,6 +3113,8 @@ input:hover, input:focus {
 }
 
 .search-model-box .search-model-form input {
+    /* search Modal font 변경 */
+    font-family: 'Poor Story';
     width: 500px;
     font-size: 40px;
     border: none;
@@ -7455,7 +7457,7 @@ b, sup, sub, u, del {
 
 /* hover 수정 */
 .btn_3:hover {
-    background-color: lightblue;
+    background-color: #d0a7e4;
     font-weight: bold;
     color: purple;
     cursor: pointer;
