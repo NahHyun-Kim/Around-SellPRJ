@@ -39,9 +39,6 @@
                                 <!-- 관심상품과 최근 본 상품 메뉴 -->
                                 <li><a href="#">Cart</a>
                                     <ul class="submenu">
-                                        <!--
-                                        <li><a href="/myCart.do">관심상품</a></li>
-                                        <li><a href="/mySee.do">최근 본 상품</a></li>-->
                                         <li><a href="javascript:cartChk()">관심상품</a></li>
                                         <li><a href="javascript:seeChk()">최근 본 상품</a></li>
                                     </ul>
@@ -53,15 +50,25 @@
                                     <ul class="submenu">
                                         <li><a href="/logIn.do">로그인</a></li>
                                         <li><a href="/signup.do">회원가입</a></li>
+                                        <li><a href="/userSearch.do">FIND ID/PW</a></li>
                                     </ul>
                                 </li>
-                                <% } else { %>
+                                <% } else if (SS_USER_NAME != null && !SS_USER_NO.equals("0")){ %>
                                 <li><a href="/myList.do">MyPage</a>
                                     <ul class="submenu">
                                         <li><a href="/logOut.do">로그아웃</a></li>
-                                        <li><a href="/getUserInfo.do">개인정보 수정</a></li>
+                                        <li><a href="/updateUserForm.do">개인정보 수정</a></li>
                                         <li><a href="/myList.do">마이페이지</a></li>
                                         <li><a href="/noticeForm.do">판매글 등록하기</a></li>
+                                    </ul>
+                                </li>
+                                <% } else if (SS_USER_NAME != null && SS_USER_NO.equals("0")) {%>
+                                <li><a href="/getUser.do">관리자 페이지</a>
+                                    <ul class="submenu">
+                                        <li><a href="/logOut.do">로그아웃</a></li>
+                                        <li><a href="/updateUserForm.do">관리자 정보수정</a></li>
+                                        <li><a href="/myList.do">마이페이지</a></li>
+                                        <li><a href="/getUser.do">관리자 페이지</a></li>
                                     </ul>
                                 </li>
                                 <% } %>
@@ -75,11 +82,11 @@
                         <ul id="headers">
                             <li>
                                 <% if (SS_USER_NAME != null) { %>
-                                <div class="header-chk">
+                                <div class="header-chk font" style="color: #d0a7e4;">
                                     <%=CmmUtil.nvl(SS_USER_NAME)%>님&nbsp;(<%=CmmUtil.nvl(SS_USER_ADDR2)%>)
                                 </div>
                                 <% } else { %>
-                                <div class="header-chk"><a id="getLogin" class="header-chk" href="/logIn.do">로그인 후 이용하세요</a></div>
+                                <div class="header-chk"><a id="getLogin" href="/logIn.do">로그인 후 이용하세요</a></div>
                                 <% } %>
                             </li>
                             <!--<li><a href="/myCart.do"><span class="flaticon-shopping-cart"></span></a> </li>-->
@@ -107,7 +114,7 @@
 </header>
 
 <style>
-    .header-chk {
+    .header-chk #getLogin {
         font-family: 'Noto Sans KR';
     }
 </style>

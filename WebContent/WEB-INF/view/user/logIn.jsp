@@ -63,23 +63,26 @@
 
                                     <!-- 이메일 입력 -->
                                     <div class="col-md-12 form-group p_star">
-                                        <input class="form-control" type="email" name="user_email" id="user_email" placeholder="이메일을 입력해 주세요." style="margin-top: 10px;">
+                                        <input class="form-control font" type="email" name="user_email" id="user_email" placeholder="이메일을 입력해 주세요." style="margin-top: 10px;">
+                                        <div class="check_font font" id="email_check"></div>
                                     </div>
-                                    <div class="check_font" id="email_check"></div>
+
 
                                     <!-- 비밀번호 입력 -->
                                     <div class="col-md-12 form-group p_star">
-                                        <input type="password" class="form-control" name="password" id="password" placeholder="비밀번호를 입력해 주세요." style="margin-top: 10px;">
+                                        <input type="password" class="form-control font" name="password" id="password" placeholder="비밀번호를 입력해 주세요." style="margin-top: 10px;">
+                                        <div class="check_font font" id="pwd_check"></div>
                                     </div>
+
                                     <div class="col-md-12 form-group">
 
                                         <!-- 로그인, 비밀번호 찾기 버튼 -->
-                                        <button type="submit" value="submit" class="btn_3">
+                                        <button type="submit" value="submit" class="btn_3 font">
                                             log in
                                         </button>
-                                        <a class="lost_pass" href="/signup.do">Sign Up</a>
+                                        <a class="lost_pass font" href="/signup.do">Sign Up</a>
                                         <br/>
-                                        <a class="lost_pass" href='/userSearch.do'>Find ID/PW</a>
+                                        <a class="lost_pass font" href='/userSearch.do'>Find ID/PW</a>
 
                                     </div>
                                 </form>
@@ -97,8 +100,17 @@
         <!--================login_part end =================-->
     </main>
 
+    <style>
+        .check_font {
+            font-family: "Noto Sans KR";
+            margin-top:5px;
+        }
+    </style>
      <!-- 로그인 유효성 체크 js -->
     <script type="text/javascript" src="/resource/valid/loginCheck.js"></script>
+
+    <!-- include Footer -->
+    <%@ include file="../include/footer.jsp"%>
 
     <!-- include JS File Start -->
     <%@ include file="../include/jsFile.jsp"%>

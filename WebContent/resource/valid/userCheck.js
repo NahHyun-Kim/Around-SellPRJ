@@ -331,10 +331,9 @@ function doEditUser() {
     console.log("이름 : " + $(uname).val());
 
     if (emailJ.test($(umail).val()) == false || nameJ.test($(uname).val()) == false || phoneJ.test($(phnum).val()) == false ||
-        ($(pwd1).val() != $(pwd2).val())) {
-        console.log(emailJ.test($(umail).val()));
-        console.log($(pwd1).val() != $(pwd2).val());
-        alert("입력한 정보를 다시 한 번 확인해 주세요.");
+        ($(pwd1).val() != $(pwd2).val()) || pwJ.test($(pwd1).val()) == false || pwJ.test($(pwd2).val()) == false || ($("#sample5_address").val() == "")) {
+
+        Swal.fire('입력한 정보를 다시 한 번 확인해 주세요.','','info');
         return false;
     }
 }

@@ -34,17 +34,35 @@
         }
     </style>
     <script type="text/javascript">
-        // 작성자 본인 여부 체크
-        function doOnload() {
-            // 본인이 아닌, 타 사용자가 접근했다면
-            if ("<%=getLogin%>" == "2") {
-                alert("로그인 후 이용해 주세요.");
-                location.href="/logIn.do";
-            }
-        }
+
+       <%--$(document).ready(function() {--%>
+        <%--    var validChk = <%=getLogin%>;--%>
+        <%--    console.log("본인이 접근했는지 : " + validChk);--%>
+
+        <%--    if (validChk == 2) {--%>
+        <%--        Swal.fire({--%>
+        <%--            title: '로그인 후 이용해 주세요',--%>
+        <%--            icon: 'warning',--%>
+        <%--            setTimeout: '2500',--%>
+        <%--            showConfirmButton: false--%>
+        <%--        }).then(value => {--%>
+        <%--            if (value) {--%>
+        <%--                location.href = "/logIn.do";--%>
+        <%--            }}--%>
+        <%--            )--%>
+        <%--    }--%>
+        <%--})--%>
+        <%--// 작성자 본인 여부 체크--%>
+        <%--function doOnload() {--%>
+        <%--    // 본인이 아닌, 타 사용자가 접근했다면--%>
+        <%--    if ("<%=getLogin%>" == "2") {--%>
+        <%--        alert("로그인 후 이용해 주세요.");--%>
+        <%--        location.href="/logIn.do";--%>
+        <%--    }--%>
+        <%--}--%>
     </script>
 </head>
-<body onload="doOnload()">
+<body>
 <!-- preloader -->
 <%@ include file="../include/preloader.jsp" %>
 <!-- preloader End -->
@@ -53,129 +71,208 @@
 <%@ include file="../include/header.jsp" %>
 <!-- Header End(상단 메뉴바 끝!) -->
 
-회원정보 수정 폼(테스트)
-<a href="javascript:history.back();">뒤로가기</a>
-<a href="/index.do">홈으로</a>
+<!-- wordCloud 디자인용(로그인, 회원가입, 비밀번호 찾기 시 사용) -->
+<%@ include file="../include/wordcloudForDesign.jsp"%>
 
-<div class="container">
-    <!-- 회원정보 수정 폼 -->
-    <form action="/updateUser.do" method="post" onsubmit="return doEditUser()">
+<main>
 
-        <!-- 업데이트할 회원 번호 받아오기 -->
-        <input type="hidden" name="user_no" value="<%=rDTO.getUser_no()%>"/>
+    <!-- REG area -->
+    <!--================REG_PART Area =================-->
+    <section class="login_part section_padding ">
+        <div class="container">
+            <div class="row align-items-center">
 
-        <!-- 회원 이메일(변경 불가능, 읽기 전용으로 복호화하여 표시) -->
-        <div class="form-control">
-            <label for="user_email">회원 이메일</label>
-            <input type="email" name="user_email" id="user_email" value="<%=EncryptUtil.decAES128CBC(rDTO.getUser_email())%>" readonly/>
+                <div class="col-lg-6 col-md-6"  style="border-right: 1px dotted #d0a7e4;">
+                    <div class="login_part_text text-center">
+                        <div class="login_part_text_iner" style="margin-top: 5px;">
+                            <div style="font-size: 30px; font-family: 'Do Hyeon';">회원정보 수정</div>
+                            <!-- 로그인/ 회원가입 디자인용 워드클라우드 -->
+                            <div id="chartdivLogin"></div>
+
+                            <!-- 도로명주소 검색으로 선택한 거주 주소지를 표시하여 나타내는 지도(시각화 확인) -->
+                            <div id="map" style="border-radius:10%; margin: 0 auto;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 col-md-5">
+                    <div class="login_part_form">
+                        <div class="login_part_form_iner">
+                            <img src="/resources/boot/img/logo/aroundsell_sub.png" style="width: 200px; display: block; margin: 10px auto;" />
+
+                            <form action="/updateUser.do" method="post" onsubmit="return doEditUser()" class="row contact_form">
+
+                                <!-- 업데이트할 회원 번호 받아오기 -->
+                                <input type="hidden" name="user_no" value="<%=rDTO.getUser_no()%>"/>
+
+                                <!-- 회원 이메일(변경 불가능, 읽기 전용으로 복호화하여 표시) -->
+                                <div class="col-md-12 form-group p_star">
+                                    <label for="user_email" class="font">회원 이메일</label>
+                                    <input class="form-control font" type="email" name="user_email" id="user_email" value="<%=EncryptUtil.decAES128CBC(rDTO.getUser_email())%>" readonly/>
+                                </div>
+
+                                <!-- 이름 입력 -->
+                                <div class="col-md-12 form-group p_star">
+                                    <label for="user_name" class="font">회원 이름</label>
+                                    <input class="form-control font" input type="text" name="user_name" id="user_name" value="<%=rDTO.getUser_name()%>" style="margin-top: 10px;">
+                                    <div class="font" id="name_check"></div>
+                                </div>
+
+                                <!-- 기존 비밀번호 입력 -->
+                                <div class="col-md-12 form-group p_star">
+                                    <label for="password_1" class="font">비밀번호 <button type="button" class="btn view-btn1 font ml-20" onclick="doPwd()" >비번 변경</button>
+                                        <input type="hidden" id="now_pw" value="<%=rDTO.getPassword()%>"/></label>
+                                    <input class="form-control font" type="password" name="password" id="password_1" placeholder="기존 비밀번호를 입력해 주세요." style="margin-top: 10px;">
+                                    <div class="font" id="pw_check1"></div>
+                                </div>
+
+                                <!-- 비밀번호 변경 이용 시, 비밀번호 변경 페이지로 이동(기존 비밀번호와 일치 시에만 이동하도록 구현) -->
+                                <script type="text/javascript">
+                                    function doPwd() {
+                                        var userinput = document.getElementById("password_1").value;
+                                        var nowpass = document.getElementById("now_pw").value;
+                                        console.log("현재 비밀번호 : " + nowpass);
+                                        console.log("유저가 입력한 비밀번호 : " + userinput);
+
+                                        var sendData = "password="+userinput;
+                                        console.log("sendData : " + sendData);
+
+                                        $.ajax({
+                                            url : "/pwdCheck.do",
+                                            type : "post",
+                                            dataType : "json",
+                                            data :  sendData,
+                                            success(data) {
+                                                if (data == 1) {
+                                                    //location.href = "editPwForm.do";
+                                                        Swal.fire({
+                                                            icon: 'question',
+                                                            title: '변경할 비밀번호를 입력하세요.',
+                                                            input: 'password',
+                                                            customClass: {
+                                                                validationMessage: 'my-validation-message',
+                                                            },
+                                                            // inputAttributes: {
+                                                            //     id: "password1",
+                                                            // },
+                                                            preConfirm: (value) => {
+                                                                if (!value) {
+                                                                    Swal.showValidationMessage(
+                                                                        '<i class="fa fa-info-circle"></i> 비밀번호를 입력해 주세요!'
+                                                                    )
+                                                                }
+                                                            },
+
+                                                            inputValidator: (value) => {
+                                                                // 비밀번호가 입력되었다면, ajax로 비밀번호 수정 요청
+                                                                if (value) {
+
+                                                                    $.ajax({
+                                                                        url: "/updatePwAjax.do",
+                                                                        type: "post",
+                                                                        data: {
+                                                                            "password" : value
+                                                                        },
+                                                                        success: function(data) {
+                                                                            console.log("전송 성공했으면 1, 실패하면 0" + data);
+                                                                            // 비밀번호 변경이 성공했다면, 세션 초기화와 함께 로그인 창으로 이동
+                                                                            if (data == 1) {
+                                                                                Swal.fire({
+                                                                                    title: 'Around-Sell',
+                                                                                    text: '비밀번호 변경에 성공하였습니다. 재 로그인해 주세요!',
+                                                                                    icon: 'success',
+                                                                                    timer: 2500,
+                                                                                    showConfirmButton: false
+                                                                                }).then(val => {
+                                                                                    if (val) {
+                                                                                        location.href = "/logIn.do"
+                                                                                    }
+                                                                                });
+                                                                            } else if (data == 0) {
+                                                                                Swal.fire('Around-Sell','비밀번호 변경에 실패하였습니다. 재 시도해 주세요!','error');
+                                                                                return false;
+                                                                            } else if (data == 2) {
+                                                                                Swal.fire('Around-Sell','기존 비밀번호와 일치합니다. 새로운 비밀번호를 입력해 주세요!','warning');
+                                                                                return false;
+                                                                            }
+                                                                        },
+                                                                        error: function (jqXHR, textStatus, errorThrown) {
+                                                                            alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                                                                            console.log(errorThrown);
+                                                                        }
+                                                                    })
+                                                                }
+                                                                }
+                                                        })
+
+                                                } else { //비밀번호가 일치하지 않다면
+                                                    Swal.fire('기존 비밀번호를 확인해 주세요.','','info');
+                                                    return false;
+                                                }
+                                            },  error:function(jqXHR, textStatus, errorThrown) {
+                                                alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                                                console.log(errorThrown);
+                                            }
+                                        })
+                                    }
+                                </script>
+
+                                <!-- 비밀번호 확인 입력 -->
+                                <div class="col-md-12 form-group p_star">
+                                    <input class="form-control font" type="password" name="password2" id="password_2" placeholder="비밀번호 확인을 입력해 주세요." style="margin-top: 10px;">
+                                    <div class="font" id="pw_check2"></div>
+                                </div>
+
+                                <!-- 핸드폰 번호 변경 -->
+                                <div class="col-md-12 form-group p_star">
+                                    <label for="phone_no" class="font">핸드폰 번호</label>
+                                    <input class="form-control font" type="text" name="phone_no" id="phone_no" placeholder="핸드폰 번호를 입력해 주세요." value="<%=rDTO.getPhone_no()%>" style="margin-top: 10px;">
+                                    <div class="font" id="phone_check"></div>
+                                </div>
+
+                                <!-- 주소 입력(도로명주소 이용) -->
+                                <div class="col-md-12 form-group p_star">
+                                    <label for="sample5_address" class="font">주소 입력 <button type="button" class="btn view-btn1 font ml-15" onclick="sample5_execDaumPostcode()">주소 검색</button></label>
+                                    <input class="form-control font mt-10" type="text" name="addr" id="sample5_address" placeholder="주소를 검색해 주세요." value="<%=rDTO.getAddr()%>" required readonly/>
+                                </div>
+
+                                <div class="col-md-12 form-group">
+
+                                    <!-- 회원가입, 로그인 버튼 -->
+                                    <button type="submit" value="submit" class="btn_3 font">
+                                        회원정보 수정
+                                    </button>
+                                    <a class="lost_pass font" href="/myList.do">마이페이지로</a>
+                                    <br/>
+
+
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-1 col-md-1">
+                </div>
+            </div>
         </div>
 
-        <!-- 회원 이름 -->
-        <div class="form-control">
-            <label for="user_name">회원 이름</label>
-            <input type="text" name="user_name" id="user_name" value="<%=rDTO.getUser_name()%>"/>
-            <div class="check_font" id="name_check"></div>
-        </div>
+    </section>
+    <!--================login_part end =================-->
+</main>
 
-        <!-- 비밀번호 -->
-        <div class="form-control">
-            <label for="password_1">비밀번호</label>
-            <input type="password" name="password" id="password_1" placeholder="기존 비밀번호를 입력해 주세요." required/>
-            <div class="check_font" id="pw_check1"></div>
-        </div>
-        <!-- 비밀번호 변경 이용 시, 비밀번호 변경 페이지로 이동(기존 비밀번호와 일치 시에만 이동하도록 구현 예정) -->
-        <!-- button에 함수를 주어, 일치할 경우에만 이동되도록 함 -->
-        <script type="text/javascript">
-            function doPwd() {
-                var userinput = document.getElementById("password_1").value;
-                var nowpass = document.getElementById("now_pw").value;
-                console.log("현재 비밀번호 : " + nowpass);
-                console.log("유저가 입력한 비밀번호 : " + userinput);
+<style>
+    .my-validation-message::before {
+        display: none;
+    }
 
-                var sendData = "password="+userinput;
-                console.log("sendData : " + sendData);
-
-                $.ajax({
-                    url : "/pwdCheck.do",
-                    type : "post",
-                    dataType : "json",
-                    data :  sendData,
-                    success(data) {
-                        if (data == 1) {
-                            location.href = "editPwForm.do";
-                        } else { //비밀번호가 일치하지 않다면
-                            alert("기존 비밀번호를 확인해 주세요.");
-                            return false;
-                        }
-                    },  error:function(jqXHR, textStatus, errorThrown) {
-                        alert("에러 발생! \n" + textStatus + ":" + errorThrown);
-                        console.log(errorThrown);
-                    }
-                })
-            }
-        </script>
-        <button type="button" onclick="doPwd()">비밀번호 변경하기</button>
-        <input type="hidden" id="now_pw" value="<%=rDTO.getPassword()%>"/>
-
-        <!-- 비밀번호 확인 -->
-        <div class="form-control">
-            <label for="password_2">비밀번호 확인</label>
-            <input type="password" name="password_2" id="password_2" placeholder="비밀번호 확인을 입력해 주세요." required/>
-            <div class="check_font" id="pw_check2"></div>
-        </div>
-
-        <!-- 회원 주소지 입력(변경) -->
-        <div>
-            <label for="sample5_address">주소 입력</label>
-            <input type="text" name="addr" id="sample5_address" placeholder="주소를 검색해 주세요" value="<%=rDTO.getAddr()%>"/>
-            <input type="button" onclick="sample5_execDaumPostcode()" value="주소 검색"/><br>
-            <!-- 도로명주소 검색으로 선택한 거주 주소지를 표시하여 나타내는 지도(시각화 확인) -->
-            <div id="map"></div>
-        </div>
-
-        <!-- 핸드폰 번호 변경 -->
-        <div class="form-group">
-            <label for="phone_no">핸드폰 번호</label>
-            <input type="text" name="phone_no" id="phone_no" placeholder="핸드폰 번호를 입력해 주세요." value="<%=rDTO.getPhone_no()%>"/>
-            <div class="check_font" id="phone_check"></div>
-        </div>
-
-        <input type="submit" value="수정하기" />
-        <input type="reset" value="다시 작성하기" />
-        <a href="javascript:history.back();">뒤로가기</a>
-
-    </form>
-
-    <button type="button" id="user_no" value="<%=CmmUtil.nvl(rDTO.getUser_no())%>" onclick="deleteUser();">탈퇴하기</button>
-    <script type="text/javascript">
-        function deleteUser() {
-            console.log("user value : " + $("#user_no").val())
-            if (confirm('정말 탈퇴하시겠습니까? 탈퇴 시, 작성한 판매글도 함께 삭제됩니다.')) {
-                $.ajax({
-                    url: "/deleteForceUser.do",
-                    type: "post",
-                    dataType: "json",
-                    data: {
-                        "user_no": $("#user_no").val()
-                    },
-                    success: function (data) {
-                        if (data > 0) {
-                            alert("탈퇴가 완료되었습니다. 떠나신다니 아쉽습니다.");
-                            location.href="/logIn.do";
-                            return true;
-                        }
-                        else {
-                            alert("탈퇴에 실패했습니다.");
-                            window.location.reload()
-                            return false;
-                        }
-                    }
-                });
-            }
-        };
-    </script>
-</div>
-
+    .my-validation-message i {
+        margin: 0 .4em;
+        color: #f27474;
+        font-size: 1.4em;
+    }
+</style>
 <!-- include Footer -->
 <%@ include file="../include/footer.jsp"%>
 
@@ -187,6 +284,6 @@
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services"></script>
 <script type="text/javascript" src="/resource/js/addrAPI2.js"></script>
 
-<script type="text/javascript" src="/resource/valid/userCheck.js"></script>
+<script type="text/javascript" src="/resource/valid/userCheck.js?ver=2"></script>
 </body>
 </html>

@@ -124,7 +124,8 @@ public class UserController {
             // 관리자 권한으로 로그인 시, 관리자 페이지로 이동
             if (user_no.equals("0")) {
                 log.info("adminPage Start!");
-                url = "/adminPage.do";
+                msg = "관리자로 로그인되었습니다";
+                url = "/getUser.do";
             }
 
         }

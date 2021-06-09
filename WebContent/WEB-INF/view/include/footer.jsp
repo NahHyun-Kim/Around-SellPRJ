@@ -15,33 +15,18 @@
 
                 <div class="col-xl-2 col-lg-3 col-md-3 col-sm-5">
                     <div class="single-footer-caption mb-50">
-                        <div class="footer-tittle">
-                            <h4><img src="/resources/boot/img/logo/aroundsell_main.png" alt="" style="width:120px;height: 30px; padding-bottom: 5px; margin-right: 5px"/></h4>
+                        <div class="footer-tittle font">
+                            <h4><img src="/resources/boot/img/logo/aroundsell_main.png" alt="" style="width:120px;height:40px; padding-bottom: 5px; margin-right: 5px"/></h4>
                                 <ul>
-                                    <li><p>Around-Sell은 가입한 지역구를 기반으로 주변에 판매하는 상품 정보를 시각화하여 제공하는 웹 서비스입니다. </p></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                <%--                <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6">--%>
-<%--                    <div class="single-footer-caption mb-50">--%>
+                                    <li><p class="font">Around-Sell은 가입한 지역구를 기반으로 주변에 판매하는 상품 정보를 시각화하여 제공하는 웹 서비스입니다. </p></li>
+                                </ul>
+                        </div>
+                    </div>
+                </div>
 
-<%--                            <!-- logo -->--%>
-<%--                            <div class="footer-logo">--%>
-<%--                                <a href="/getIndex.do"><img src="" alt=""></a>--%>
-<%--                            </div>--%>
-<%--                            <div class="footer-tittle">--%>
-<%--                                    <img src="/resources/boot/img/logo/aroundsell_main.png" alt=""--%>
-<%--                                         style="width:120px;height: 30px; padding-bottom: 5px; margin-right: 5px"/>--%>
-<%--                                    &copy; by <a href="https://colorlib.com" target="_blank">Colorlib</a>--%>
-<%--                                    <p>Around-Sell은 가입한 지역구를 기반으로 주변에 판매하는 상품 정보를 시각화하여 제공하는 웹 서비스입니다. </p>--%>
-<%--                            </div>--%>
-
-<%--                    </div>--%>
-<%--                </div>--%>
                 <div class="col-xl-2 col-lg-3 col-md-3 col-sm-5">
                     <div class="single-footer-caption mb-50">
-                        <div class="footer-tittle">
+                        <div class="footer-tittle font">
                             <h4>Around-Sell</h4>
                             <ul>
                                 <li><a href="/getIndex.do"> 카카오 api</a></li>
@@ -53,7 +38,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-4 col-sm-7">
                     <div class="single-footer-caption mb-50">
-                        <div class="footer-tittle">
+                        <div class="footer-tittle font">
                             <h4>Around-Sell</h4>
                             <ul>
                                 <li><a href="/getIndex.do"> 날씨정보 크롤링</a></li>
@@ -65,7 +50,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-5 col-sm-7">
                     <div class="single-footer-caption mb-50">
-                        <div class="footer-tittle">
+                        <div class="footer-tittle font">
                             <h4>Around-Sell</h4>
                             <ul>
                                 <li><a href="#">Spring Framework</a></li>

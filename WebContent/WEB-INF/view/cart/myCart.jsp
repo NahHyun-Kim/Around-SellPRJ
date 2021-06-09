@@ -135,9 +135,9 @@
     // 검색 결과가 없다면, 검색 결과가 없다는 멘트와 함께 상품 보러가기 페이지로 이동 링크를 띄운다.
     if (total == 0) {
 
-        var resultMent = "<hr/><span style='font-family: Do Hyeon;'><br/>" + "관심상품이 없습니다."  + "<br/><br/></span>"
+        var resultMent = '<hr/><span class="font"><br/>' + "관심상품이 없습니다."  + "<br/><br/></span>"
          + "<span style='color: blue'>" +
-            '<div class="row justify-content-center"><div class="room-btn pt-70" style="padding-top: 5px;"><a href="/searchList.do" class="btn view-btn1">상품 보러가기</a></span> </div>  </hr>';
+            '<div class="row justify-content-center"><div class="room-btn pt-70" style="padding-top: 5px;"><a href="/searchList.do" class="btn view-btn1 font">상품 보러가기</a></span> </div>  </hr>';
 
         console.log("관심상품 멘트 : " + resultMent);
 

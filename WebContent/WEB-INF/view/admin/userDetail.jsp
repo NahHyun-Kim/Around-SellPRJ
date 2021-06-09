@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="../include/session.jsp"%>
 <%@ page import="static poly.util.CmmUtil.nvl" %>
 <%@ page import="poly.dto.UserDTO" %>
 <%@ page import="poly.util.EncryptUtil" %>
@@ -16,10 +17,18 @@
 <html>
 <head>
     <title>AroundSell- 회원 상세정보 조회</title>
-    <!-- jquery -->
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
+    <!-- 부트스트랩 템플릿 CSS -->
+    <%@ include file="../include/cssFile.jsp"%>
 </head>
 <body>
+<!-- preloader -->
+<%@ include file="../include/preloader.jsp"%>
+<!-- preloader End -->
+
+<!-- Header(상단 메뉴바 시작!) Start -->
+<%@ include file="../include/header.jsp"%>
+<!-- Header End(상단 메뉴바 끝!) -->
+
 <div class="container">
 
     <h1>회원 상세정보 조회</h1>
@@ -120,8 +129,13 @@
         }
     };
 </script>
-<!-- bootstrap, css 파일 -->
-<script src="/resources/js/bootstrap.js"></script>
-<link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+
+<!-- include Footer -->
+<%@ include file="../include/footer.jsp"%>
+
+<!-- include JS File Start -->
+<%@ include file="../include/jsFile.jsp"%>
+<!-- include JS File End -->
+
 </body>
 </html>

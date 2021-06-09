@@ -48,25 +48,26 @@
                                 <img src="/resources/boot/img/logo/aroundsell_sub.png" style="width: 200px; display: block; margin: 10px auto;" />
 
                                 <div class="col-md-12 form-group p_star">
-                                    <label for="search_1">이메일 찾기</label>
+                                    <label for="search_1" class="font">이메일 찾기</label>
                                     <input type="radio" id="search_1" name="search_total" onclick="search_check(1)" checked="checked" />
 
-                                    <label for="search_2">비밀번호 찾기</label>
+                                    <label for="search_2" class="font">비밀번호 찾기</label>
                                     <input type="radio" id="search_2" name="search_total" onclick="search_check(2)" />
                                 </div>
 
+                                <hr/>
                                 <!-- 이메일 찾기 -->
                                     <form action="/findEmailUser.do", method="post", onsubmit="return emailSearch()">
                                         <div id="searchE">
 
                                                 <div class="col-md-12 form-group p_star">
-                                                    <label for="inputPhone">핸드폰 번호</label>
-                                                    <input class="form-control" type="text" id="inputPhone" name="inputPhone" placeholder="ex)01012345678"/>
+                                                    <label for="inputPhone" class="font">핸드폰 번호</label>
+                                                    <input class="form-control font" type="text" id="inputPhone" name="inputPhone" placeholder="ex)01012345678"/>
                                                 </div>
 
                                             <div class="col-md-12 form-group">
                                                 <!-- 이메일 찾기 버튼 -->
-                                                <button type="submit" value="submit" class="btn_3">
+                                                <button type="submit" value="submit" class="btn_3 font">
                                                     이메일 찾기
                                                 </button>
                                             </div>
@@ -80,13 +81,13 @@
                                         <div id="searchP" style="display: none;">
 
                                                 <div class="col-md-12 form-group p_star">
-                                                    <label for="inputEmail">이메일</label>
-                                                    <input class="form-control" type="email" id="inputEmail" name="inputEmail" placeholder="가입 시 이메일을 입력해 주세요."/>
+                                                    <label for="inputEmail" class="font">이메일</label>
+                                                    <input class="form-control font" type="email" id="inputEmail" name="inputEmail" placeholder="가입 시 이메일을 입력해 주세요."/>
                                                 </div>
 
                                             <div class="col-md-12 form-group">
                                                 <!-- 비밀번호 찾기 버튼 -->
-                                                <button type="submit" value="submit" class="btn_3">
+                                                <button type="submit" value="submit" class="btn_3 font">
                                                     비밀번호 찾기
                                                 </button>
 

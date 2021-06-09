@@ -171,7 +171,7 @@
                 cancelButtonText: "아니오"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    location.href = "/myCart.do"
+                    location.href = "/logIn.do"
                 } else if (result.isCancled) {
                     return false;
                 }

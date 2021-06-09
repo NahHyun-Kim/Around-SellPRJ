@@ -51,14 +51,20 @@
 
                     var resHTML = "";
 
+                    resHTML += '<div class="col-md-12 form-group p_star"><label for="user_name" class="font">회원 이름</label><input class="form-control font" id="user_name" type="text" value="' + json.user_name + '" readOnly/></div>';
+                    resHTML += '<div class="col-md-12 form-group p_star"><label for="phone_no" class="font">핸드폰 번호</label><input class="form-control font" id="phone_no" type="text" value="' + json.phone_no + '" readOnly/></div>';
+                    resHTML += '<div class="col-md-12 form-group p_star"><label for="addr" class="font">가입 주소지</label><input class="form-control font" id="addr" type="text" value="' + json.addr + '" readOnly/></div>';
+                    resHTML += '<div class="col-md-12 form-group p_star"><label for="reg_dt" class="font">가입일</label><input class="form-control font" id="reg_dt" type="text" value="' + json.reg_dt + '" readOnly/></div>';
 
-                    resHTML += '<li><p class="info">이름 : ' + json.user_name + '</li>';
-                    resHTML += '<li><p class="info">핸드폰 번호 : ' + json.phone_no + '</li>';
-                    resHTML += '<li><p class="info">주소지 : ' + json.addr + '</li>';
-                    resHTML += '<li><p class="info">가입일 : ' + json.reg_dt + '</li>';
+                    // resHTML += '<li><p class="info">이름 : ' + json.user_name + '</li>';
+                    // resHTML += '<li><p class="info">핸드폰 번호 : ' + json.phone_no + '</li>';
+                    // resHTML += '<li><p class="info">주소지 : ' + json.addr + '</li>';
+                    // resHTML += '<li><p class="info">가입일 : ' + json.reg_dt + '</li>';
+
 
                     // $(".list cat-list").append(resHTML);
-                    $("#userInfo").append(resHTML);
+                    // $("#userInfo").append(resHTML);
+                    $("#infoInput").html(resHTML);
                 }
             })
 
@@ -114,7 +120,8 @@
                             <br/>
                             <h4 class="widget_title mt-10" style="font-family: 'Noto Sans KR'">나의 회원정보</h4>
                             <br/>
-                            <ul class="list cat-list" id="userInfo">
+                            <div id="infoInput"></div>
+                           <!-- <ul class="list cat-list" id="userInfo"> -->
 <%--                                <br/>--%>
 <%--                                <div id="resHTML"></div>--%>
 
@@ -122,7 +129,7 @@
                         </aside>
                             </div>
 
-                        <a href="/updateUserForm.do" class="btn view-btn3">회원정보 수정하기</a>
+                        <a href="/updateUserForm.do" class="btn view-btn3 font">회원정보 수정하기</a>
                     </div>
 
                 </div>
@@ -137,7 +144,8 @@
                 <aside class="single_sidebar_widget post_category_widget">
                     <h4 class="widget_title info" >나의 판매글</h4>
                     <br/>
-                        <button type="button" id="del" value="삭제하기" class="btn btn-danger cen" style="display: block; margin: 0 auto;">삭제하기</button>
+                    <div class="font" id="noSell"></div>
+                        <button type="button" id="del" value="삭제하기" class="btn btn-danger font" style="display: block; margin: 0 auto;">삭제하기</button>
                 </aside>
                     </div>
                 </div>
@@ -196,11 +204,25 @@
 <style>
     .info {
         font-family: 'Noto Sans KR';
-        font-size: 20px;
+        font-size: 17px;
         font-weight: 400;
     }
 </style>
 <script type="text/javascript">
+
+    var sellCnt = <%=total%>;
+    console.log("나의 판매글 개수 : " + sellCnt);
+
+    // 판매글이 없다면, 판매글이 없다는 멘트와 함께 게시글 등록하기 버튼을 띄움
+    if (sellCnt == 0) {
+        $("#del").hide();
+
+        var noMent = "";
+        noMent += '<p class="info">등록한 판매글이 없습니다. </p><br/>';
+        noMent += '<a href="/noticeForm.do" class="btn view-btn3 font">판매글 등록하기</a>'
+        $("#noSell").html(noMent);
+    }
+
     // 삭제 버튼을 눌렀을때, 판매글 번호를 받아오고 confirm을 통해 재확인
     $("#del").on("click", function() {
         var num = document.getElementById("del_num").value;

@@ -41,22 +41,22 @@
                         <div class="login_part_form">
                             <div class="login_part_form_iner">
                                 <img src="/resources/boot/img/logo/aroundsell_sub.png" style="width: 200px; display: block; margin: 10px auto;" />
-                                <label for="user_auth">인증번호 입력 : </label>
-                                <form action="/findAuth.do" method="post" class="row contact_form" onsubmit="return loginChk()">
+                                <label for="user_auth" class="font">인증번호 입력 : </label>
+                                <form action="/findAuth.do" method="post" class="row contact_form" >
 
                                     <!-- 인증번호 입력 -->
                                     <div class="col-md-12 form-group p_star">
-                                        <input class="form-control" type="text" id="user_auth" name="user_auth" placeholder="인증번호를 입력하세요" style="margin-top: 10px;">
+                                        <input class="form-control font" type="text" id="user_auth" name="user_auth" placeholder="인증번호를 입력하세요" style="margin-top: 10px;">
                                     </div>
 
                                     <div class="col-md-12 form-group">
                                         <!-- 로그인, 비밀번호 찾기 버튼 -->
-                                        <button type="submit" value="submit" class="btn_3">
+                                        <button type="submit" value="submit" class="btn_3 font">
                                            인증번호 전송!
                                         </button>
-                                        <a class="lost_pass" href="/userSearch">뒤로가기</a>
+                                        <a class="lost_pass font" href="/userSearch">뒤로가기</a>
                                         <br/>
-                                        <a class="lost_pass" href='/getIndex.do'>메인으로</a>
+                                        <a class="lost_pass font" href='/getIndex.do'>메인으로</a>
 
                                     </div>
                                 </form>

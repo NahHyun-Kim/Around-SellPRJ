@@ -136,20 +136,26 @@ public class MyController {
         // 기존 회원정보를 가져오기 위해 사용한 pDTO 변수 초기화
         pDTO = null;
         log.info("rDTO null? : " + (rDTO == null));
-        log.info("rDTO에서 가져온 회원번호 : " + rDTO.getUser_no());
-        log.info("rDTO에서 가져온 회원 이메일 : " + EncryptUtil.decAES128CBC(rDTO.getUser_email()));
 
         String msg = "";
         String url = "";
 
         if (rDTO != null) {
+            log.info("rDTO에서 가져온 회원번호 : " + rDTO.getUser_no());
+            log.info("rDTO에서 가져온 회원 이메일 : " + EncryptUtil.decAES128CBC(rDTO.getUser_email()));
+
             model.addAttribute("rDTO", rDTO);
 
         } else {
+
+            rDTO = new UserDTO();
             log.info("회원정보 가져오기 실패!");
             msg = "일치하는 회원정보가 없습니다. 로그인 여부를 확인해 주세요.";
             url = "/logIn.do";
-            return "redirect";
+
+            model.addAttribute("msg", msg);
+            model.addAttribute("url", url);
+            return "/info";
         }
 
         return "/user/editUser";
@@ -200,7 +206,10 @@ public class MyController {
             session.setAttribute("SS_USER_ADDR", addr);
             session.setAttribute("SS_USER_ADDR2", addr2);
             msg = "회원정보가 수정되었습니다.";
-            url = "/myPage.do";
+            url = "/myList.do";
+
+            model.addAttribute("msg", msg);
+            model.addAttribute("url", url);
 
             pDTO = null;
         } catch (Exception e) {
@@ -209,14 +218,16 @@ public class MyController {
             msg = "실패하였습니다." + e.toString();
             url = "/updateUserForm.do";
 
-            log.info(e.toString());
-            e.printStackTrace();
-        } finally {
-            log.info(this.getClass().getName() + ".updateUser(회원정보 수정 로직) End!");
-
             model.addAttribute("msg", msg);
             model.addAttribute("url", url);
+            log.info(e.toString());
+            e.printStackTrace();
+
+            return "/info";
+
         }
+        log.info(this.getClass().getName() + ".updateUser(회원정보 수정 로직) End!");
+
         return "/redirect";
     }
 
@@ -259,6 +270,81 @@ public class MyController {
     }
 
 
+    // 비밀번호 변경 ajax로 진행
+    @ResponseBody
+    @RequestMapping(value="/updatePwAjax")
+    public int updatePwAjax(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+                            @RequestParam(value="password") String password) throws Exception {
+        log.info("비밀번호 변경 ajax 진행 시작");
+
+        String user_no = (String) session.getAttribute("SS_USER_NO");
+        String member_pw = CmmUtil.nvl(EncryptUtil.encHashSHA256(password));
+
+        log.info("가져온 회원번호 : " + user_no);
+        log.info("입력받은 비밀번호(복호화 진행) : " + member_pw);
+
+        // 기존 비밀번호와 일치하는지 확인하기 위해 중복확인 작업
+        UserDTO uDTO = new UserDTO();
+
+        uDTO.setPassword(member_pw);
+        uDTO.setUser_no(user_no);
+
+        UserDTO rDTO = userService.myPwdChk(uDTO);
+
+        int valid = 0;
+        //중복되는 값이 없다면, 기존 비밀번호와 다른 유효성에 맞는 비번 입력
+        if (rDTO == null) {
+            valid = 0;
+        } else { // 기존 값이 있는 것을 입력(다른 비밀번호 입력해야함)
+            valid = 1;
+        }
+        uDTO = null;
+
+        UserDTO pDTO = null;
+
+
+        // ajax 비밀번호 변경 결과값으로 전송할 변수 res
+        int res = 0;
+
+        // 기존 비밀번호와 다를 경우, 비밀번호 변경 진행
+        if (valid == 0) {
+            log.info("valid 0! 비밀번호 정상 변경 진행");
+
+            try {
+                pDTO = new UserDTO();
+
+                //수정할 비밀번호 전달
+                pDTO.setUser_no(user_no);
+                pDTO.setPassword(member_pw);
+
+                // 비밀번호 DB반영
+                userService.updateMyPw(pDTO);
+
+                // 재 로그인을 요청하기 때문에, 현재 로그인 상태를 초기화함
+                session.invalidate();
+
+                pDTO = null;
+                res = 1;
+                log.info("비밀번호 변경 종료");
+
+            } catch (Exception e) {
+                log.info("실패 ! " + e.toString());
+                e.printStackTrace();
+                res = 0;
+            }
+            pDTO = null;
+
+            // 비밀번호가 기존 비밀번호와 일치하면 문구를 띄워줌
+        } else if (valid == 1) {
+            log.info("기존 비밀번호와 일치! (valid 1) 재 변경 요청");
+            res = 2;
+        }
+        log.info("비밀번호 변경 ajax 진행 끝!");
+        return res;
+
+    }
+
+
     // 비밀번호 변경(회원정보 수정 시)
     @RequestMapping("/updateMyPw")
     public String updateMyPw(HttpServletRequest request, HttpServletResponse response, ModelMap model, HttpSession session) throws Exception {
@@ -287,7 +373,7 @@ public class MyController {
 
             // 재 로그인을 요청하기 때문에, 현재 로그인 상태를 초기화함
             session.invalidate();
-            msg = "비밀번호가 변경되었습니다.";
+            msg = "비밀번호가 변경되었습니다. 재 로그인해 주세요!";
             url = "/logIn.do";
 
             model.addAttribute("msg", msg);
@@ -300,8 +386,8 @@ public class MyController {
             log.info("비밀번호 변경 종료");
 
         } catch (Exception e) {
-            msg = "실패하였습니다. : " + e.toString();
-            url = "/";
+            msg = "실패하였습니다. : ";
+            url = "updateUserForm.do";
 
 
             log.info(e.toString());
@@ -309,6 +395,8 @@ public class MyController {
 
             model.addAttribute("msg", msg);
             model.addAttribute("url", url);
+
+            return "/info";
 
         } finally {
             // 변수와 메모리 초기화

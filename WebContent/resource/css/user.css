@@ -19,3 +19,12 @@
         height: 250px;
     }
 }
+
+.font {
+    font-family: 'Noto Sans KR';
+}
+
+.btn view-btn1 font:hover {
+    color: purple;
+
+}

@@ -65,10 +65,10 @@
 
                                     // 데이터가 5개가 넘었을 경우, 총 건수에서 최근 5건만 표시되었음을 알림
                                     if (cnt < len) {
-                                        recentlyGoods += "<div>최근 본 상품</div> ";
+                                        recentlyGoods += '<div class="font">최근 본 상품</div>';
                                         recentlyGoods += "<div>총 " + len + "건의 결과, 최근 " + cnt + "건을 표시합니다.</div> <hr/>";
                                     } else {
-                                        recentlyGoods += "<div>최근 본 상품</div> <hr/> ";
+                                        recentlyGoods += '<div class="font">최근 본 상품</div><hr/>';
                                     }
                                 }
 
@@ -121,16 +121,13 @@
                             */
                         } else if (data.length == 0) {
 
-                            var resultMent = '최근 본 상품이 없습니다. <hr/> <a href="/noticeList.do">상품 보러가기</a>';
+                            var resultMent = '최근 본 상품이 없습니다. <hr/> <a class="font" href="/noticeList.do">상품 보러가기</a>';
 
                             $("#recentlyGoods").html(resultMent);
                             $("#recentlyGoods").show();
                         }
                     }
                 })
-            } else {
-                alert("로그인 후 이용해 주세요");
-                location.href = "/logIn.do";
             }
         })
     </script>
@@ -182,9 +179,11 @@
                 <!-- Button -->
                 <div class="row justify-content-center">
                     <div class="room-btn pt-70" style="padding-top: 5px;">
-                        <a href="/searchList.do" class="btn view-btn1">상품 보러가기</a>
+                        <a href="/searchList.do" class="btn view-btn1 font">상품 보러가기</a>
                     </div>
                 </div>
+            </div>
+        </div>
     </main>
 <%--  <div>최근 본 상품</div>--%>
 <%--        <div id="recentlyGoods" style="margin: 0 auto;"></div>--%>
@@ -192,7 +191,7 @@
     <style>
         .title {
             color: black;
-            font-family: 'Do Hyeon', sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
         }
 
         #recentlyGoods {

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="../include/session.jsp"%>
 <%@ page import="static poly.util.CmmUtil.nvl" %>
 <%@ page import="java.util.List" %>
 <%@ page import="poly.dto.UserDTO" %>
@@ -36,10 +37,23 @@
 <html>
 <head>
     <title>AroundSell- 회원 관리</title>
-    <!-- jquery -->
-    <script src="/resource/js/jquery-3.4.1.min.js"></script>
+    <!-- 부트스트랩 템플릿 CSS -->
+    <%@ include file="../include/cssFile.jsp"%>
 </head>
 <body>
+
+<!-- preloader -->
+<%@ include file="../include/preloader.jsp"%>
+<!-- preloader End -->
+
+<!-- Header(상단 메뉴바 시작!) Start -->
+<%@ include file="../include/header.jsp"%>
+<!-- Header End(상단 메뉴바 끝!) -->
+
+<!-- wordCloud 디자인용(로그인, 회원가입, 비밀번호 찾기 시 사용) -->
+<%@ include file="../include/wordcloudForDesign.jsp"%>
+
+
     <input name="allCheck" type="checkbox" id="allCheck"/>전체 선택
 
     <div class="container">
@@ -137,9 +151,11 @@
             }
         }
     </script>
-    <!-- bootstrap, css 파일 -->
-    <script src="/resources/js/bootstrap.js"></script>
-    <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+<!-- include Footer -->
+<%@ include file="../include/footer.jsp"%>
 
+<!-- include JS File Start -->
+<%@ include file="../include/jsFile.jsp"%>
+<!-- include JS File End -->
 </body>
 </html>

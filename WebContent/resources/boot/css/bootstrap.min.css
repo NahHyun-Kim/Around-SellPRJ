@@ -1957,7 +1957,9 @@ pre code {
 }
 
 .form-control:disabled, .form-control[readonly] {
-    background-color: #e9ecef;
+    /*background-color: #e9ecef; */
+    /*background-color: #d0a7e4; 나현 수정 readonly 속성 배경색 */
+    background-image: url(../img/hero/background-purple.jpeg);
     opacity: 1
 }
 
@@ -2368,7 +2370,7 @@ textarea.form-control {
 
 .btn:focus, .btn:hover {
     text-decoration: none;
-    background-color: transparent;
+    /*background-color: transparent; 나현 임시 수정*/
 }
 
 .btn.focus, .btn:focus {

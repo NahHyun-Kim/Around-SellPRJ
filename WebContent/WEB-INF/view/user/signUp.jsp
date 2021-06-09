@@ -48,49 +48,49 @@
 
                                     <!-- 이메일 입력 -->
                                     <div class="col-md-12 form-group p_star">
-                                        <input class="form-control" type="email" name="user_email" id="user_email" placeholder="이메일을 입력해 주세요." />
+                                        <input class="form-control font" type="email" name="user_email" id="user_email" placeholder="이메일을 입력해 주세요." />
                                         <div class="check_font" id="email_check"></div>
                                     </div>
 
 
                                     <!-- 이름 입력 -->
                                     <div class="col-md-12 form-group p_star">
-                                        <input class="form-control" type="text" name="user_name" id="user_name" placeholder="이름을 입력해 주세요." style="margin-top: 10px;">
+                                        <input class="form-control font" type="text" name="user_name" id="user_name" placeholder="이름을 입력해 주세요." style="margin-top: 10px;">
                                         <div class="check_font" id="name_check"></div>
                                     </div>
 
                                     <!-- 비밀번호 입력 -->
                                     <div class="col-md-12 form-group p_star">
-                                        <input class="form-control" type="password" name="password" id="password_1" placeholder="비밀번호를 입력해 주세요." style="margin-top: 10px;">
+                                        <input class="form-control font" type="password" name="password" id="password_1" placeholder="비밀번호를 입력해 주세요." style="margin-top: 10px;">
                                         <div class="check_font" id="pw_check1"></div>
                                     </div>
 
                                     <!-- 비밀번호 확인 입력 -->
                                     <div class="col-md-12 form-group p_star">
-                                        <input class="form-control" type="password" name="password2" id="password_2" placeholder="비밀번호 확인을 입력해 주세요." style="margin-top: 10px;">
+                                        <input class="form-control font" type="password" name="password2" id="password_2" placeholder="비밀번호 확인을 입력해 주세요." style="margin-top: 10px;">
                                         <div class="check_font" id="pw_check2"></div>
                                     </div>
 
                                     <!-- 핸드폰 번호 입력 -->
                                     <div class="col-md-12 form-group p_star">
-                                        <input class="form-control" type="text" name="phone_no" id="phone_no" placeholder="-를 제외한 전화번호를 입력해 주세요." style="margin-top: 10px;">
+                                        <input class="form-control font" type="text" name="phone_no" id="phone_no" placeholder="-를 제외한 전화번호를 입력해 주세요." style="margin-top: 10px;">
                                         <div class="check_font" id="phone_check"></div>
                                     </div>
 
                                     <!-- 주소 입력(도로명주소 이용) -->
                                     <div class="col-md-12 form-group p_star">
-                                        <input class="form-control" type="text" name="addr" id="sample5_address" placeholder="주소를 검색해 주세요" style="margin-top: 10px;">
-                                        <input type="button" class="btn_3" onclick="sample5_execDaumPostcode()" value="주소 검색"/>
+                                        <input class="form-control font" type="text" name="addr" id="sample5_address" placeholder="주소를 검색해 주세요." style="margin-top: 10px;">
+                                        <input type="button" class="btn_3 font" onclick="sample5_execDaumPostcode()" value="주소 검색"/>
                                         <!--<div class="check_font" id="addr_check"></div>-->
                                     </div>
 
                                     <div class="col-md-12 form-group">
 
                                         <!-- 회원가입, 로그인 버튼 -->
-                                        <button type="submit" value="submit" class="btn_3">
+                                        <button type="submit" value="submit" class="btn_3 font">
                                             Sign Up
                                         </button>
-                                        <a class="lost_pass" href="/logIn.do">Log In</a>
+                                        <a class="lost_pass font" href="/logIn.do">Log In</a>
                                         <br/>
 
 
@@ -110,6 +110,13 @@
         <!--================login_part end =================-->
     </main>
 
+
+    <style>
+        .check_font {
+            font-family: "Noto Sans KR";
+            margin-top:5px;
+        }
+    </style>
 <!-- 회원가입 유효성 체크 js -->
 
 <script type="text/javascript" src="/resource/valid/userCheck.js?ver=1"></script>

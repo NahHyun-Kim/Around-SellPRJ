@@ -71,16 +71,16 @@
                             <% if (SS_USER_ADDR2 == null) { %>
                             <h2><img src="/resources/boot/img/logo/aroundsell_sub.png" alt=""
                                      style="width:200px;height: 55px;"></h2>
-                            <p>우리 동네, 집 주변 판매하는 상품 찾기 웹 서비스 <br/>
-                            <a href="/logIn.do">로그인</a> 후 설정한 지역구의 판매 상품 정보를 받아보세요!</p>
+                            <p class="font">우리 동네, 집 주변 판매하는 상품 찾기 웹 서비스 <br/>
+                            <a class="font" href="/logIn.do">로그인</a> 후 설정한 지역구의 판매 상품 정보를 받아보세요!</p>
                             <hr/>
                             <!-- 로그인 했다면 지역구 날씨 보여주기 -->
                             <% } else { %>
                             <h2><%=SS_USER_ADDR2%> &nbsp;</h2>
-                            <div id="weather"></div>
+                            <div id="weather" class="font"></div>
 
-                            <button class="btn btn-info" style="background-color: #d0a7e4; border-style: none; margin-right: 10px;" value="내일">내일 날씨</button>
-                            <button class="btn btn-info" style="background-color: #d0a7e4; border-style: none" value="모레">모레 날씨</button>
+                            <button class="btn btn-info font" style="background-color: #d0a7e4; border-style: none; margin-right: 10px;" value="내일">내일 날씨</button>
+                            <button class="btn btn-info font" style="background-color: #d0a7e4; border-style: none" value="모레">모레 날씨</button>
                             <hr/>
                             <% } %>
 
@@ -93,7 +93,7 @@
                     <div class="col-xl-7 col-lg-8 col-md-10">
                         <div class="section-tittle mb-70 text-center" >
 
-                            <h2> NEW ITEM </h2>
+                            <h2 class="font"> NEW ITEM </h2>
                         </div>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
 
                                 <!-- hover 적용, 마우스 올릴 시 click me! 문구 표시 -->
                                 <div class="img-cap">
-                                    <span>Click Me!</span>
+                                    <span class="font">Click Me!</span>
                                 </div>
 
                                 <!-- 하트 표시를 누르면 관심상품 유효성 체크 + 등록 진행 -->
@@ -133,16 +133,16 @@
 
                             <div class="popular-caption">
                                 <!-- 상품명 -->
-                                <h3><a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');">
+                                <h3><a class="font" href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');">
                                     <%=CmmUtil.nvl(rDTO.getGoods_title())%>
                                 </a></h3>
 
                                 <!-- 가격 -->
                                 <!--<span style="font-size: 15px;"><%=CmmUtil.nvl(rDTO.getGoods_addr())%></span>-->
-                                <h3><a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');"><%=CmmUtil.nvl(rDTO.getGoods_price())%></a></h3>
+                                <h3><a class="font" href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');"><%=CmmUtil.nvl(rDTO.getGoods_price())%></a></h3>
 
                                 <!-- 상호명 -->
-                                <h5><a style="color: #d0a7e4;" href="javascript:searchLocation('<%=CmmUtil.nvl(rDTO.getGoods_addr())%>', <%=rDTO.getGoods_no()%>)"><%=CmmUtil.nvl(rDTO.getGoods_addr())%></a></h5>
+                                <h5><a class="font" style="color: #d0a7e4;" href="javascript:searchLocation('<%=CmmUtil.nvl(rDTO.getGoods_addr())%>', <%=rDTO.getGoods_no()%>)"><%=CmmUtil.nvl(rDTO.getGoods_addr())%></a></h5>
                             </div>
                         </div>
                     </div>
@@ -164,7 +164,7 @@
     </main>
 
     <div class="section-tittle mb-70 text-center" >
-        <h2>MY FAVORITE CATEGORY</h2>
+        <h2 class="font">MY FAVORITE CATEGORY</h2>
     </div>
     <hr/>
     <!-- 동적 파이차트 HTML -->

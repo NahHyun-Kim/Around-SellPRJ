@@ -41,28 +41,28 @@
                         <div class="login_part_form_iner">
                             <img src="/resources/boot/img/logo/aroundsell_sub.png" style="width: 200px; display: block; margin: 10px auto;" />
 
-                            <form action="/updatePw.do" method="post" class="row contact_form">
+                            <form action="/updatePw.do" method="post" class="row contact_form" onsubmit="return pwChk()">
 
                                 <!-- 변경할 비밀번호 입력 -->
                                 <div class="col-md-12 form-group p_star">
-                                    <input class="form-control" type="password" id="password1" name="password1" placeholder="비밀번호를 입력해 주세요." style="margin-top: 10px;">
-                                    <div className="check_font" id="pwd1_check"></div>
+                                    <input class="form-control font" type="password" id="password1" name="password1" placeholder="비밀번호를 입력해 주세요." style="margin-top: 10px;">
+                                    <div class="font" id="pwd1_check"></div>
                                 </div>
 
                                 <!-- 변경할 비밀번호 확인 입력 -->
                                 <div class="col-md-12 form-group p_star">
-                                    <input class="form-control" type="password" id="password2" name="password2" placeholder="비밀번호를 입력해 주세요." style="margin-top: 10px;">
-                                    <div className="check_font" id="pwd2_check"></div>
+                                    <input class="form-control font" type="password" id="password2" name="password2" placeholder="비밀번호를 입력해 주세요." style="margin-top: 10px;">
+                                    <div class="font" id="pwd2_check"></div>
                                 </div>
 
                                 <div class="col-md-12 form-group">
                                     <!-- 로그인, 비밀번호 찾기 버튼 -->
-                                    <button type="submit" value="submit" class="btn_3">
+                                    <button type="submit" value="submit" class="btn_3 font">
                                         비밀번호 변경하기
                                     </button>
-                                    <a class="lost_pass" href="/findPwChk.do">뒤로가기</a>
+                                    <a class="lost_pass font" href="/findPwChk.do">뒤로가기</a>
                                     <br/>
-                                    <a class="lost_pass" href='/getIndex.do'>메인으로</a>
+                                    <a class="lost_pass font" href='/getIndex.do'>메인으로</a>
 
                                 </div>
                             </form>
@@ -79,26 +79,6 @@
     </section>
     <!--================인증번호 입력 Area =================-->
 </main>
-
-<!--<form action="/updatePw.do" method="post">
-        <div class="form-group">
-            <label for="password1">비밀번호 : </label>
-            <div>
-                <input type="password" id="password1" name="password1" placeholder="비밀번호를 입력해 주세요."/>
-            </div>
-            <div className="check_font" id="pwd1_check"></div>
-        </div>
-        <div class="form-group">
-            <label for="password2">비밀번호 확인 : </label>
-            <div>
-                <input type="password" id="password2" name="password2" placeholder="비밀번호를 입력해 주세요."/>
-            </div>
-            <div className="check_font" id="pwd2_check"></div>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="비밀번호 변경하기"/>
-        </div>
-    </form> -->
 
 <!-- 이메일/비밀번호 찾기 js -->
 <script type="text/javascript" src="/resource/valid/searchUser.js?ver=1"></script>
