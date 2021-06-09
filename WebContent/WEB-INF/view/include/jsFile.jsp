@@ -206,4 +206,59 @@
         }
 
     }
+
+    // 개인정보 수정 버튼을 눌렀을때, 비밀번호를 확인하고 들어가는 Swal
+        function doPassword() {
+        Swal.fire({
+            icon: 'info',
+            title: '비밀번호를 입력해 주세요.',
+            input: 'password',
+            customClass: {
+                validationMessage: 'my-validation-message',
+            },
+
+            preConfirm: (value) => {
+                if (!value) {
+                    Swal.showValidationMessage(
+                        '<i class="fa fa-info-circle"></i> 비밀번호를 입력해 주세요!'
+                    )
+                    return false;
+                }
+            },
+
+            inputValidator: (value) => {
+                // 비밀번호가 입력되었다면, ajax로 기존 비밀번호와 일치하는지 확인
+                if (value) {
+
+                    $.ajax({
+                        url: "/myPwdChk.do",
+                        type: "post",
+                        dataType: "JSON",
+                        data: {
+                            "password": value
+                        },
+                        success: function(data) {
+                            console.log("일치하면 1, 다르면 0 : " + data);
+                            // data == 1 (기존 비밀번호와 일치하면 수정 페이지로 이동)
+
+                            if (data == 1) {
+                                console.log("비밀번호 일치!");
+                                location.href = "/updateUserForm.do";
+
+                                // 일치하지 않으면 다시 입력할 것을 알림
+                            } else if (data == 0) {
+                                Swal.fire('비밀번호를 다시 입력해 주세요!','','error');
+                                return false;
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                            console.log(errorThrown);
+                        }
+                    })
+                }
+            }
+        })
+    }
+
 </script>

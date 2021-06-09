@@ -57,7 +57,7 @@
                                 <li><a href="/myList.do">MyPage</a>
                                     <ul class="submenu">
                                         <li><a href="/logOut.do">로그아웃</a></li>
-                                        <li><a href="/updateUserForm.do">개인정보 수정</a></li>
+                                        <li><a href="javascript:doPassword()">개인정보 수정</a></li>
                                         <li><a href="/myList.do">마이페이지</a></li>
                                         <li><a href="/noticeForm.do">판매글 등록하기</a></li>
                                     </ul>
@@ -66,7 +66,7 @@
                                 <li><a href="/getUser.do">관리자 페이지</a>
                                     <ul class="submenu">
                                         <li><a href="/logOut.do">로그아웃</a></li>
-                                        <li><a href="/updateUserForm.do">관리자 정보수정</a></li>
+                                        <li><a href="javascript:doPassword()">관리자 정보수정</a></li>
                                         <li><a href="/myList.do">마이페이지</a></li>
                                         <li><a href="/getUser.do">관리자 페이지</a></li>
                                     </ul>

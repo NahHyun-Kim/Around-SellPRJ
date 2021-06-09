@@ -93,7 +93,7 @@
                     <div class="col-xl-7 col-lg-8 col-md-10">
                         <div class="section-tittle mb-70 text-center" >
 
-                            <h2 class="font"> NEW ITEM </h2>
+                            <h2 class="fontPoor"> NEW ITEM </h2>
                         </div>
                     </div>
                 </div>
@@ -164,7 +164,7 @@
     </main>
 
     <div class="section-tittle mb-70 text-center" >
-        <h2 class="font">MY FAVORITE CATEGORY</h2>
+        <h2 class="fontPoor">MY FAVORITE CATEGORY</h2>
     </div>
     <hr/>
     <!-- 동적 파이차트 HTML -->
@@ -547,6 +547,7 @@
         })
         //end piechart2
     </script>
+
     <!-- 로그인 한 유저의 지역구 날씨 크롤링 -->
     <script type="text/javascript" src="/resource/js/Weather.js?ver=2"></script>
 

@@ -56,14 +56,6 @@
                     resHTML += '<div class="col-md-12 form-group p_star"><label for="addr" class="font">가입 주소지</label><input class="form-control font" id="addr" type="text" value="' + json.addr + '" readOnly/></div>';
                     resHTML += '<div class="col-md-12 form-group p_star"><label for="reg_dt" class="font">가입일</label><input class="form-control font" id="reg_dt" type="text" value="' + json.reg_dt + '" readOnly/></div>';
 
-                    // resHTML += '<li><p class="info">이름 : ' + json.user_name + '</li>';
-                    // resHTML += '<li><p class="info">핸드폰 번호 : ' + json.phone_no + '</li>';
-                    // resHTML += '<li><p class="info">주소지 : ' + json.addr + '</li>';
-                    // resHTML += '<li><p class="info">가입일 : ' + json.reg_dt + '</li>';
-
-
-                    // $(".list cat-list").append(resHTML);
-                    // $("#userInfo").append(resHTML);
                     $("#infoInput").html(resHTML);
                 }
             })
@@ -121,15 +113,68 @@
                             <h4 class="widget_title mt-10" style="font-family: 'Noto Sans KR'">나의 회원정보</h4>
                             <br/>
                             <div id="infoInput"></div>
-                           <!-- <ul class="list cat-list" id="userInfo"> -->
-<%--                                <br/>--%>
-<%--                                <div id="resHTML"></div>--%>
 
                             </ul>
                         </aside>
                             </div>
 
-                        <a href="/updateUserForm.do" class="btn view-btn3 font">회원정보 수정하기</a>
+                        <a class="btn view-btn3 font" style="color: white;" onclick="doPassword()">회원정보 수정하기</a>
+
+                        <script type="text/javascript">
+                            function doPassword() {
+                                            Swal.fire({
+                                                icon: 'info',
+                                                title: '비밀번호를 입력해 주세요.',
+                                                input: 'password',
+                                                customClass: {
+                                                    validationMessage: 'my-validation-message',
+                                                },
+
+                                                preConfirm: (value) => {
+                                                    if (!value) {
+                                                        Swal.showValidationMessage(
+                                                            '<i class="fa fa-info-circle"></i> 비밀번호를 입력해 주세요!'
+                                                        )
+                                                        return false;
+                                                    }
+                                                },
+
+                                                inputValidator: (value) => {
+                                                    // 비밀번호가 입력되었다면, ajax로 기존 비밀번호와 일치하는지 확인
+                                                    if (value) {
+
+                                                        $.ajax({
+                                                            url: "/myPwdChk.do",
+                                                            type: "post",
+                                                            dataType: "JSON",
+                                                            data: {
+                                                                "password": value
+                                                            },
+                                                            success: function(data) {
+                                                                console.log("일치하면 1, 다르면 0 : " + data);
+                                                                // data == 1 (기존 비밀번호와 일치하면 수정 페이지로 이동)
+
+                                                                if (data == 1) {
+                                                                    console.log("비밀번호 일치!");
+                                                                    location.href = "/updateUserForm.do";
+
+                                                                    // 일치하지 않으면 다시 입력할 것을 알림
+                                                                } else if (data == 0) {
+                                                                    Swal.fire('비밀번호를 다시 입력해 주세요!','','error');
+                                                                    return false;
+                                                                }
+                                                            },
+                                                            error: function (jqXHR, textStatus, errorThrown) {
+                                                                alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                                                                console.log(errorThrown);
+                                                            }
+                                                        })
+                                                    }
+                                                }
+                                            })
+                            }
+                        </script>
+
                     </div>
 
                 </div>
@@ -230,14 +275,14 @@
         var bool = $("input[name=del_num]:radio").is(":checked");
         console.log(bool);
 
-        if (bool == true) {
-        Swal.fire({
+        if (bool == true) {Swal.fire({
             title: '정말 삭제하시겠습니까?',
             icon: "question",
             showCancelButton: true,
             confirmButtonText: "네!",
             cancelButtonText: "아니오"
         }).then((result) => {
+
             if (result.isConfirmed) {
                 $.ajax({
                     url: "/delMySell.do",
@@ -274,7 +319,6 @@
         )
 
 </script>
-
 <!-- include Footer -->
 <%@ include file="../include/footer.jsp"%>
 

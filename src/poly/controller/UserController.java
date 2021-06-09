@@ -422,7 +422,12 @@ public class UserController {
 
         if (res > 0) { // 회원 탈퇴에 성공했다면,
             log.info("deleteForceUser 성공");
-            session.invalidate();
+            log.info("관리자인지(관리자면 true, 아니면 false) : " + (SS_USER_NO.equals("0")));
+
+            // 관리자 권한으로 회원을 삭제했을때는 로그인 유지, 그 외에는 로그아웃 처리(session 초기화)
+            if (!SS_USER_NO.equals("0")) {
+                session.invalidate();
+            }
 
             MailDTO mDTO = new MailDTO();
 

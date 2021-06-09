@@ -62,16 +62,19 @@
         <div class="row justify-content-center">
             <div class="col-xl-7 col-lg-8 col-md-10">
                 <div class="section-tittle mb-70 text-center" >
-                    <h2 style="font-family: sans-serif">Search your Item!</h2>
+                    <hr/>
+                    <h3 class="mb-10 toCenter"><img src="/resources/boot/img/logo/aroundsell_sub.png" alt=""
+                                                    style="width:300px;height: 75px;"></h3>
+                    <h2 style="font-family: 'Poor Story'">Search your Item!</h2>
                     <br>
-                    <p>원하는 집 주변 상품을 검색하세요!</p>
+                    <p style="font-family: 'Poor Story'">원하는 집 주변 상품을 검색하세요!</p>
 
                     <div id="searchResult"></div>
                     <!-- 검색창, 검색 후 정렬 가능, 검색한 결과와 카테고리를 저장한다. -->
                     <div>
                         <!-- 검색창(카테고리 지정) -->
                         <select id="searchType" name="searchType">
-                            <option value="" selected disabled hidden>==카테고리를 선택하세요==</option>
+                            <option value="" selected disabled hidden>카테고리</option>
                             <option value="T" <%=CmmUtil.nvl(searchType).equals("T") ? "selected" : ""%>>상품명</option>
                             <option value="C" <%=CmmUtil.nvl(searchType).equals("C") ? "selected" : ""%>>상품 설명</option>
                             <option value="L" <%=CmmUtil.nvl(searchType).equals("L") ? "selected" : ""%>>상호명</option>
@@ -84,7 +87,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <!-- 검색창(키워드 입력, 검색창 선택 시 최근검색어 불러옴) -->
-                                <input type="text" name="keyword" id="keyword" value="${paging.keyword}"/>
+                                <input type="text" name="keyword" id="keyword" value="${paging.keyword}" class="form-control font ml-20" style="width: 300px;"/>
 
                                 <!-- div로 최근검색어 리스트에 추가함 -->
                                 <div id="searchHistory" style="display:none;">
@@ -92,8 +95,8 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <button type="button" id="searchProduct" class="btn btn-info">검색하기</button>
+                            <div class="col-4">
+                                <button type="button" id="searchProduct" class="btn view-btn font">검색하기</button>
                             </div>
                         </div>
 
@@ -115,16 +118,15 @@
                         <!-- 테스트용, 추후 삭제 예정(onChange 함수로 정렬 성공) -->
                         <!--<button type="button" id="orderProduct" class="btn btn-info">정렬하기</button>-->
                     </div>
-                    <button class="btn btn-info" type="button" onclick="location.href='/noticeForm.do'">글쓰기</button>
-                    <a href="/index.do">홈으로</a>
-                    <a href="javascript:history.back()">뒤로가기</a>
+
                     <hr/>
 
                     <!-- 페이징 게시물 수 -->
                     <select id="cntPerPage" name="sel" onchange="selChange()">
-                        <option value="3" <%if (cntPerPage == 3) {%> selected <%}%>>3개씩 보기</option>
                         <option value="6" <%if (cntPerPage == 6) {%> selected <%}%>>6개씩 보기</option>
                         <option value="9" <%if (cntPerPage == 9) {%> selected <%}%>>9개씩 보기</option>
+                        <option value="12" <%if (cntPerPage == 12) {%> selected <%}%>>12개씩 보기</option>
+                        <option value="18" <%if (cntPerPage == 18) {%> selected <%}%>>18개씩 보기</option>
                     </select>
                 </div>
 
@@ -285,7 +287,7 @@
         // 판매 주소지(검색타입 J)로 검색하는 경우, "해당 주소지"에 대한 n건의 검색결과로 깔끔하게 나타냄
         if (keyword != "null" && searchType != "주소지" && searchType != "카테고리") {
             console.log("검색된 게시물 수 : " + total);
-            resultMent = "<span style='color:#ff0000'>" + keyword + "</span>에 대한 " + "총 <span style='color:blue'>" + total + "</span> 건의 검색 결과";
+            resultMent = '<p class="font"><span class="font" style="color:#ff0000">' + keyword + "</span>에 대한 " + "총 <span style='color:blue'>" + total + "</span> 건의 검색 결과</p>";
             console.log("검색결과 멘트 : " + resultMent);
             // 검색한 상품이 있을 때에만 정렬 기능을 지원하므로, 기본 display:none 속성을 해제한다.
             $("#odType").show();
@@ -293,14 +295,14 @@
             // 검색어가 존재하지 않으면, 전체 게시물 건수를 보여줌.
         } else if (keyword == "null") {
             console.log("전체 게시물 수 : " + total);
-            var totalMent = "전체 <span style='color:blue'>" + total + "</span> 건의 상품";
+            var totalMent = '<p class="font">전체 <span style="color:blue">' + total + '</span> 건의 상품</p>';
             // nice-select 디자인에 속성이 바뀌어서 카테고리/정렬/페이징 순의 1번째 인덱스(0,1,2) 인 정렬을 숨김 처리
             // eq(index) -> 해당하는 인덱스 요소에 대해서만 적용, .odd / even(짝.홀수) / :first/last(처음.마지막)
             $(".nice-select:eq(1)").hide();
             res.innerHTML = totalMent;
         } else if (keyword != "null" && (searchType == "주소지" || searchType == "카테고리")) {
             console.log("검색된 게시물 수 : " + total);
-            resultMent = "해당 " + searchType + "<span style='color:#ff0000'>(" + keyword + ")</span>에 대한 " + "총 <span style='color:blue'>" + total + "</span> 건의 검색 결과";
+            resultMent = '<p class="font">해당 ' + searchType + "<span style='color:#ff0000'>(" + keyword + ")</span>에 대한 " + "총 <span style='color:blue'>" + total + "</span> 건의 검색 결과</p>";
             console.log("검색결과 멘트 : " + resultMent);
             // 검색한 상품이 있을 때에만 정렬 기능을 지원하므로, 기본 display:none 속성을 해제한다.
             $("#odType").show();
@@ -398,9 +400,9 @@
                         var searchKeyword = searchArr[i];
                         console.log("검색한 키워드 값 : " + searchKeyword);
                         // 검색어 목록을 list에 append 함
-                        $("#list").append('<li id="' + i + '" onclick="insertKeyword(' + i + ')" >' + searchKeyword + '</li>');
+                        $("#list").append('<li class="font" id="' + i + '" onclick="insertKeyword(' + i + ')" >' + searchKeyword + '</li>');
                     }
-                    $("#list").append('<button class="btn btn-danger" onclick="rmKeyword()"">X</button>');
+                    $("#list").append('<button class="btn view-btn3 p-0" style="width:25px; height: 25px;" onclick="rmKeyword()"">X</button>');
                     $("#searchHistory").show();
                 }
             })
@@ -426,7 +428,7 @@
     }
 </script>
 <!-- bootstrap, css 파일 -->
-<link rel="stylesheet" href="/resource/css/notice.css?ver=1"/>
+<link rel="stylesheet" href="/resource/css/notice.css?ver=2"/>
 
 <!-- include Footer -->
 <%@ include file="../include/footer.jsp"%>

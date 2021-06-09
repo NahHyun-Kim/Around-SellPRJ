@@ -121,7 +121,7 @@
                             */
                         } else if (data.length == 0) {
 
-                            var resultMent = '최근 본 상품이 없습니다. <hr/> <a class="font" href="/noticeList.do">상품 보러가기</a>';
+                            var resultMent = '<span class="font">최근 본 상품이 없습니다. <hr/> <a class="font" href="/noticeList.do">상품 보러가기</a></span>';
 
                             $("#recentlyGoods").html(resultMent);
                             $("#recentlyGoods").show();

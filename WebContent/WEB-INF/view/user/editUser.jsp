@@ -33,34 +33,26 @@
             display: none
         }
     </style>
-    <script type="text/javascript">
+<%--    <script type="text/javascript">--%>
 
-       <%--$(document).ready(function() {--%>
-        <%--    var validChk = <%=getLogin%>;--%>
-        <%--    console.log("본인이 접근했는지 : " + validChk);--%>
+<%--       $(document).ready(function() {--%>
+<%--            var validChk = <%=getLogin%>;--%>
+<%--            console.log("본인이 접근했는지 : " + validChk);--%>
 
-        <%--    if (validChk == 2) {--%>
-        <%--        Swal.fire({--%>
-        <%--            title: '로그인 후 이용해 주세요',--%>
-        <%--            icon: 'warning',--%>
-        <%--            setTimeout: '2500',--%>
-        <%--            showConfirmButton: false--%>
-        <%--        }).then(value => {--%>
-        <%--            if (value) {--%>
-        <%--                location.href = "/logIn.do";--%>
-        <%--            }}--%>
-        <%--            )--%>
-        <%--    }--%>
-        <%--})--%>
-        <%--// 작성자 본인 여부 체크--%>
-        <%--function doOnload() {--%>
-        <%--    // 본인이 아닌, 타 사용자가 접근했다면--%>
-        <%--    if ("<%=getLogin%>" == "2") {--%>
-        <%--        alert("로그인 후 이용해 주세요.");--%>
-        <%--        location.href="/logIn.do";--%>
-        <%--    }--%>
-        <%--}--%>
-    </script>
+<%--            if (validChk == 2) {--%>
+<%--                Swal.fire({--%>
+<%--                    title: '로그인 후 이용해 주세요',--%>
+<%--                    icon: 'warning',--%>
+<%--                    setTimeout: '2500',--%>
+<%--                    showConfirmButton: false--%>
+<%--                }).then(value => {--%>
+<%--                    if (value) {--%>
+<%--                        location.href = "/logIn.do";--%>
+<%--                    }}--%>
+<%--                    )--%>
+<%--            }--%>
+<%--        })--%>
+<%--    </script>--%>
 </head>
 <body>
 <!-- preloader -->
@@ -244,8 +236,104 @@
                                     </button>
                                     <a class="lost_pass font" href="/myList.do">마이페이지로</a>
                                     <br/>
+                                    <a class="lost_pass font" href="javascript:deleteUser()">탈퇴하기</a>
 
+                                    <input type="hidden" id="user_no" value="<%=CmmUtil.nvl(rDTO.getUser_no())%>"/>
+                                    <script type="text/javascript">
+                                        function deleteUser() {
+                                            console.log("user value : " + $("#user_no").val())
+                                            Swal.fire({
+                                                icon: 'question',
+                                                title: 'Really? :(',
+                                                text: '정말 탈퇴하시겠습니까? 작성하신 판매글도 모두 삭제됩니다.',
+                                                showConfirmButton: true,
+                                                confirmButtonText: '네. 탈퇴할래요',
+                                                showCancelButton: true,
+                                                cancelButtonText: '아니오'
+                                            }).then(result => {
 
+                                                // 확인을 누르면, 비밀번호 다시 입력 후 탈퇴 진행
+                                               if (result.isConfirmed) {
+                                                   Swal.fire({
+                                                       icon: 'info',
+                                                       title: '비밀번호를 입력해 주세요.',
+                                                       input: 'password',
+                                                       customClass: {
+                                                           validationMessage: 'my-validation-message',
+                                                       },
+
+                                                       preConfirm: (value) => {
+                                                           if (!value) {
+                                                               Swal.showValidationMessage(
+                                                                   '<i class="fa fa-info-circle"></i> 비밀번호를 입력해 주세요!'
+                                                               )
+                                                               return false;
+                                                           }
+                                                       },
+
+                                                       inputValidator: (value) => {
+                                                           // 비밀번호가 입력되었다면, ajax로 기존 비밀번호와 일치하는지 확인
+                                                           if (value) {
+
+                                                               $.ajax({
+                                                                   url: "/myPwdChk.do",
+                                                                   type: "post",
+                                                                   dataType: "JSON",
+                                                                   data: {
+                                                                       "password": value
+                                                                   },
+                                                                   success: function(data) {
+                                                                       console.log("일치하면 1, 다르면 0 : " + data);
+                                                                       // data == 1 (기존 비밀번호와 일치하면 수정 페이지로 이동)
+
+                                                                       if (data == 1) {
+                                                                           alert("비밀번호 일치! 탈퇴 진행");
+
+                                                                           $.ajax({
+                                                                               url: "/deleteForceUser.do",
+                                                                               type: "post",
+                                                                               dataType: "json",
+                                                                               data: {
+                                                                                   "user_no": $("#user_no").val()
+                                                                               },
+                                                                               success: function (data) {
+                                                                                   if (data > 0) {
+                                                                                       Swal.fire({
+                                                                                           title:'탈퇴가 완료되었습니다.',
+                                                                                           icon: 'info',
+                                                                                           showConfirmButton: false,
+                                                                                           timer: 2000
+                                                                                       }).then(val => {
+                                                                                           if (val) {
+                                                                                               location.href = "/getIndex.do";
+                                                                                           }
+                                                                                       });
+                                                                                   } else {
+                                                                                       Swal.fire('Error','오류로 탈퇴에 실패했습니다. 재 시도해 주세요.', 'error');
+                                                                                       window.location.reload()
+                                                                                   }
+                                                                               }
+                                                                               // 일치하지 않으면 다시 입력할 것을 알림
+                                                                           })
+                                                                       } else if (data == 0) {
+                                                                           Swal.fire('비밀번호를 다시 입력해 주세요!','','error');
+                                                                           return false;
+                                                                       }
+                                                                   },
+                                                                   error: function (jqXHR, textStatus, errorThrown) {
+                                                                       alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                                                                       console.log(errorThrown);
+                                                                   }
+                                                               })
+
+                                                           }
+                                                       }
+                                                   })
+                                               }
+
+                                                });
+                                        };
+                                    </script>
                                 </div>
                             </form>
 
@@ -262,17 +350,6 @@
     <!--================login_part end =================-->
 </main>
 
-<style>
-    .my-validation-message::before {
-        display: none;
-    }
-
-    .my-validation-message i {
-        margin: 0 .4em;
-        color: #f27474;
-        font-size: 1.4em;
-    }
-</style>
 <!-- include Footer -->
 <%@ include file="../include/footer.jsp"%>
 

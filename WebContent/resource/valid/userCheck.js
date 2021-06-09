@@ -160,7 +160,7 @@ function signupCheck() {
     || ($(pwd1).val() != $(pwd2).val()) || pwJ.test($(pwd1).val()) == false || phoneJ.test($(phnum).val()) == false ||
     $(addr).val() == "") {
 
-        Swal.fire('','입력한 정보를 다시 한 번 확인해 주세요.','warning');
+        Swal.fire('입력한 정보를 다시 한 번 확인해 주세요.','','warning');
 
         return false;
 

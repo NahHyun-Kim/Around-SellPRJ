@@ -4,11 +4,6 @@
 <head>
     <title>워드 클라우드</title>
 
-    <!-- 영어용 폰트
-    font-family: 'Roboto Mono', monospace; -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poor+Story&family=Roboto+Mono:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
-
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp" %>
 
@@ -24,6 +19,14 @@
         // 워드 클라우드 로직 시작(ajax)
         $(document).ready(function () {
             console.log("준비 됐나?");
+            tagWordCloud();
+        })
+
+        function tagWordCloud() {
+            $("#chartdivColor").hide();
+            $("#getNext").show();
+            $("#getOrigin").hide();
+
             $.ajax({
                 url: "/titleCount.do",
                 async: false,
@@ -39,7 +42,7 @@
                     var chart = am4core.create("chartdiv", am4plugins_wordCloud.WordCloud);
 
                     // 폰트, 글자 굵기 변경경
-                   chart.fontFamily = 'Poor Story';
+                    chart.fontFamily = 'Poor Story';
                     chart.fontWeight = 600;
                     var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
                     series.randomness = 0.1;
@@ -84,7 +87,74 @@
                     console.log(errorThrown);
                 }
             })
-        })
+
+            $("#chartdiv").show();
+        }
+
+        function nextWordCloud() {
+            $("#chartdiv").hide();
+            $("#getNext").hide();
+            $("#getOrigin").show();
+
+            $.ajax({
+                url: "/titleAll.do",
+                type: "post",
+//서버에서 전송받을 데이터 형식 JSON 으로 받아야함
+                dataType: "text",
+                success(res) {
+                    console.log("타이틀 : " + res);
+// Themes begin
+                    am4core.useTheme(am4themes_animated);
+// Themes end
+
+                    var chart = am4core.create("chartdivColor", am4plugins_wordCloud.WordCloud);
+                    var series = chart.series.push(new am4plugins_wordCloud.WordCloudSeries());
+
+                    series.accuracy = 4;
+                    series.step = 15;
+                    series.rotationThreshold = 0.7;
+                    series.maxCount = 200;
+                    series.minWordLength = 2;
+                    series.labels.template.margin(4, 4, 4, 4);
+                    series.maxFontSize = am4core.percent(30);
+
+                    series.text = res;
+
+                    series.fontFamily = 'Poor Story';
+                    series.randomness = 0;
+                    series.colors = new am4core.ColorSet();
+                    series.colors.passOptions = {}; // makes it loop
+
+//series.labelsContainer.rotation = 45;
+                    series.angles = [0, -90];
+                    series.fontWeight = "700"
+
+                    var subtitle = chart.titles.create();
+                    subtitle.text = "(빈도수가 포함되지 않은 워드클라우드)";
+
+                    var title = chart.titles.create();
+
+                    chart.fontFamily = 'Poor Story';
+                    chart.fontWeight = 600;
+
+                    title.text = "WordCloud";
+                    title.fontSize = 80;
+                    title.fontWeight = "500";
+                    title.style = "text-align: center";
+
+                    // setInterval(function () {
+                    //     series.dataItems.getIndex(Math.round(Math.random() * (series.dataItems.length - 1))).setValue("value", Math.round(Math.random() * 10));
+                    // }, 10000)
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                    console.log(errorThrown);
+                }
+            })
+
+            $("#chartdivColor").show();
+        }
     </script>
 </head>
 <body>
@@ -95,49 +165,14 @@
 <!-- Header(상단 메뉴바 시작!) Start -->
 <%@ include file="../include/header.jsp" %>
 <!-- Header End(상단 메뉴바 끝!) -->
+<a id="getNext" class="btn view-btn3 font wordCenter" href="javascript:nextWordCloud()" >디자인 변경!</a>
+<a id="getOrigin" class="btn view-btn3 font wordCenter" href="javascript:tagWordCloud()">디자인 변경!</a>
+
 <main>
-
-<%--    <!-- 상품 목록 일부 보여주기(index) 시작 -->--%>
-<%--    <div class="popular-items section-padding30">--%>
-<%--        <!-- container 시작 -->--%>
-<%--        <div class="container">--%>
-
-<%--            <!-- 워드 클라우드, 로고 표시 -->--%>
-<%--            <div class="row justify-content-center">--%>
-<%--                <div class="room-btn pt-70" style="padding-top: 5px;">--%>
-<%--                    <h2 style="font-family: 'Poor Story'">CATEGORY</h2>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-
-<%--            <!-- Section tittle2 (New 아이템 표시!) -->--%>
-<%--            <div class="row justify-content-center">--%>
-<%--                <div class="col-xl-7 col-lg-8 col-md-10">--%>
-<%--                    <div class="section-tittle mb-70 text-center" >--%>
-
-<%--                        <hr />--%>
-<%--&lt;%&ndash;                        <img src="/resources/boot/img/logo/aroundsell_sub.png" alt=""&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                 style="width:300px;height: 75px;">&ndash;%&gt;--%>
-
-
-
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-
-<%--            <!-- Button -->--%>
-<%--            <div class="row justify-content-center">--%>
-<%--                <div class="room-btn pt-70" style="padding-top: 5px;">--%>
-
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--    </div>--%>
-<%--    <!-- 상품 목록 일부 보여주기(index) 끝 -->--%>
-
-<%--</main>--%>
 
 <!-- 워드 클라우드 -->
 <div id="chartdiv"></div>
+<div id="chartdivColor"></div>
 
 <style>
     /* 워드 클라우드 */
@@ -145,6 +180,20 @@
         margin: 80px auto 0px auto;
     }
 
+    #chartdivColor {
+        margin: 80px auto 0px auto;
+    }
+
+    .wordCenter {
+        display: block;
+        width: 10%;
+        margin: 50px auto 0 auto;
+        background-image: url('../../../resources/boot/img/hero/background-purple.jpeg');
+    }
+
+    .wordCenter:hover {
+        color: #FAF8FA;
+    }
 
 </style>
 

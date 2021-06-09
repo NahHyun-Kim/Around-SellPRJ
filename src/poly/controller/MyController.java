@@ -420,12 +420,13 @@ public class MyController {
     // 비밀번호 변경 시, 기존 비밀번호와 다른 비밀번호로 변경
     @ResponseBody
     @RequestMapping(value="/myPwdChk", method=RequestMethod.POST)
-    public int myPwdChk(HttpSession session, HttpServletRequest request) throws Exception {
+    public int myPwdChk(HttpSession session, HttpServletRequest request,
+                        @RequestParam(value="password") String pwd) throws Exception {
         log.info(this.getClass().getName() + ".비밀번호 기존 비밀번호 확인 Start!");
 
         String user_no = (String) session.getAttribute("SS_USER_NO");
         String email = (String) session.getAttribute("SS_EMAIL");
-        String password = CmmUtil.nvl(EncryptUtil.encHashSHA256(request.getParameter("password")));
+        String password = CmmUtil.nvl(EncryptUtil.encHashSHA256(pwd));
 
         log.info("받아온 회원번호 : " + user_no);
         log.info("받아온 (비번 찾기 시) 이메일 : " + email);
@@ -441,7 +442,7 @@ public class MyController {
         //}
 
 
-        UserDTO rDTO = new UserDTO();
+        UserDTO rDTO = null;
         rDTO = userService.myPwdChk(pDTO);
 
         int res = 0;

@@ -11,34 +11,53 @@
         rList = new ArrayList<UserDTO>();
     }
 
-    // 관리자만 회원 관리 가능
-    String admin_no = (String) session.getAttribute("SS_USER_NO");
-
     int edit = 1; //1이면 회원 아님, 2이면 관리자 아님, 3이면 관리자
-    if (admin_no == "") {
+    if (SS_USER_NO == null) {
         edit = 1;
-    } else if (admin_no.equals("0")) {
+    } else if (SS_USER_NO.equals("0")) {
         edit = 3;
     } else {
         edit = 2;
     }
 
-    /* body doOnload(); 로 체크
-    * <script type="text/javascript">
-    * if ((edit>) == 1){
-        alert("로그인 후 이용해 주세요");
-        * location.href="/logIn.do";
-        * } else if((edit>) == 2) {
-        * alert("관리자만 권한을 가질 수 있습니다.");
-        * location.href="/logOut.do";
-        * }
-     */
 %>
 <html>
 <head>
     <title>AroundSell- 회원 관리</title>
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp"%>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var adminChk = <%=edit%>;
+
+            console.log(adminChk);
+
+            if (adminChk == 1) {
+                Swal.fire({
+                    title:'로그인 후 이용해 주세요.',
+                    icon: 'warning',
+                    showConfirmButton: false,
+                    timer: 2500
+                }).then(val => {
+                    if (val) {
+                        location.href = "/logIn.do";
+                    }
+                });
+            } else if (adminChk == 2) {
+                Swal.fire({
+                    title:'권한이 없습니다.',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(val => {
+                    if (val) {
+                        location.href = "/getIndex.do";
+                    }
+                });
+            }
+        })
+    </script>
 </head>
 <body>
 
@@ -53,34 +72,66 @@
 <!-- wordCloud 디자인용(로그인, 회원가입, 비밀번호 찾기 시 사용) -->
 <%@ include file="../include/wordcloudForDesign.jsp"%>
 
+<div class="slider-area ">
+    <div class="single-slider slider-height2 d-flex align-items-center" style="margin-top:2px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="hero-cap text-center">
+                        <h2 style="color: #3d1a63; font-family: 'Do Hyeon', sans-serif;"> 회원 관리 </h2>
 
-    <input name="allCheck" type="checkbox" id="allCheck"/>전체 선택
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<section class="confirmation_part section_padding">
     <div class="container">
-        <h1>회원 관리 - 리스트 조회</h1>
-        <div class="row">
-            <div class="col-3 text-center"><b>회원 번호</b></div>
-            <div class="col-2 text-center"><b>회원 이름</b></div>
-            <div class="col-3 text-center"><b>가입일</b></div>
-            <div class="col-2 text-center"><b>주소지</b></div>
+        <div class="row font">
+            <div class="col-lg-12">
+                <div class="order_details_iner maxWidth">
+                    <h3 class="mb-10 toCenter"><img src="/resources/boot/img/logo/aroundsell_sub.png" alt=""
+                                              style="width:300px;height: 75px;"></h3>
+                    <table class="table table-borderless">
+                        <thead>
+                        <tr class="toCenter">
+                            <th scope="col"><input name="allCheck" type="checkbox" id="allCheck"/>&nbsp; 전체 선택</th>
+                            <th scope="col">회원 번호</th>
+                            <th scope="col">회원명</th>
+                            <th scope="col">가입일</th>
+                            <th scope="col">주소지</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <% int i=1;
+                            for(UserDTO r : rList) { %>
+                        <tr class="toCenter">
+                            <th><input name="RowCheck" type="checkbox" id="del" value="<%=r.getUser_no()%>"/></th>
+                            <th><%=CmmUtil.nvl(r.getUser_no())%></th>
+                            <th><a class="toPurple" href="/getUserDetail.do?no=<%=r.getUser_no()%>"><%=CmmUtil.nvl(r.getUser_name()) %></a></th>
+                            <th><%=CmmUtil.nvl(r.getReg_dt()) %></th>
+                            <th><%=CmmUtil.nvl(r.getAddr2()) %></th>
+                        </tr>
+                        <% } %>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th class="toCenter" scope="col" colspan="5"><button class="btn view-btn3 mt-20 font" onclick="deleteUser()">회원 삭제</button></th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
         </div>
+    </div>
+</section>
 
-        <% int i=1;
-        for(UserDTO r : rList) { %>
-        <div class="row">
-            <input name="RowCheck" type="checkbox" id="del" value="<%=r.getUser_no()%>"/>
-            <div id="user_no" class="col-3 text-center"><%=CmmUtil.nvl(r.getUser_no())%></div>
-            <div class="col-2 text-center"><a href="/getUserDetail.do?no=<%=r.getUser_no()%>"><%=CmmUtil.nvl(r.getUser_name()) %></a></div>
-            <div class="col-3 text-center"><%=CmmUtil.nvl(r.getReg_dt()) %></div>
-            <div class="col-2 text-center"><%=CmmUtil.nvl(r.getAddr2()) %></div>
-        </div>
-        <% i++;} %>
-
-        <button class="btn btn-warning" onclick="deleteUser()">회원 삭제</button>
-   </div>
+<%--        <button class="btn btn-warning" onclick="deleteUser()">회원 삭제</button>--%>
 
     <script type="text/javascript">
-        var res = document.getElementById("user_no").value;
+        //var res = document.getElementById("user_no").value;
 
         // 체크박스 선택에 따라 전체 선택, 전체 해제, 다중 삭제 구현
         var chkObj = document.getElementsByName("RowCheck");
@@ -120,37 +171,69 @@
 
             // 선택된 값이 없다면,
             if (valueArr.length == 0) {
-                alert("선택한 회원이 없습니다.");
-
+                Swal.fire('Check Plz','선택한 회원이 없습니다!','warning');
             }
             else {
-                var chk = confirm("정말 삭제하시겠습니까? 회원의 판매글도 함께 삭제됩니다.");
-                if (chk) {
-                    $.ajax({
-                        url : "/deleteUser.do",
-                        type : "post",
-                        data: {
-                            // 배열에 담은 회원번호를 Controller로 전송하여, 삭제 진행
-                            "valueArr" : valueArr
-                        },
-                        // 삭제에 성공했다면, 회원 목록 새로고침
-                        success: function(data){
-                            if (data == 1) {
-                                alert("삭제에 성공했습니다.");
-                                window.location.reload();
-                            } else {
-                                alert("삭제에 실패했습니다.");
+                Swal.fire({
+                    title: 'Around-Sell',
+                    text: '정말 탈퇴 처리하시겠습니까? 회원의 모든 정보가 함께 삭제됩니다.',
+                    icon: 'warning',
+                    showConfirmButton: true,
+                    confirmButtonText: '네. 삭제합니다',
+                    showCancelButton:  true,
+                    cancelButtonText: '아니오'
+                }).then(result => {
+
+                    if (result.isConfirmed) {
+                        console.log("삭제 요청");
+                        $.ajax({
+                            url : "/deleteUser.do",
+                            type : "post",
+                            data: {
+                                // 배열에 담은 회원번호를 Controller로 전송하여, 삭제 진행
+                                "valueArr" : valueArr
+                            },
+                            // 삭제에 성공했다면, 회원 목록 새로고침
+                            success: function(data){
+                                if (data == 1) {
+                                    Swal.fire('Admin','회원 삭제에 성공했습니다.','success');
+                                    window.location.reload();
+                                } else {
+                                    Swal.fire('Error','오류로 회원 삭제에 실패했습니다.','error');
+                                    return false;
+                                }
+                            },
+                            error:function(jqXHR, textStatus, errorThrown) {
+                                alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                                console.log(errorThrown);
                             }
-                        },
-                        error:function(jqXHR, textStatus, errorThrown) {
-                            alert("에러 발생! \n" + textStatus + ":" + errorThrown);
-                            console.log(errorThrown);
-                        }
-                    })
-                }
+                        })
+                    }
+
+                    }
+                )
             }
         }
     </script>
+
+<style>
+    .toCenter {
+        text-align: center;
+    }
+
+    .maxWidth {
+        width: 70%;
+        margin: 0 auto;
+    }
+
+    .toPurple {
+        color: purple;
+    }
+
+    .toPurple:hover {
+        color: gray;
+    }
+</style>
 <!-- include Footer -->
 <%@ include file="../include/footer.jsp"%>
 
