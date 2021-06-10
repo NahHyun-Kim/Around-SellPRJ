@@ -49,7 +49,7 @@ public class NoticeController {
     private ICartService cartService;
 
     // 업로드되는 파일이 저장되는 기본 폴더 설정
-    final private String FILE_UPLOAD_SAVE_PATH = "C:/PersonalProject/WebContent/resource//images";
+    final private String FILE_UPLOAD_SAVE_PATH = "/data/img";
 
     // 판매글 작성 페이지 이동
     @RequestMapping(value="/noticeForm", method = RequestMethod.GET)

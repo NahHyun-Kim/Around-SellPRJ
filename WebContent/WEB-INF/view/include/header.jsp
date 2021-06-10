@@ -24,7 +24,7 @@
                                 <li><a href="/searchList.do">Shop & Search</a>
                                     <ul class="submenu">
                                         <li><a href="/searchList.do"> 상품 찾기</a></li>
-                                        <li><a href="/noticeForm.do"> 판매글 등록하기</a></li>
+                                        <li><a href="javascript:formChk()"> 판매글 등록하기</a></li>
                                     </ul>
                                 </li>
 

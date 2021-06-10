@@ -261,4 +261,27 @@
         })
     }
 
+    function formChk() {
+        console.log("user_no : " + user_no);
+
+        if (user_no == null) {
+            Swal.fire({
+                title: 'Around-Sell',
+                text: '판매글 등록은 로그인한 사용자만 가능합니다. 로그인 하시겠습니까?',
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonText: "네! 로그인",
+                cancelButtonText: "아니오"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.href = "/logIn.do";
+                } else if (result.isCancled) {
+                    return false;
+                }
+
+            });
+        } else {
+            location.href = "/noticeForm.do";
+        }
+    }
 </script>

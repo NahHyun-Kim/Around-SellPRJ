@@ -12,15 +12,20 @@
 
             var user_no = "<%=SS_USER_NO%>";
 
-            if (user_no == "") {
+            if (user_no == "null") {
                 Swal.fire({
                     title: 'Around-Sell',
                     text: '로그인한 사용자만 판매글을 등록할 수 있습니다. 로그인 하시겠습니까?',
                     icon: "success",
-                    confirmButtonText: "네!"
+                    confirmButtonText: "네!",
+                    showCancelButton: false,
+                    showDenyButton: true,
+                    denyButtonText: "아니오",
                 }).then((result) => {
                     if (result.isConfirmed) {
                         location.href = "/logIn.do"
+                    } else if (result.isDenied) {
+                        location.href = "/getIndex.do"
                     }
                 })
 
@@ -48,10 +53,21 @@
             f.goods_detail.focus();
             return false;
         }
-        // else {
-        //     confirm("판매글을 등록하시겠습니까?");
-        //
-        // }
+        if (f.goods_price.value == ""){
+            Swal.fire('Input Price','상품 가격을 입력해 주세요!','warning');
+            f.goods_price.focus();
+            return false;
+        }
+        if (f.goods_addr.value == ""){
+            Swal.fire('Input Addr','상호명을 입력해 주세요!','warning');
+            f.goods_addr.focus();
+            return false;
+        }
+        if (f.category.value == "") {
+            Swal.fire('Select Category','카테고리를 선택해 주세요!','warning');
+            f.category.focus();
+            return false;
+        }
     }
 
     //글자 길이 바이트 단위로 체크하기(바이트값 전달)
@@ -138,7 +154,7 @@
                             <div class="login_part_form_iner">
                                 <img src="/resources/boot/img/logo/aroundsell_sub.png" style="width: 200px; display: block; margin: 10px auto;" />
 
-                                <form name="f" action="/noticeInsert.do" method="post" onsubmit="return doSubmit();" enctype="multipart/form-data" class="row contact_form">
+                                <form name="f" action="/noticeInsert.do" method="post" onsubmit="return doSubmit(this);" enctype="multipart/form-data" class="row contact_form">
 
                                     <!-- 이미지 등록 -->
                                     <input type="file" id="img" name="fileUpload" class="btn view-btn font" required/>
@@ -161,33 +177,33 @@
                                     <div class="col-md-12 form-group p_star">
                                         <br/>
                                         <label for="goods_title" class="font text-center">상품명</label>
-                                        <input class="form-control font" type="text" name="goods_title" id="goods_title" required placeholder="상품명을 입력해 주세요." />
+                                        <input class="form-control font" type="text" name="goods_title" id="goods_title" placeholder="상품명을 입력해 주세요." />
                                     </div>
 
 
                                     <!-- 상품 설명 입력 -->
                                     <div class="col-md-12 form-group p_star">
                                         <label for="goods_detail" class="font text-center">상품 설명</label>
-                                        <input class="form-control font" type="textarea" name="goods_detail" id="goods_detail" required placeholder="상품 설명을 입력해 주세요." style="height: 100px;">
+                                        <input class="form-control font" type="textarea" name="goods_detail" id="goods_detail" placeholder="상품 설명을 입력해 주세요." style="height: 100px;">
                                     </div>
 
                                     <!-- 상품 가격 입력 -->
                                     <div class="col-md-12 form-group p_star">
                                         <label for="goods_price" class="font text-center">상품 가격</label>
-                                        <input class="form-control font" input type="text" name="goods_price" id="goods_price" required placeholder="가격을 입력해 주세요 ex)6000" style="margin-top: 10px;">
+                                        <input class="form-control font" input type="text" name="goods_price" id="goods_price" placeholder="가격을 입력해 주세요 ex)6000" style="margin-top: 10px;">
                                     </div>
 
                                     <!-- 상품이 판매되는 상호명 또는 간략한 주소 입력(간략 ex) 아리따움 강서구청점) -->
                                     <div class="col-md-12 form-group p_star">
                                         <label for="goods_addr" class="font text-center">판매 상호명</label>
-                                        <input class="form-control font" name="goods_addr" id="goods_addr" placeholder="판매하는 상호명을 입력해 주세요." required style="margin-top: 10px;">
+                                        <input class="form-control font" name="goods_addr" id="goods_addr" placeholder="판매하는 상호명을 입력해 주세요." style="margin-top: 10px;">
                                         <div class="check_font" id="phone_check"></div>
                                     </div>
 
                                     <!-- 주소 입력(도로명주소 이용) -->
                                     <div class="col-md-12 form-group p_star">
                                         <label for="sample5_address" class="font text-center">주소지 검색</label>
-                                        <input class="form-control font" type="text" name="goods_addr2" id="sample5_address" placeholder="주소를 검색해 주세요." style="margin-top: 10px;">
+                                        <input class="form-control font" type="text" name="goods_addr2" id="sample5_address" placeholder="주소를 검색해 주세요." required style="margin-top: 10px;">
                                         <input type="button" class="btn_3 font" onclick="sample5_execDaumPostcode()" value="주소 검색"/>
                                     </div>
 

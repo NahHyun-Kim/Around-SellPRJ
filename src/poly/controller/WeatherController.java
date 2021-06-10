@@ -145,8 +145,6 @@ public class WeatherController {
                     if(nNode.getNodeType() == Node.ELEMENT_NODE){
 
                         Element eElement = (Element) nNode;
-                        System.out.println("######################");
-
                         pDTO.setMsrstename(CmmUtil.nvl(Test.getTagValue("MSRSTENAME", eElement))); //측정소명(자치구)
                         pDTO.setGrade(CmmUtil.nvl(Test.getTagValue("GRADE", eElement)));//지수등급
                         pDTO.setPm10(CmmUtil.nvl(Test.getTagValue("PM10", eElement))); //미세먼지
