@@ -158,7 +158,7 @@ function signupCheck() {
     // 실시간으로 유효성 체크를 하기 때문에, 유효성이 잘못되었거나 값이 입력되지 않으면 다시 확인해 달라는 모달창을 띄움
     if (emailJ.test($(umail).val()) == false || nameJ.test($(uname).val()) == false
     || ($(pwd1).val() != $(pwd2).val()) || pwJ.test($(pwd1).val()) == false || phoneJ.test($(phnum).val()) == false ||
-    $(addr).val() == "") {
+    $("#sample5_address").val() == "") {
 
         Swal.fire('입력한 정보를 다시 한 번 확인해 주세요.','','warning');
 

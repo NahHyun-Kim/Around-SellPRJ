@@ -22,17 +22,107 @@
     <%@ include file="../include/cssFile.jsp"%>
 
     <script type="text/javascript">
-        // 작성자 본인 여부 체크
-        function doOnload() {
+
+        $(document).ready(function() {
+            console.log("userno : " + <%=SS_USER_NO%>);
+
+            var user_no = "<%=SS_USER_NO%>";
+
+            if (user_no == "null") {
+                Swal.fire({
+                    title: 'Around-Sell',
+                    text: '로그인한 사용자만 판매글을 등록할 수 있습니다. 로그인 하시겠습니까?',
+                    icon: "success",
+                    confirmButtonText: "네!",
+                    showCancelButton: false,
+                    showDenyButton: true,
+                    denyButtonText: "아니오",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.href = "/logIn.do"
+                    } else if (result.isDenied) {
+                        location.href = "/getIndex.do"
+                    }
+                })
+
+            }
+
             // 본인이 아닌, 타 사용자가 접근했다면
             if ("<%=access%>" == "1") {
-                Swal.fire("작성자만 수정할 수 있습니다.");
-                location.href="/searchList.do";
+                Swal.fire({
+                    title: '잘못된 접근',
+                    text: "작성자만 수정할 수 있습니다!",
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(val => {
+                    if (val) {
+                        location.href = "/searchList.do"
+                    }
+                });
             }
+
+        })
+
+
+        //전송시 유효성 체크
+        function doSubmit(f){
+            if(f.goods_title.value == ""){
+                Swal.fire('Input Title','제목을 입력해 주세요!','warning');
+                f.goods_title.focus();
+                return false;
+            }
+            if(calBytes(f.goods_title.value) > 200){
+                Swal.fire('Too Long','최대 200Bytes까지 입력 가능합니다.','warning');
+                f.goods_title.focus();
+                return false;
+            }
+            if(f.goods_detail.value == ""){
+                Swal.fire('Input Detail','상품 설명을 입력해 주세요!','warning');
+                f.goods_detail.focus();
+                return false;
+            }
+            if(calBytes(f.goods_detail.value) > 5000){
+                Swal.fire('Too Long','최대 5000Bytes까지 입력 가능합니다.','warning');
+                f.goods_detail.focus();
+                return false;
+            }
+            if (f.goods_price.value == ""){
+                Swal.fire('Input Price','상품 가격을 입력해 주세요!','warning');
+                f.goods_price.focus();
+                return false;
+            }
+            if (f.goods_addr.value == ""){
+                Swal.fire('Input Addr','상호명을 입력해 주세요!','warning');
+                f.goods_addr.focus();
+                return false;
+            }
+            if (f.category.value == "") {
+                Swal.fire('Select Category','카테고리를 선택해 주세요!','warning');
+                f.category.focus();
+                return false;
+            }
+        }
+
+        //글자 길이 바이트 단위로 체크하기(바이트값 전달)
+        function calBytes(str){
+            var tcount = 0;
+            var tmpStr = new String(str);
+            var strCnt = tmpStr.length;
+            var onechar;
+            for (i=0;i<strCnt;i++){
+                onechar = tmpStr.charAt(i);
+                if (escape(onechar).length > 4){
+                    tcount += 2;
+                }else{
+                    tcount += 1;
+                }
+            }
+            return tcount;
         }
     </script>
 </head>
-<body onload="doOnload()">
+<body>
     <!-- preloader -->
     <%@ include file="../include/preloader.jsp"%>
     <!-- preloader End -->
@@ -89,7 +179,7 @@
                             <div class="login_part_form_iner">
                                 <img src="/resources/boot/img/logo/aroundsell_sub.png" style="width: 200px; display: block; margin: 10px auto;" />
 
-                                <form action="/noticeUpdate.do" method="post" onsubmit="return doSubmit();" enctype="multipart/form-data" class="row contact_form">
+                                <form action="/noticeUpdate.do" method="post" onsubmit="return doSubmit(this);" enctype="multipart/form-data" class="row contact_form">
 
                                     <!-- 업데이트할 판매글 번호 받아오기 -->
                                     <input type="hidden" name="nSeq" value="<%=rDTO.getGoods_no()%>"/>
@@ -114,33 +204,33 @@
                                     <div class="col-md-12 form-group p_star">
                                         <br/>
                                         <label for="goods_title" class="font text-center">상품명</label>
-                                        <input class="form-control font" value="<%=rDTO.getGoods_title()%>" type="text" name="goods_title" id="goods_title" required placeholder="상품명을 입력해 주세요." />
+                                        <input class="form-control font" value="<%=rDTO.getGoods_title()%>" type="text" name="goods_title" id="goods_title" placeholder="상품명을 입력해 주세요." />
                                     </div>
 
 
                                     <!-- 상품 설명 입력 -->
                                     <div class="col-md-12 form-group p_star">
                                         <label for="goods_detail" class="font text-center">상품 설명</label>
-                                        <input class="form-control font" value="<%=rDTO.getGoods_detail()%>" type="textarea" name="goods_detail" id="goods_detail" required placeholder="상품 설명을 입력해 주세요." style="height: 100px;">
+                                        <input class="form-control font" value="<%=rDTO.getGoods_detail()%>" type="textarea" name="goods_detail" id="goods_detail" placeholder="상품 설명을 입력해 주세요." style="height: 100px;">
                                     </div>
 
                                     <!-- 상품 가격 입력 -->
                                     <div class="col-md-12 form-group p_star">
                                         <label for="goods_price" class="font text-center">상품 가격</label>
-                                        <input class="form-control font" value="<%=rDTO.getGoods_price()%>" input type="text" name="goods_price" id="goods_price" required placeholder="가격을 입력해 주세요 ex)6000" style="margin-top: 10px;">
+                                        <input class="form-control font" value="<%=rDTO.getGoods_price()%>" input type="text" name="goods_price" id="goods_price" placeholder="가격을 입력해 주세요 ex)6000" style="margin-top: 10px;">
                                     </div>
 
                                     <!-- 상품이 판매되는 상호명 또는 간략한 주소 입력(간략 ex) 아리따움 강서구청점) -->
                                     <div class="col-md-12 form-group p_star">
                                         <label for="goods_addr" class="font text-center">판매 상호명</label>
-                                        <input class="form-control font" value="<%=rDTO.getGoods_addr()%>" name="goods_addr" id="goods_addr" placeholder="판매하는 상호명을 입력해 주세요." required style="margin-top: 10px;">
+                                        <input class="form-control font" value="<%=rDTO.getGoods_addr()%>" name="goods_addr" id="goods_addr" placeholder="판매하는 상호명을 입력해 주세요." style="margin-top: 10px;">
                                         <div class="check_font" id="phone_check"></div>
                                     </div>
 
                                     <!-- 주소 입력(도로명주소 이용) -->
                                     <div class="col-md-12 form-group p_star">
                                         <label for="sample5_address" class="font text-center">주소지 검색</label>
-                                        <input class="form-control font" value="<%=rDTO.getGoods_addr2()%>" type="text" name="goods_addr2" id="sample5_address" placeholder="주소를 검색해 주세요." style="margin-top: 10px;">
+                                        <input class="form-control font" value="<%=rDTO.getGoods_addr2()%>" type="text" name="goods_addr2" id="sample5_address" placeholder="주소를 검색해 주세요." required style="margin-top: 10px;">
                                         <input type="button" class="btn_3 font" onclick="sample5_execDaumPostcode()" value="주소 검색"/>
                                     </div>
 

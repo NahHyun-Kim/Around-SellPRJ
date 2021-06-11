@@ -143,13 +143,17 @@ public class PageController {
         log.info("가져온 정렬 : " + odType);
 
         // 제대로 받아왔는지 확인
-        log.info("searchType 받아옴(isNull이면 true) ? : " + (searchType == null));
-        log.info("keyword 받아옴(isNull이면 true) ? : " + (keyword == null));
-        log.info("odType 받아옴(정렬 없으면 true, 정렬 있으면 false)" + (odType == null));
+        /**
+         * 사용자의 로그인 여부, 검색 타입& 키워드 유무와 정렬 유무 상관 없이 모든 결과에 대해 페이징을 제공하기 위함
+         * String.valueOf()를 사용하여 NPE 발생 없이 null값과 nvl 처리한 값 모두 "null"로 표시할 수 있다.
+         * */
+        log.info("searchType 받아옴(isNull이면 true) ? : " + String.valueOf(searchType).equals("null"));
+        log.info("keyword 받아옴(isNull이면 true) ? : " + String.valueOf(keyword).equals("null"));
+        log.info("odType 받아옴(정렬 없으면 true, 정렬 있으면 false)" + String.valueOf(odType).equals("null"));
 
         // 비 로그인 상태로 페이지 로딩 또는 검색을 진행한다면
         if (addr2 == null) {
-            if (searchType == null && keyword == null) {
+            if (String.valueOf(searchType).equals("null") && String.valueOf(keyword).equals("null")) {
                 log.info("비 로그인 + 기본 페이지 로딩(검색어 없음)");
                 // 총 게시물 수를 가져옴(count *)
                 total = pageService.cntNotice();
@@ -162,7 +166,7 @@ public class PageController {
 
             } else { // 비 로그인 상태로, 검색했다면
                 // 1. 비 로그인 + 검색 + 정렬 안함
-                if (odType == null) {
+                if (String.valueOf(odType).equals("null")) {
                     log.info("비 로그인 + 검색 진행 + 정렬X");
 
                     NoticeDTO nDTO = new NoticeDTO();
@@ -206,7 +210,7 @@ public class PageController {
 
         // 로그인 상태로 페이지 로딩 또는 검색을 진행한다면
         else if (addr2 != null) {
-            if (searchType == null && keyword == null) {
+            if (String.valueOf(searchType).equals("null") && String.valueOf(keyword).equals("null")) {
                 log.info("로그인 + 기본 페이지 로딩(검색어 없음");
 
                 NoticeDTO nDTO = new NoticeDTO();
@@ -228,7 +232,7 @@ public class PageController {
             } else { // 로그인 상태로, 검색했다면(검색 결과에 따른 정렬 제공)
 
                 // 1. 로그인 + 검색 + 정렬 안함
-                if (odType == null) {
+                if (String.valueOf(odType).equals("null")) {
                     log.info("비 로그인 + 검색 진행 + 정렬X");
 
                     NoticeDTO nDTO = new NoticeDTO();

@@ -79,8 +79,8 @@
 
                                     <!-- 주소 입력(도로명주소 이용) -->
                                     <div class="col-md-12 form-group p_star">
-                                        <input class="form-control font" type="text" name="addr" id="sample5_address" placeholder="주소를 검색해 주세요." style="margin-top: 10px;">
-                                        <input type="button" class="btn_3 font" onclick="sample5_execDaumPostcode()" value="주소 검색"/>
+                                        <input class="form-control font" type="text" name="addr" id="sample5_address" required placeholder="주소를 검색해 주세요." style="margin-top: 10px;">
+                                        <input type="button" class="btn_3 font" onclick="sample5_execDaumPostcode()" value="주소 검색" />
                                         <!--<div class="check_font" id="addr_check"></div>-->
                                     </div>
 

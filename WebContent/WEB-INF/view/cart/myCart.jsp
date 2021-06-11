@@ -232,7 +232,7 @@
                                     text : '관심상품을 삭제하였습니다. 다른 상품을 보러 가시겠습니까?',
                                     icon : "success",
                                     showCancelButton : true,
-                                    confirmButtonText : "네! 로그인",
+                                    confirmButtonText : "네! ",
                                     cancelButtonText : "아니오, 그냥 볼래요"
                                 }).then((result) => {
                                     if (result.isConfirmed) {

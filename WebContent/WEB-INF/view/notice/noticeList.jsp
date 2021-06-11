@@ -83,8 +83,8 @@ box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);">지도</div>
                             <h2 class="fontPoor"><%=SS_USER_ADDR2%> &nbsp;</h2>
                             <div id="weather" class="font"></div>
 
-                            <button class="btn btn-info fontPoor" style="background-color: #d0a7e4; border-style: none; margin-right: 10px;" value="내일">내일 날씨</button>
-                            <button class="btn btn-info fontPoor" style="background-color: #d0a7e4; border-style: none" value="모레">모레 날씨</button>
+                            <button class="btn btn-info fontPoor toBold" style="background-color: #d0a7e4; border-style: none; margin-right: 10px;" value="내일">내일 날씨</button>
+                            <button class="btn btn-info fontPoor toBold" style="background-color: #d0a7e4; border-style: none" value="모레">모레 날씨</button>
                             <br/>
                             <div id="apiRes"></div>
                             <hr/>
@@ -595,6 +595,11 @@ box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);">지도</div>
         }
     </script>
 
+    <style>
+        .toBold {
+            font-weight: bold;
+        }
+    </style>
     <!-- 로그인 한 유저의 지역구 날씨 크롤링 -->
     <script type="text/javascript" src="/resource/js/Weather.js?ver=2"></script>
 

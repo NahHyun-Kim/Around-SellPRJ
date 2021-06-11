@@ -196,8 +196,17 @@
                             // 삭제에 성공했다면, 회원 목록 새로고침
                             success: function(data){
                                 if (data == 1) {
-                                    Swal.fire('Admin','회원 삭제에 성공했습니다.','success');
-                                    window.location.reload();
+                                    Swal.fire({
+                                        title : 'Admin',
+                                        text : '회원 삭제에 성공했습니다.',
+                                        icon : "success",
+                                        confirmButtonText : "네! ",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.reload();
+                                        }
+                                    })
+
                                 } else {
                                     Swal.fire('Error','오류로 회원 삭제에 실패했습니다.','error');
                                     return false;

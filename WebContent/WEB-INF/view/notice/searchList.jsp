@@ -27,10 +27,10 @@
         // 총 검색 결과건수를 표시하기 위한 total 변수 함께 가져옴
         int total = pDTO.getTotal();
         // 검색된 상태로 페이징할 경우 searchType과 keyword를 함께 보낸다.
-        String searchType = pDTO.getSearchType();
-        String keyword = pDTO.getKeyword();
+        String searchType = CmmUtil.nvl(pDTO.getSearchType(), "null");
+        String keyword = CmmUtil.nvl(pDTO.getKeyword(),"null");
         // 정렬할 경우 odType을 받아온다.
-        String odType = pDTO.getOdType();
+        String odType = CmmUtil.nvl(pDTO.getOdType(), "null");
         System.out.println("받아온 타입 : " + searchType + ", 받아온 검색어 : " + keyword + ", 정렬 : " + odType);
         List<NoticeDTO> searchList = (List<NoticeDTO>) request.getAttribute("searchList");
         if (searchList == null) {
@@ -38,10 +38,10 @@
         }
         List<String> addrList = new ArrayList<>();
         String tempaddr = "";
-        for (NoticeDTO i : searchList) {
-            tempaddr = i.getGoods_addr2();
-            System.out.println(tempaddr);
-        }
+//        for (NoticeDTO i : searchList) {
+//            tempaddr = i.getGoods_addr2();
+//            System.out.println(tempaddr);
+//        }
     %>
 </head>
 <body>
@@ -74,7 +74,7 @@
                     <div>
                         <!-- 검색창(카테고리 지정) -->
                         <select id="searchType" name="searchType">
-                            <option value="" selected disabled hidden>카테고리</option>
+                            <option value="" selected disabled hidden>검색 타입</option>
                             <option value="T" <%=CmmUtil.nvl(searchType).equals("T") ? "selected" : ""%>>상품명</option>
                             <option value="C" <%=CmmUtil.nvl(searchType).equals("C") ? "selected" : ""%>>상품 설명</option>
                             <option value="L" <%=CmmUtil.nvl(searchType).equals("L") ? "selected" : ""%>>상호명</option>
@@ -123,6 +123,7 @@
 
                     <!-- 페이징 게시물 수 -->
                     <select id="cntPerPage" name="sel" onchange="selChange()">
+                        <option value="3" <%if (cntPerPage == 3) {%> selected <%}%>>3개씩 보기</option>
                         <option value="6" <%if (cntPerPage == 6) {%> selected <%}%>>6개씩 보기</option>
                         <option value="9" <%if (cntPerPage == 9) {%> selected <%}%>>9개씩 보기</option>
                         <option value="12" <%if (cntPerPage == 12) {%> selected <%}%>>12개씩 보기</option>
@@ -154,7 +155,7 @@
                     <!-- 상품 이미지 -->
                     <div class="popular-img">
                         <img src="/resource/images/<%=rDTO.getImgs()%>" alt=""
-                             style="width:240px; height:240px; object-fit: contain;">
+                             style="width:240px; height:240px; object-fit: contain; cursor: pointer" onclick="doDetail(<%=rDTO.getGoods_no()%>)">
                         <div class="img-cap">
                             <span>Click Me!</span>
                         </div>
@@ -168,6 +169,8 @@
                         </a></h3>
                         <!--<span style="font-size: 15px;"><%=CmmUtil.nvl(rDTO.getGoods_addr())%></span>-->
                         <span><%=CmmUtil.nvl(rDTO.getGoods_price())%></span>
+                        <!-- 상호명 -->
+                        <h5><a class="font" style="color: #d0a7e4;" href="javascript:searchLocation('<%=CmmUtil.nvl(rDTO.getGoods_addr())%>', <%=rDTO.getGoods_no()%>)"><%=CmmUtil.nvl(rDTO.getGoods_addr())%></a></h5>
 
                     </div>
                 </div>
@@ -181,13 +184,12 @@
         <!-- Button -->
         <div class="row justify-content-center">
             <div class="room-btn pt-70">
-                <a href="/myCart.do" class="btn view-btn1">MY Favorite</a>
 
                 <!-- paging button 시작 -->
                 <div id="paging">
                     <div class="row">
                         <%if (startPage != 1) { %>
-                        <div class="col-1"><a href="/searchList.do?nowPage=<%=startPage - 1%>&cntPerPage=<%=cntPerPage%>">&lt;</a></div>
+                        <div class="col-1"><a href="/searchList.do?nowPage=<%=startPage - 1%>&cntPerPage=<%=cntPerPage%>&searchType=<%=searchType%>&keyword=<%=keyword%>&odType=<%=odType%>">&lt;</a></div>
                         <%
                             }
                         %> <% for (int i = startPage; i <= endPage; i++) { %> <%
@@ -199,12 +201,12 @@
                         <%
                             if (i != nowPage) {
                         %>
-                        <div class="col-1"><a href="/searchList.do?nowPage=<%=i%>&cntPerPage=<%=cntPerPage%>"><%=i%>
+                        <div class="col-1"><a href="/searchList.do?nowPage=<%=i%>&cntPerPage=<%=cntPerPage%>&searchType=<%=searchType%>&keyword=<%=keyword%>&odType=<%=odType%>"><%=i%>
                         </a></div>
                         <%}%>
                         <%}%>
                         <%if (endPage != lastPage) { %>
-                        <div class="col-1"><a href="/searchList.do?nowPage=<%=endPage + 1%>&cntPerPage=<%=cntPerPage%>">&gt;</a></div>
+                        <div class="col-1"><a href="/searchList.do?nowPage=<%=endPage + 1%>&cntPerPage=<%=cntPerPage%>&searchType=<%=searchType%>&keyword=<%=keyword%>&odType=<%=odType%>">&gt;</a></div>
                         <%}%>
 
                     </div>
@@ -212,6 +214,9 @@
                     <!-- paging button 끝 -->
 
                 </div>
+
+                <a href="/myCart.do" class="btn view-btn1 mt-1">MY Favorite</a>
+
             </div>
 
             <!-- end Container -->
@@ -396,14 +401,19 @@
                     // remove() 요소 자체를 지움, empty 요소의 내용을 지움 -> empty()로 검색어 리스트(내용)를 지움
                     $("#list").empty();
                     console.log("기존 검색어 지우기 완료!");
-                    for (let i = 0; i < searchArr.length; i++) {
-                        var searchKeyword = searchArr[i];
-                        console.log("검색한 키워드 값 : " + searchKeyword);
-                        // 검색어 목록을 list에 append 함
-                        $("#list").append('<li class="font" id="' + i + '" onclick="insertKeyword(' + i + ')" >' + searchKeyword + '</li>');
+
+                    // 최근검색어가 없을 경우에는 제공하지 않음(length가 0이 아닐때만 검색어 제공)
+                    if (searchArr.length != 0) {
+                        for (let i = 0; i < searchArr.length; i++) {
+                            var searchKeyword = searchArr[i];
+                            console.log("검색한 키워드 값 : " + searchKeyword);
+                            // 검색어 목록을 list에 append 함
+                            $("#list").append('<li class="font" id="' + i + '" onclick="insertKeyword(' + i + ')" >' + searchKeyword + '</li>');
+                        }
+                        $("#list").append('<button class="btn view-btn3 p-0" style="width:25px; height: 25px;" onclick="rmKeyword()"">X</button>');
+                        $("#searchHistory").show();
                     }
-                    $("#list").append('<button class="btn view-btn3 p-0" style="width:25px; height: 25px;" onclick="rmKeyword()"">X</button>');
-                    $("#searchHistory").show();
+
                 }
             })
         }
