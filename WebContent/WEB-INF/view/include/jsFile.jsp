@@ -252,7 +252,7 @@
                             }
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
-                            alert("에러 발생! \n" + textStatus + ":" + errorThrown);
+                            console.log("에러 발생! \n" + textStatus + ":" + errorThrown);
                             console.log(errorThrown);
                         }
                     })

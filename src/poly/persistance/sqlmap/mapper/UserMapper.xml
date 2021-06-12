@@ -149,7 +149,7 @@
         SELECT PASSWORD
         FROM aroundsell.user_info
         <include refid="findOrUpd"></include>
-        AND PASSWORD = #{password}
+        PASSWORD = #{password}
     </select>
 
     <!-- 기존 비밀번호 일치 여부를 확인할때, 비 로그인 상태로 비번 찾기와 로그인 상태로 변경 두 가지 경우에 따라 DTO에서 다르게 변수를 받는다. -->
@@ -157,12 +157,16 @@
         <choose>
             <!-- 로그인하지 않은 상태에서 비밀번호 변경을 요청 : 회원번호 null, 세션 이메일 not null -->
             <when test="user_no == null and user_email != null">
-                WHERE USER_EMAIL = #{user_email}
+                WHERE USER_EMAIL = #{user_email} AND
             </when>
 
             <!-- 로그인 상태에서 비밀번호 변경을 요청 : 회원번호 not null, 세션 이메일 null -->
             <when test="user_no != null and user_email == null">
-                WHERE USER_NO = #{user_no}
+                WHERE USER_NO = #{user_no} AND
+            </when>
+
+            <when test="user_no != null and user_email != null">
+                WHERE USER_NO = #{user_no} AND
             </when>
         </choose>
     </sql>

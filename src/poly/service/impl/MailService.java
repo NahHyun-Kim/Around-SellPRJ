@@ -56,15 +56,19 @@ public class MailService implements IMailService {
 			MimeMessage message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(user));
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(toMail));
-			
+
 			message.setSubject(CmmUtil.nvl(pDTO.getTitle()));
-			
+			log.info("메일 제목 넘어감");
+
 			message.setText(CmmUtil.nvl(pDTO.getContents()));
-			
+			log.info("메일 내용 넘어감감");
+
 			Transport.send(message);
 			
 		}catch(MessagingException e) {
 			res=0;
+			log.info(e.toString());
+			e.printStackTrace();
 			log.info("에러!" + e);
 		}catch(Exception e) {
 			res=0;
@@ -77,4 +81,5 @@ public class MailService implements IMailService {
 	}
 	
 }
+
 

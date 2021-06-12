@@ -287,7 +287,7 @@
                                                                        // data == 1 (기존 비밀번호와 일치하면 수정 페이지로 이동)
 
                                                                        if (data == 1) {
-                                                                           alert("비밀번호 일치! 탈퇴 진행");
+                                                                           console.log("비밀번호 일치! 탈퇴 진행");
 
                                                                            $.ajax({
                                                                                url: "/deleteForceUser.do",
