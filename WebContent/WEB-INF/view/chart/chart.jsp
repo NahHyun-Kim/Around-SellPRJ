@@ -20,54 +20,56 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+
             /**
-             * 일반 원형태 파이차트
+             * 일반 원형태 파이차트(semi 원 파이차트로 디자인 수정)
              * */
-            //Themes begin(piechart)
             $.ajax({
-                url : "/cateCount.do",
-                async : false,
-                type : "post",
-                //서버에서 전송받을 데이터 형식 JSON 으로 받아야함
+                url: "/cateCount.do",
+                async: false,
+                type: "post",
                 dataType: "JSON",
                 success(res) {
-                    console.log("파이차트 res : " + res);
-                    console.log("파이차트 res 받아온 타입 : " + typeof res);
+                    console.log("파이차트에서 받아온 res(object) : " + res);
 
+                    // amchart 담기 시작
+                    // Themes begin
                     am4core.useTheme(am4themes_animated);
+                    // Themes end
 
-                    // Create chart instance
                     var chart = am4core.create("chartdiv3", am4charts.PieChart);
+                    chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
 
-                    chart.fontFamily = 'Poor Story';
-                    // Add data
+                    // JSONArray 형태로 만든 데이터를 chart에 data로 넣음
                     chart.data = res;
 
-                    // Add and configure Series
-                    var pieSeries = chart.series.push(new am4charts.PieSeries());
-                    pieSeries.dataFields.value = "cnt";
-                    pieSeries.dataFields.category = "category";
-                    pieSeries.slices.template.stroke = am4core.color("#fff");
-                    pieSeries.slices.template.strokeOpacity = 1;
+                    // font 수정
+                    chart.fontFamily = 'Poor Story';
+                    chart.radius = am4core.percent(70);
+                    chart.innerRadius = am4core.percent(40);
+                    chart.startAngle = 180;
+                    chart.endAngle = 360;
 
-                    /**
-                     *카테고리를 클릭 시, 해당 카테고리에 해당하는 판매글 목록을 가져온다.
-                     */
-                    pieSeries.slices.template.url = "${pageContext.request.contextPath}/searchList.do?nowPage=1&cntPerPage=9&searchType=G&keyword={category}";
-                    // _blank 옵션을 통해 새 탭으로 결과 검색창을 보여줌(추후 활성화 시키려면 활성화 풀자!)
-                    // pieSeries.slices.template.urlTarget = "_blank";
+                    var series = chart.series.push(new am4charts.PieSeries());
+                    series.dataFields.value = "cnt";
+                    series.dataFields.category = "country";
 
-                    // This creates initial animation
-                    pieSeries.hiddenState.properties.opacity = 1;
-                    pieSeries.hiddenState.properties.endAngle = -90;
-                    pieSeries.hiddenState.properties.startAngle = -90;
+                    series.slices.template.cornerRadius = 10;
+                    series.slices.template.innerCornerRadius = 7;
+                    series.slices.template.draggable = true;
+                    series.slices.template.inert = true;
 
-                    chart.hiddenState.properties.radius = am4core.percent(0);
+                    // 카테고리를 누르면 해당 카테고리 검색결과로 이동
+                    series.slices.template.url = "${pageContext.request.contextPath}/searchList.do?nowPage=1&cntPerPage=9&searchType=G&keyword={category}";
+                    series.alignLabels = false;
 
+                    series.hiddenState.properties.startAngle = 90;
+                    series.hiddenState.properties.endAngle = 90;
+
+                    chart.legend = new am4charts.Legend();
 
                 }
             })
-
 
             // 이미지+조회수 인기순으로 보여주기
             $.ajax({

@@ -203,7 +203,7 @@
                                     <!-- 주소 입력(도로명주소 이용) -->
                                     <div class="col-md-12 form-group p_star">
                                         <label for="sample5_address" class="font text-center">주소지 검색</label>
-                                        <input class="form-control font" type="text" name="goods_addr2" id="sample5_address" placeholder="주소를 검색해 주세요." required style="margin-top: 10px;">
+                                        <input class="form-control font" type="text" name="goods_addr2" id="sample5_address" placeholder="주소를 검색해 주세요." required readonly style="margin-top: 10px;">
                                         <input type="button" class="btn_3 font" onclick="sample5_execDaumPostcode()" value="주소 검색"/>
                                     </div>
 

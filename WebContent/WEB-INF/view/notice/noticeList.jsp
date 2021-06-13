@@ -15,7 +15,7 @@
 
 <html>
 <head>
-    <title>판매글 목록</title>
+    <title>Around-Sell</title>
 
     <!-- Resources(amchart 차트) Start-->
     <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
@@ -563,13 +563,49 @@ box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);">지도</div>
 
                         var resHTML = "";
                         var cnt = 0;
+                        // 미세먼지, 초미세먼지 농도에 대한 등급 표시
+                        var grade10 = "";
+                        var grade25 = "";
+
+                        function grade10Chk(mis) {
+                            if (mis <= 30) {
+                                grade10 = "좋음";
+                            } else if (31 <= mis <= 80) {
+                                grade10 = "보통";
+                            } else if (81 <= mis <= 151) {
+                                grade10 = "나쁨";
+                            } else if (mis >= 151) {
+                                grade10 = "매우 나쁨";
+                            }
+
+                            return grade10;
+                        }
+
+                        function grade25Chk(cho) {
+                            if (cho <= 15) {
+                                grade25 = "좋음";
+                            } else if (16 <= cho <= 35) {
+                                grade25 = "보통";
+                            } else if (36 <= cho <= 75) {
+                                grade25 = "나쁨";
+                            } else if (cho >= 76) {
+                                grade25 = "매우 나쁨";
+                            }
+
+                            return grade25;
+                        }
 
                         for (var i = 0; i < json.length; i++) {
 
+                            // 미세먼지(pm10), 초미세먼지(pm25) 상태 체크하는 함수
+
                             if (json[i].msrstename == user_addr) {
+
                                 resHTML += '<br/><div class="fontPoor">전반적인 대기환경 상태 : <a class="fontPoor" href="https://cleanair.seoul.go.kr/" target="_blank">' + json[i].grade + '(click! 더 알아보기)</a>';
-                                resHTML += '<br/> 미세먼지 & 초미세먼지 농도 : ' + json[i].pm10 + ' / ' + json[i].pm25 + ' 입니다. (단위:㎍/㎥)</div>';
+                                resHTML += '<br/> 미세먼지 농도 : ' + json[i].pm10 + '㎍/㎥ (' + grade10Chk(json[i].pm10) + ') 이며,';
+                                resHTML += '<br/> 초미세먼지 농도 : ' + json[i].pm25 + '㎍/㎥ (' + grade25Chk(json[i].pm25) + ')입니다.</div>';
                                 cnt++;
+
                             }
 
                         }

@@ -123,6 +123,6 @@ function pwChk() {
         Swal.fire('Around-Sell','입력한 정보를 다시 한 번 확인해 주세요!','warning');
         return false;
     } else {
-        alert("비번 성공! 유효성 안 걸림");
+        console.log("비번 성공! 유효성 안 걸림");
     }
     }

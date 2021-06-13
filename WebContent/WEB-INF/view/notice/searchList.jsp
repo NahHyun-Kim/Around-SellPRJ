@@ -38,10 +38,7 @@
         }
         List<String> addrList = new ArrayList<>();
         String tempaddr = "";
-//        for (NoticeDTO i : searchList) {
-//            tempaddr = i.getGoods_addr2();
-//            System.out.println(tempaddr);
-//        }
+
     %>
 </head>
 <body>
@@ -53,6 +50,16 @@
 <%@ include file="../include/header.jsp" %>
 <!-- Header End(상단 메뉴바 끝!) -->
 
+<style>
+    .pointPage {
+        background-color: #d0a7e4;
+        border-radius: 50%;
+    }
+
+    .toPurple {
+        color: rebeccapurple;
+    }
+</style>
 <!-- 상품 리스트 + 검색 section 시작 -->
 <div class="popular-items section-padding30">
     <!-- container 시작 -->
@@ -189,24 +196,24 @@
                 <div id="paging">
                     <div class="row">
                         <%if (startPage != 1) { %>
-                        <div class="col-1"><a href="/searchList.do?nowPage=<%=startPage - 1%>&cntPerPage=<%=cntPerPage%>&searchType=<%=searchType%>&keyword=<%=keyword%>&odType=<%=odType%>">&lt;</a></div>
+                        <div class="col-1 toPurple"><a class="toPurple" href="/searchList.do?nowPage=<%=startPage - 1%>&cntPerPage=<%=cntPerPage%>&searchType=<%=searchType%>&keyword=<%=keyword%>&odType=<%=odType%>">&lt;</a></div>
                         <%
                             }
                         %> <% for (int i = startPage; i <= endPage; i++) { %> <%
                         if (i == nowPage) { %>
-                        <div class="col-1"><span><%=i%></span></div>
+                        <div class="col-1"><span class="pointPage"><%=i%></span></div>
                         <%
                             }
                         %>
                         <%
                             if (i != nowPage) {
                         %>
-                        <div class="col-1"><a href="/searchList.do?nowPage=<%=i%>&cntPerPage=<%=cntPerPage%>&searchType=<%=searchType%>&keyword=<%=keyword%>&odType=<%=odType%>"><%=i%>
+                        <div class="col-1"><a class="toPurple" href="/searchList.do?nowPage=<%=i%>&cntPerPage=<%=cntPerPage%>&searchType=<%=searchType%>&keyword=<%=keyword%>&odType=<%=odType%>"><%=i%>
                         </a></div>
                         <%}%>
                         <%}%>
                         <%if (endPage != lastPage) { %>
-                        <div class="col-1"><a href="/searchList.do?nowPage=<%=endPage + 1%>&cntPerPage=<%=cntPerPage%>&searchType=<%=searchType%>&keyword=<%=keyword%>&odType=<%=odType%>">&gt;</a></div>
+                        <div class="col-1"><a class="toPurple" href="/searchList.do?nowPage=<%=endPage + 1%>&cntPerPage=<%=cntPerPage%>&searchType=<%=searchType%>&keyword=<%=keyword%>&odType=<%=odType%>">&gt;</a></div>
                         <%}%>
 
                     </div>
@@ -419,12 +426,14 @@
         }
     })
     // 최근검색어 클릭 시, 검색어창에 자동 입력되게 하는 함수
-    function insertKeyword(keyword) {
+    function insertKeyword(keywordId) {
         console.log("insertKeyword() 함수 호출!");
-        var insertKeyword = keyword;
-        console.log("받아온 검색어 : " + insertKeyword);
-        var value = document.getElementById(insertKeyword).innerHTML;
+
+        console.log("받아온 id값 : " + keywordId);
+
+        var value = document.getElementById(keywordId).innerHTML;
         console.log("받아온 검색어2 : " + value);
+
         // 클릭한 최근검색어를 검색창에 자동 입력되도록 설정
         $('input[name=keyword]').attr('value', value);
         console.log("검색어 입력 성공!");
