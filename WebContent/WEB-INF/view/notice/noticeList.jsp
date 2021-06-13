@@ -87,6 +87,19 @@ box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);">지도</div>
                             <button class="btn btn-info fontPoor toBold" style="background-color: #d0a7e4; border-style: none" value="모레">모레 날씨</button>
                             <br/>
                             <div id="apiRes"></div>
+
+                            <hr/>
+                            <!-- Section tittle2 (New 아이템 표시!) -->
+                            <div class="row justify-content-center">
+                                <div class="col-xl-7 col-lg-8 col-md-10">
+                                    <div class="section-tittle mb-10 text-center" >
+
+
+                                        <!-- 대기환경 수치 게이지 차트 -->
+                                        <div id="chartdiv10"></div>
+                                    </div>
+                                </div>
+                            </div>
                             <hr/>
                             <% } %>
 
@@ -128,7 +141,7 @@ box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);">지도</div>
 
                                 <!-- hover 적용, 마우스 올릴 시 click me! 문구 표시 -->
                                 <div class="img-cap">
-                                    <span class="font">Click Me!</span>
+                                    <span class="font" onclick="doDetail(<%=rDTO.getGoods_no()%>)">Click Me!</span>
                                 </div>
 
                                 <!-- 하트 표시를 누르면 관심상품 유효성 체크 + 등록 진행 -->
@@ -606,6 +619,203 @@ box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);">지도</div>
                                 resHTML += '<br/> 초미세먼지 농도 : ' + json[i].pm25 + '㎍/㎥ (' + grade25Chk(json[i].pm25) + ')입니다.</div>';
                                 cnt++;
 
+                                var tmp = json[i].pm10;
+                                var pm10 = tmp * 1;
+
+                                /**
+                                 * 미세먼지 상태 표시를 위한 게이지 차트 활용
+                                 * */
+                                // Themes begin
+                                am4core.useTheme(am4themes_animated);
+                                // Themes end
+
+                                // 미세먼지 농도는 0부터 시작
+                                var chartMin = 0;
+                                var chartMax = 200;
+
+                                var data = {
+                                    // 미세먼지 측정한 농도를 게이지로 나타냄
+                                    // 서울시 대기환경정보 미세먼지 농도를 기준으로 그래프 작성
+                                    // 좋음, 보통, 나쁨, 매우 나쁨 수치와 등급에 따른 색상 사이트를 참고함
+                                    gradingData: [
+                                        {
+                                            title: "좋음",
+                                            color: "#3A59FF",
+                                            lowScore: 0,
+                                            highScore: 30
+                                        },
+                                        {
+                                            title: "보통",
+                                            color: "green",
+                                            lowScore: 31,
+                                            highScore: 80
+                                        },
+                                        {
+                                            title: "나쁨",
+                                            color: "yellow",
+                                            lowScore: 81,
+                                            highScore: 150
+                                        },
+                                        {
+                                            title: "매우 나쁨",
+                                            color: "red",
+                                            lowScore: 151,
+                                            highScore: 200
+                                        }
+                                    ]
+                                };
+
+                                // 공공데이터로부터 얻어낸 지역구 pm10(미세먼지) 농도를 score 값에 담음
+                                data.score = pm10;
+
+                                /**
+                                 Grading Lookup
+                                 */
+                                function lookUpGrade(lookupScore, grades) {
+                                    // Only change code below this line
+                                    for (var i = 0; i < grades.length; i++) {
+                                        if (
+                                            grades[i].lowScore < lookupScore &&
+                                            grades[i].highScore >= lookupScore
+                                        ) {
+                                            return grades[i];
+                                        }
+                                    }
+                                    return null;
+                                }
+
+// create chart
+                                var chart = am4core.create("chartdiv10", am4charts.GaugeChart);
+                                chart.hiddenState.properties.opacity = 0;
+                                chart.fontSize = 11;
+                                chart.innerRadius = am4core.percent(80);
+                                chart.resizable = true;
+
+                                var title = chart.titles.create();
+                                title.text = "Air Check";
+                                title.fontSize = 40;
+                                title.fontWeight = "bold";
+                                title.fontFamily = 'Poor Story';
+                                title.style = "text-align: center";
+
+                                /**
+                                 * Normal axis
+                                 */
+
+                                var axis = chart.xAxes.push(new am4charts.ValueAxis());
+                                axis.min = chartMin;
+                                axis.max = chartMax;
+                                axis.strictMinMax = true;
+                                axis.renderer.radius = am4core.percent(80);
+                                axis.renderer.inside = true;
+                                axis.renderer.line.strokeOpacity = 0.1;
+                                axis.renderer.ticks.template.disabled = false;
+                                axis.renderer.ticks.template.strokeOpacity = 1;
+                                axis.renderer.ticks.template.strokeWidth = 0.5;
+                                axis.renderer.ticks.template.length = 5;
+                                axis.renderer.grid.template.disabled = true;
+                                axis.renderer.labels.template.radius = am4core.percent(15);
+                                axis.renderer.labels.template.fontSize = "0.8em";
+                                axis.renderer.labels.template.fontFamily = 'Poor Story';
+
+                                /**
+                                 * Axis for ranges
+                                 */
+
+                                var axis2 = chart.xAxes.push(new am4charts.ValueAxis());
+                                axis2.min = chartMin;
+                                axis2.max = chartMax;
+                                axis2.strictMinMax = true;
+                                axis2.renderer.labels.template.disabled = true;
+                                axis2.renderer.ticks.template.disabled = true;
+                                axis2.renderer.grid.template.disabled = false;
+                                axis2.renderer.grid.template.opacity = 0.5;
+                                axis2.renderer.labels.template.bent = true;
+                                axis2.renderer.labels.template.fill = am4core.color("#000");
+                                axis2.renderer.labels.template.fontWeight = "bold";
+                                axis2.renderer.labels.template.fillOpacity = 0.3;
+
+
+
+                                /**
+                                 Ranges
+                                 */
+
+                                for (let grading of data.gradingData) {
+                                    var range = axis2.axisRanges.create();
+                                    range.axisFill.fill = am4core.color(grading.color);
+                                    range.axisFill.fillOpacity = 0.8;
+                                    range.axisFill.zIndex = -1;
+                                    range.value = grading.lowScore > chartMin ? grading.lowScore : chartMin;
+                                    range.endValue = grading.highScore < chartMax ? grading.highScore : chartMax;
+                                    range.grid.strokeOpacity = 0;
+                                    range.stroke = am4core.color(grading.color).lighten(-0.1);
+                                    range.label.inside = true;
+                                    range.label.text = grading.title.toUpperCase();
+                                    range.label.inside = true;
+                                    range.label.location = 0.5;
+                                    range.label.inside = true;
+                                    range.label.radius = am4core.percent(10);
+                                    range.label.paddingBottom = -5; // ~half font size
+                                    range.label.fontSize = "0.9em";
+                                }
+
+                                var matchingGrade = lookUpGrade(data.score, data.gradingData);
+
+                                /**
+                                 * Label 1
+                                 */
+
+                                var label = chart.radarContainer.createChild(am4core.Label);
+                                label.isMeasured = false;
+                                label.fontSize = "5em";
+                                label.x = am4core.percent(50);
+                                label.paddingBottom = 15;
+                                label.horizontalCenter = "middle";
+                                label.verticalCenter = "bottom";
+                                //label.dataItem = data;
+                                label.text = data.score.toFixed(1);
+                                label.fontFamily = 'Poor Story';
+
+                                //label.text = "{score}";
+                                label.fill = am4core.color(matchingGrade.color);
+
+                                /**
+                                 * Label 2
+                                 */
+
+                                var label2 = chart.radarContainer.createChild(am4core.Label);
+                                label2.isMeasured = false;
+                                label2.fontSize = "2em";
+                                label2.horizontalCenter = "middle";
+                                label2.verticalCenter = "bottom";
+                                label2.text = matchingGrade.title.toUpperCase();
+                                label2.fill = am4core.color(matchingGrade.color);
+
+
+                                /**
+                                 * Hand
+                                 */
+
+                                var hand = chart.hands.push(new am4charts.ClockHand());
+                                hand.axis = axis2;
+                                hand.innerRadius = am4core.percent(55);
+                                hand.startWidth = 8;
+                                hand.pin.disabled = true;
+                                hand.value = data.score;
+                                hand.fill = am4core.color("#444");
+                                hand.stroke = am4core.color("#000");
+
+                                hand.events.on("positionchanged", function(){
+                                    label.text = axis2.positionToValue(hand.currentPosition).toFixed(1);
+                                    var value2 = axis.positionToValue(hand.currentPosition);
+                                    var matchingGrade = lookUpGrade(axis.positionToValue(hand.currentPosition), data.gradingData);
+                                    label2.text = matchingGrade.title.toUpperCase();
+                                    label2.fill = am4core.color(matchingGrade.color);
+                                    label2.stroke = am4core.color(matchingGrade.color);
+                                    label.fill = am4core.color(matchingGrade.color);
+                                })
+
                             }
 
                         }
@@ -634,6 +844,12 @@ box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);">지도</div>
     <style>
         .toBold {
             font-weight: bold;
+        }
+
+        #chartdiv10 {
+            width: 350px;
+            height: 350px;
+            margin: 0 auto;
         }
     </style>
     <!-- 로그인 한 유저의 지역구 날씨 크롤링 -->

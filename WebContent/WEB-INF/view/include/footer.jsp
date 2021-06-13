@@ -21,7 +21,7 @@
                 <div class="col-xl-2 col-lg-3 col-md-3 col-sm-5">
                     <div class="single-footer-caption mb-50">
                         <div class="footer-tittle font">
-                            <h4 style="font-family: 'Poor Story'">Around-Sell</h4>
+                            <h4 style="font-family: 'Poor Story'; font-weight: bold;">Around-Sell</h4>
                             <ul>
                                 <li><a href="/getIndex.do"> 카카오맵 api</a></li>
                                 <li><a href="/wordCloud.do"> 워드클라우드</a></li>
@@ -34,7 +34,7 @@
                 <div class="col-xl-3 col-lg-3 col-md-4 col-sm-7">
                     <div class="single-footer-caption mb-50">
                         <div class="footer-tittle font">
-                            <h4 style="font-family: 'Poor Story'">Around-Sell</h4>
+                            <h4 style="font-family: 'Poor Story'; font-weight: bold;">Around-Sell</h4>
                             <ul>
                                 <li><a href="/searchList.do"> 댓글 긍정/부정 분석</a></li>
                                 <li><a href="/getIndex.do"> 날씨정보 크롤링</a></li>
@@ -47,7 +47,7 @@
                 <div class="col-xl-3 col-lg-3 col-md-5 col-sm-7">
                     <div class="single-footer-caption mb-50">
                         <div class="footer-tittle font">
-                            <h4 style="font-family: 'Poor Story'">Around-Sell</h4>
+                            <h4 style="font-family: 'Poor Story'; font-weight: bold;">Around-Sell</h4>
                             <ul>
                                 <li><a href="#">Spring Framework</a></li>
                                 <li><a href="#">Aws ec2, Rds</a></li>

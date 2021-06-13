@@ -520,7 +520,7 @@
                                     </li>
 
                                     <!-- 로그아웃(혹은 로그인&회원가입), 회원 정보를 제공하는 메뉴 -->
-                                    <% if (SS_USER_NAME == null) { %>
+                                    <% if (SS_USER_NO.equals("-1")) { %>
                                     <li><a href="#">LogIn / SignUp</a>
                                         <ul class="submenu">
                                             <li><a href="/logIn.do">로그인</a></li>
@@ -528,7 +528,7 @@
                                             <li><a href="/userSearch.do">FIND ID/PW</a></li>
                                         </ul>
                                     </li>
-                                    <% } else if (SS_USER_NAME != null && !SS_USER_NO.equals("0")){ %>
+                                    <% } else if (!SS_USER_NO.equals("-1") && !SS_USER_NO.equals("0")){ %>
                                     <li><a href="/myList.do">MyPage</a>
                                         <ul class="submenu">
                                             <li><a href="/logOut.do">로그아웃</a></li>
@@ -537,7 +537,7 @@
                                             <li><a href="/noticeForm.do">판매글 등록하기</a></li>
                                         </ul>
                                     </li>
-                                    <% } else if (SS_USER_NAME != null && SS_USER_NO.equals("0")) {%>
+                                    <% } else if (!SS_USER_NO.equals("-1") && SS_USER_NO.equals("0")) {%>
                                     <li><a href="/getUser.do">관리자 페이지</a>
                                         <ul class="submenu">
                                             <li><a href="/logOut.do">로그아웃</a></li>
@@ -690,6 +690,61 @@
                                     <a href="javascript:doCart('<%=rDTO.getGoods_no()%>', <%=rDTO.getUser_no()%>)" class="btn_3 font" id="doCart" style="font-family: 'Noto Sans KR'; color: white;">관심상품 등록</a>
                                     <a href="javascript:road()" class="btn_3 font" id="findroad">길찾기</a>
                                     <a href="javascript:searchDistance()" class="btn_3 font" id="searchD">거리 계산하기</a>
+
+                                    <!-- 로그인한 경우에만 사전결제 서비스를 제공 -->
+                                    <%if (!SS_USER_NO.equals("-1")) { %>
+                                    <button type="button" class="btn_3 font" onclick="getPay()">사전 결제</button>
+                                    <% } %>
+                                    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+
+                                    <script>
+
+                                        function getPay() {
+
+                                            Swal.fire({
+                                                icon: 'question',
+                                                text: '사전 결제 후, 매장 방문하여 물품을 수령할 수 있습니다. 결제하시겠습니까?',
+                                                showConfirmButton: true,
+                                                confirmButtonText: '네. 결제할래요',
+                                                showCancelButton: true,
+                                                cancelButtonText: '아니오, 그냥 볼래요.'
+                                            }).then(value => {
+                                                // 결제를 요청한 경우에만 결제 진행
+                                                if (value.isConfirmed) {
+                                                    // 부여받은 가맹점 식별코드
+                                                    IMP.init('imp14361922');
+
+                                                    IMP.request_pay({
+                                                        pg: 'kakao', // version 1.1.0부터 지원.
+                                                        pay_method: 'card',
+                                                        merchant_uid: 'merchant_' + new Date().getTime(),
+                                                        name: '<%=rDTO.getGoods_title()%>', //상품 이름
+                                                        amount: '<%=rDTO.getGoods_price()%>', //판매 가격
+                                                        buyer_email: 'iamport@siot.do',
+                                                        buyer_name: '<%=SS_USER_NAME%>',
+                                                        buyer_tel: '010-2100-1298',
+                                                        buyer_addr: '<%=SS_USER_ADDR%>'
+                                                        //buyer_postcode: '123-456'
+                                                    }, function (rsp) {
+                                                        if (rsp.success) {
+                                                            var msg = '결제가 완료되었습니다.<br/>';
+                                                            msg += '고유ID : ' + rsp.imp_uid + '<br/>';
+                                                            //msg += '상점 거래ID : ' + rsp.merchant_uid;
+                                                            msg += '결제 물품 : ' + '<%=rDTO.getGoods_title()%>' + '<br/>';
+                                                            msg += '결제 금액 : ' + rsp.paid_amount + '원<br/>';
+                                                            msg += '매장 방문 후 수령해 주세요!';
+                                                        } else {
+                                                            var msg = '결제에 실패하였습니다.<br/>';
+                                                            msg += '에러내용 : ' + rsp.error_msg;
+                                                        }
+                                                        Swal.fire(msg);
+                                                    });
+                                                }
+                                            })
+
+
+                                        }
+                                        </script>
                                     <div class="font" id="distance"></div>
                                     <br/>
 
@@ -726,23 +781,7 @@
                                     </div>
                                 </div>
                                 <hr/>
-<%--                                <div class="comment-list">--%>
-<%--                                    <div class="single-comment justify-content-between d-flex">--%>
-<%--                                        <div class="user justify-content-between d-flex">--%>
-<%--                                            <div class="thumb">--%>
-<%--                                                <img src="resources/boot/img/comment/comment_1.png" alt="">--%>
-<%--                                                <button type="button">버튼</button>--%>
-<%--                                            </div>--%>
-<%--                                            <div class="desc">--%>
-<%--                                                <p class="comment">--%>
-<%--                                                    Multiply sea night grass fourth day sea lesser rule open subdue female fill which them--%>
-<%--                                                    Blessed, give fill lesser bearing multiply sea night grass fourth day sea lesser--%>
-<%--                                                </p>--%>
 
-<%--                                            </div>--%>
-<%--                                        </div>--%>
-<%--                                    </div>--%>
-<%--                                </div>--%>
                                 <div class="font" id="comment_list">해당 게시물에 대한 댓글이 없습니다.</div>
                             </div>
                         </div>
