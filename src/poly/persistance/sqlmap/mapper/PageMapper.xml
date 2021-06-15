@@ -5,7 +5,7 @@
 
     <!-- 검색에 사용되는 동적 SQL, 필요한 경우에만 include 하여 사용 가능하다. -->
     <sql id="searchCriteria">
-            <foreach item='searchType' collection="typeArr">
+<!--            <foreach item='searchType' collection="typeArr">-->
                     <choose>
                         <when test='searchType == "T".toString()'>
                             GOODS_TITLE LIKE CONCAT('%',#{keyword},'%')
@@ -30,7 +30,7 @@
                             GOODS_ADDR2 LIKE CONCAT('%',#{keyword},'%')
                         </when>
                     </choose>
-            </foreach>
+<!--            </foreach>-->
     </sql>
 
     <!-- 검색 조건, 키워드에 따라 결과 건수를 가져오기 위한 include sql문 -->

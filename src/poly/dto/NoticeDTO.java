@@ -16,10 +16,6 @@ public class NoticeDTO {
 
     private String imgs; //이미지 경로(경로+이름)
 
-    // 지도 관련
-    private String laty; //위도
-    private String longx; //경도
-
     // 회원 관련
     private String user_no; //회원 번호
     private String reg_id; //등록자(user_name)
@@ -41,22 +37,6 @@ public class NoticeDTO {
 
     public void setCnt(String cnt) {
         this.cnt = cnt;
-    }
-
-    public String getLaty() {
-        return laty;
-    }
-
-    public void setLaty(String laty) {
-        this.laty = laty;
-    }
-
-    public String getLongx() {
-        return longx;
-    }
-
-    public void setLongx(String longx) {
-        this.longx = longx;
     }
 
     public String getSearchType() {

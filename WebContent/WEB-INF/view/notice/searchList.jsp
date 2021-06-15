@@ -174,8 +174,18 @@
                         <h3><a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');">
                             <%=CmmUtil.nvl(rDTO.getGoods_title())%>
                         </a></h3>
-                        <!--<span style="font-size: 15px;"><%=CmmUtil.nvl(rDTO.getGoods_addr())%></span>-->
-                        <span><%=CmmUtil.nvl(rDTO.getGoods_price())%></span>
+
+                        <span id="<%=i%>" onclick="javascript:doDetail(<%=rDTO.getGoods_no()%>)"></span>
+
+                        <!-- 상품 가격 -->
+                        <script type="text/javascript">
+                            $("#<%=i%>").text(numberWithCommas(<%=rDTO.getGoods_price()%>) + '원');
+
+                            <!-- 가격 콤마로 표시하는 함수-->
+                            function numberWithCommas(x) {
+                                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            }
+                        </script>
                         <!-- 상호명 -->
                         <h5><a class="font" style="color: #d0a7e4;" href="javascript:searchLocation('<%=CmmUtil.nvl(rDTO.getGoods_addr())%>', <%=rDTO.getGoods_no()%>)"><%=CmmUtil.nvl(rDTO.getGoods_addr())%></a></h5>
 

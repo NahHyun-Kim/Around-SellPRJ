@@ -29,3 +29,17 @@ ul {
     width: 10px;
     height: 10px;
 }
+
+#hide {
+    width: 300px; height: 350px; font-family: 'Poor Story'; background-image: url('../../../resources/boot/img/logo/cart.gif'); background-size: cover;
+}
+
+#maphide {
+    width: 300px; height: 350px; font-family: 'Poor Story'; background-image: url('../../../resources/boot/img/logo/maps.gif'); background-size: cover;
+}
+
+.styles {
+    width: 95%;
+    display: block;
+    margin: 0 auto;
+}

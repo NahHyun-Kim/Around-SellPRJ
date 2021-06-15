@@ -284,4 +284,9 @@
             location.href = "/noticeForm.do";
         }
     }
+
+    // 숫자 형태만 입력되도록 함수 작성
+    $(document).on("keyup", "input:text[numberOnly]", function() {
+        $(this).val( $(this).val().replace(/[^0-9]/gi,"") );
+    });
 </script>

@@ -194,7 +194,7 @@ public class CartController {
 
         return "/cart/mySee";
     }
-    
+
     /*최근 본 상품 불러오기*/
     //, produces = "application/text; charset=utf8"
     @ResponseBody

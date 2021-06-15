@@ -638,8 +638,17 @@
                                     <div class="col-md-12 form-group p_star">
                                         <label for="goods_price" class="font">판매 가격</label>
                                         <input class="form-control font Center" id="goods_price" type="text"
-                                               value="<%=rDTO.getGoods_price()%>원" readOnly/>
+                                               readOnly/>
                                     </div>
+
+                                    <script type="text/javascript">
+                                        $("#goods_price").val(numberWithCommas(<%=rDTO.getGoods_price()%>) + '원');
+
+                                        <!-- 가격 콤마로 표시하는 함수-->
+                                        function numberWithCommas(x) {
+                                            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                        }
+                                    </script>
 
                                     <!-- 상호명 -->
                                     <div class="col-md-12 form-group p_star">

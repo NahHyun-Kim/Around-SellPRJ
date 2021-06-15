@@ -185,7 +185,7 @@
                                     <input type="hidden" name="nSeq" value="<%=rDTO.getGoods_no()%>"/>
 
                                     <!-- 이미지 등록 -->
-                                    <input type="file" id="img" name="fileUpload" value="/resource/images/<%=rDTO.getImgs()%>" class="btn view-btn font" required/>
+                                    <input type="file" id="img" name="fileUpload" value="/resource/images/<%=rDTO.getImgs()%>" class="btn view-btn font styles" required/>
 
                                     <!-- 수정할 파일을 첨부하면, 판매글 작성 화면에서 이미지인지 보여줌 -->
                                     <script>
@@ -217,7 +217,7 @@
                                     <!-- 상품 가격 입력 -->
                                     <div class="col-md-12 form-group p_star">
                                         <label for="goods_price" class="font text-center">상품 가격</label>
-                                        <input class="form-control font" value="<%=rDTO.getGoods_price()%>" input type="text" name="goods_price" id="goods_price" placeholder="가격을 입력해 주세요 ex)6000" style="margin-top: 10px;">
+                                        <input class="form-control font" type="text" name="goods_price" numberOnly="true" id="goods_price" placeholder="가격을 입력해 주세요 ex)6000" style="margin-top: 10px;"/>
                                     </div>
 
                                     <!-- 상품이 판매되는 상호명 또는 간략한 주소 입력(간략 ex) 아리따움 강서구청점) -->
@@ -349,13 +349,9 @@
                 theme: {
                     bgColor: "#FDE2FC", //바탕 배경색
                     searchBgColor: "#D7BAD9", //검색창 배경색
-                    //contentBgColor: "", //본문 배경색(검색결과,결과없음,첫화면,검색서제스트)
                     pageBgColor: "#F9D2FC", //페이지 배경색
-                    //textColor: "", //기본 글자색
                     queryTextColor: "#FFFFFF" //검색창 글자색
-                    //postcodeTextColor: "", //우편번호 글자색
-                    //emphTextColor: "", //강조 글자색
-                    //outlineColor: "", //테두리
+
                 },
 
 
@@ -364,10 +360,7 @@
 
     </script>
 
-
-    <!-- bootstrap, css 파일 -->
-    <script src="/resources/js/bootstrap.js"></script>
-    <link rel="stylesheet" href="/resources/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/resource/css/notice.css?ver=1"/>
 
     <!-- 판매글 등록 시, 유효성 체크 js -->
     <script type="text/javascript" src="/resource/valid/noticeCheck.js"></script>

@@ -7,6 +7,7 @@ import poly.persistance.redis.ISearchMapper;
 import poly.service.ISearchService;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Set;
 
 @Service("SearchService")

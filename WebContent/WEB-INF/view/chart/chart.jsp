@@ -65,6 +65,7 @@
 
                     // 카테고리를 누르면 해당 카테고리 검색결과로 이동
                     series.slices.template.url = "${pageContext.request.contextPath}/searchList.do?nowPage=1&cntPerPage=9&searchType=G&keyword={category}";
+                    series.slices.template.urlTarget = "_blank";
                     series.alignLabels = false;
 
                     series.hiddenState.properties.startAngle = 90;

@@ -89,15 +89,6 @@
 </script>
 </head>
 
-<style>
-    #hide {
-        width: 300px; height: 350px; font-family: 'Poor Story'; background-image: url('../../../resources/boot/img/logo/cart.gif'); background-size: cover;
-    }
-
-    #maphide {
-        width: 300px; height: 350px; font-family: 'Poor Story'; background-image: url('../../../resources/boot/img/logo/maps.gif'); background-size: cover;
-    }
-</style>
 <!-- body가 실행될 때, 로그인 여부를 실행하기 위해 onLoad() 함수 호출 -->
 <body>
     <!-- preloader -->
@@ -157,7 +148,7 @@
                                 <form name="f" action="/noticeInsert.do" method="post" onsubmit="return doSubmit(this);" enctype="multipart/form-data" class="row contact_form">
 
                                     <!-- 이미지 등록 -->
-                                    <input type="file" id="img" name="fileUpload" class="btn view-btn font" required/>
+                                    <input type="file" id="img" name="fileUpload" class="btn view-btn font styles"required/>
 
                                     <!-- 파일을 첨부하면, 판매글 작성 화면에서 이미지인지 보여줌 -->
                                     <script>
@@ -187,11 +178,32 @@
                                         <input class="form-control font" type="textarea" name="goods_detail" id="goods_detail" placeholder="상품 설명을 입력해 주세요." style="height: 100px;">
                                     </div>
 
+<%--                                    <!-- 상품 가격 입력 -->--%>
+<%--                                    <div class="col-md-12 form-group p_star">--%>
+<%--                                        <label for="goods_price" class="font text-center">상품 가격</label>--%>
+<%--                                        <input class="form-control font" type="number" name="goods_price" min="0" max="1000000" step="500" id="goods_price" placeholder="가격을 입력해 주세요 ex)6000" style="margin-top: 10px;"/>--%>
+<%--                                    </div>--%>
+
                                     <!-- 상품 가격 입력 -->
                                     <div class="col-md-12 form-group p_star">
                                         <label for="goods_price" class="font text-center">상품 가격</label>
-                                        <input class="form-control font" input type="text" name="goods_price" id="goods_price" placeholder="가격을 입력해 주세요 ex)6000" style="margin-top: 10px;">
+                                        <input class="form-control font" type="text" name="goods_price" numberOnly="true" id="goods_price" placeholder="가격을 입력해 주세요 ex)6000" style="margin-top: 10px;"/>
                                     </div>
+
+<%--                                    <script type="text/javascript">--%>
+
+<%--                                        var number = document.getElementById('goods_price');--%>
+
+<%--                                        // Listen for input event on numInput.--%>
+<%--                                        number.onkeydown = function(e) {--%>
+<%--                                            if(!((e.keyCode > 95 && e.keyCode < 106)--%>
+<%--                                                || (e.keyCode > 47 && e.keyCode < 58)--%>
+<%--                                                || e.keyCode == 8)) {--%>
+<%--                                                Swal.fire('숫자로 가격을 입력해 주세요!','','error');--%>
+<%--                                                return false;--%>
+<%--                                            }--%>
+<%--                                        }--%>
+<%--                                    </script>--%>
 
                                     <!-- 상품이 판매되는 상호명 또는 간략한 주소 입력(간략 ex) 아리따움 강서구청점) -->
                                     <div class="col-md-12 form-group p_star">
@@ -340,11 +352,11 @@
     </script>
 
     <!-- css 파일 -->
-    <link rel="stylesheet" href="/resource/css/notice.css"/>
+    <link rel="stylesheet" href="/resource/css/notice.css?ver=1"/>
     <link rel="stylesheet" href="/resources/boot/css/nice-select.css"/>
 
     <!-- 판매글 등록 시, 유효성 체크 js -->
-    <script type="text/javascript" src="/resource/valid/noticeCheck.js?ver=1"></script>
+    <script type="text/javascript" src="/resource/valid/noticeCheck.js?ver=2"></script>
 
     <!-- include JS File -->
     <%@ include file="../include/jsFile.jsp"%>

@@ -156,9 +156,17 @@ box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);">지도</div>
                                     <%=CmmUtil.nvl(rDTO.getGoods_title())%>
                                 </a></h3>
 
+
                                 <!-- 가격 -->
-                                <!--<span style="font-size: 15px;"><%=CmmUtil.nvl(rDTO.getGoods_addr())%></span>-->
-                                <h3><a class="font" href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');"><%=CmmUtil.nvl(rDTO.getGoods_price())%></a></h3>
+                                <h3><span class="font" id="<%=i%>" onclick="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');" style="cursor: pointer;"></span></h3>
+                                <script type="text/javascript">
+                                    $("#<%=i%>").text(numberWithCommas(<%=rDTO.getGoods_price()%>) + '원');
+
+                                    <!-- 가격 콤마로 표시하는 함수-->
+                                    function numberWithCommas(x) {
+                                        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                    }
+                                </script>
 
                                 <!-- 상호명 -->
                                 <h5><a class="font" style="color: #d0a7e4;" href="javascript:searchLocation('<%=CmmUtil.nvl(rDTO.getGoods_addr())%>', <%=rDTO.getGoods_no()%>)"><%=CmmUtil.nvl(rDTO.getGoods_addr())%></a></h5>
