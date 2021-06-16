@@ -8,6 +8,8 @@
         rDTO = new NoticeDTO();
     }
 
+    String category = (String) CmmUtil.nvl(rDTO.getCategory());
+
     int access = 1; // 본인 : 2, 타 사용자 : 1
 
     if (SS_USER_NO.equals(rDTO.getUser_no())) {
@@ -217,7 +219,7 @@
                                     <!-- 상품 가격 입력 -->
                                     <div class="col-md-12 form-group p_star">
                                         <label for="goods_price" class="font text-center">상품 가격</label>
-                                        <input class="form-control font" type="text" name="goods_price" numberOnly="true" id="goods_price" placeholder="가격을 입력해 주세요 ex)6000" style="margin-top: 10px;"/>
+                                        <input class="form-control font" value="<%=rDTO.getGoods_price()%>" type="text" name="goods_price" numberOnly="true" id="goods_price" placeholder="가격을 입력해 주세요 ex)6000" style="margin-top: 10px;"/>
                                     </div>
 
                                     <!-- 상품이 판매되는 상호명 또는 간략한 주소 입력(간략 ex) 아리따움 강서구청점) -->
@@ -239,12 +241,12 @@
                                     <div class="col-md-12 form-group p_star">
                                         <select name="category" id="category">
                                             <option value="" selected disabled hidden>=카테고리=</option>
-                                            <option value="화장품">화장품</option>
-                                            <option value="패션">패션</option>
-                                            <option value="잡화">잡화</option>
-                                            <option value="식품">식품</option>
-                                            <option value="가전">가전</option>
-                                            <option value="건강의료">건강/의료</option>
+                                            <option value="화장품" <%=CmmUtil.nvl(category).equals("화장품") ? "selected" : ""%>>화장품</option>
+                                            <option value="패션" <%=CmmUtil.nvl(category).equals("패션") ? "selected" : ""%>>패션</option>
+                                            <option value="잡화" <%=CmmUtil.nvl(category).equals("잡화") ? "selected" : ""%>>잡화</option>
+                                            <option value="식품" <%=CmmUtil.nvl(category).equals("식품") ? "selected" : ""%>>식품</option>
+                                            <option value="가전" <%=CmmUtil.nvl(category).equals("가전") ? "selected" : ""%>>가전</option>
+                                            <option value="건강의료" <%=CmmUtil.nvl(category).equals("건강의료") ? "selected" : ""%>>건강/의료</option>
                                         </select>
                                     </div>
 

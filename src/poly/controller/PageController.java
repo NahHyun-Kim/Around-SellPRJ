@@ -40,68 +40,6 @@ public class PageController {
     @Resource(name = "SearchService")
     private ISearchService searchService;
 
-    // 판매글 리스트를 페이징 처리하여 불러오기
-    @RequestMapping(value = "/pagingList")
-    public String pagingList(Criteria pDTO, ModelMap model, HttpSession session,
-                             @RequestParam(value = "nowPage", required = false) String nowPage,
-                             @RequestParam(value = "cntPerPage", required = false) String cntPerPage)
-            throws Exception {
-
-        log.info(this.getClass().getName() + ".pagingList(페이징 판매글 리스트) Start!");
-
-        // 가입 주소를 기반으로 검색해야 하기 때문에, 주소값을 받아와 dto에 저장
-        String addr2 = (String) session.getAttribute("SS_USER_ADDR2");
-        log.info("addr null? : " + (addr2 == null));
-
-        log.info("가져온 주소(addr2) : " + addr2);
-
-
-        // 페이지 정보를 받아오지 못할 경우, 기본값을 지정
-        if (nowPage == null & cntPerPage == null) {
-            nowPage = "1";
-            cntPerPage = "9";
-
-        } else if (nowPage == null) {
-            nowPage = "1";
-
-        } else if (cntPerPage == null) {
-            cntPerPage = "9";
-
-        }
-
-        int total = 0;
-
-        if (addr2 == null) {
-            // 총 게시물 수를 가져옴(count *)
-            total = pageService.cntNotice();
-            log.info("가져온 전체 게시물 수(int total) : " + total);
-
-            // @RequestParam과 db쿼리를 통해 가져온 값을 pDTO에 세팅
-            pDTO = new Criteria(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage));
-
-        } else if (addr2 != null) {
-            NoticeDTO nDTO = new NoticeDTO();
-            nDTO.setAddr2(addr2);
-
-            // 지역구에 해당하는 게시물 수를 가져옴(total count가 달라짐 -> 이에 따른 페이징 필요)
-            total = pageService.cntAddrNotice(nDTO);
-            log.info("가져온 지역구에 해당하는 게시물 수 : " + total);
-
-            nDTO = null;
-            pDTO = new Criteria(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage), addr2);
-        }
-
-        model.addAttribute("paging", pDTO);
-        model.addAttribute("sellList", pageService.selectPaging(pDTO));
-
-        log.info("addr2값 세팅 되었는지 : " + pDTO.getAddr2());
-
-        pDTO = null;
-        log.info(this.getClass().getName() + ".pagingList(판매글 리스트 페이징) End!");
-
-        return "/notice/pagingList";
-    }
-
     // 판매글 리스트를 페이징 처리하여 불러오기(전체 + 검색 + 정렬)
     @RequestMapping(value = "/searchList")
     public String searchList(SearchCriteria pDTO, HttpServletRequest request, ModelMap model, HttpSession session,
@@ -193,7 +131,7 @@ public class PageController {
 
                     /*
                      * 로그인 안한 상태의 검색어에 해당하는 게시물 수를 가져옴
-                     * addr2에 세팅된 값이 없기 때문에, null 값 전달(아마도! 추후 검사 예정)
+                     * addr2에 세팅된 값이 없기 때문에, null 값 전달
                      * 정렬은 게시글 수에 영향을 미치지 않기 때문에 기존 검색결과 카운팅 함수 그대로 사용
                      * */
                     total = pageService.cntSearchType(nDTO);

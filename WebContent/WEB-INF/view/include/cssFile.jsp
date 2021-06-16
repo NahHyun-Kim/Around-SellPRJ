@@ -17,10 +17,9 @@
 <!-- sweet alert2 -->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!--<link rel="stylesheet" href="/resources/boot/css/mystyle.css?ver=1">-->
 <!-- top 네비게이션 바 CSS -->
 <link rel="stylesheet" href="/resources/boot/css/slicknav.css">
-<link rel="stylesheet" href="/resources/boot/css/style.css">
+<link rel="stylesheet" href="/resources/boot/css/style.css?ver=1">
 
 <link rel="stylesheet" href="/resources/boot/css/bootstrap.min.css">
 <link rel="stylesheet" href="/resources/boot/css/owl.carousel.min.css">

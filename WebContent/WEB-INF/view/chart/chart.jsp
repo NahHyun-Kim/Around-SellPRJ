@@ -262,9 +262,6 @@
 <!-- Header(상단 메뉴바 시작!) Start -->
 <%@ include file="../include/header.jsp" %>
 <!-- Header End(상단 메뉴바 끝!) -->
-
-<!-- include chart -->
-
 <!-- index -->
 
 <main>

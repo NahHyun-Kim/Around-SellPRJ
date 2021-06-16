@@ -6,7 +6,7 @@
 <%@ include file="../include/session.jsp"%>
 <html>
 <head>
-    <title>Title</title>
+    <title>최근 본 상품</title>
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp"%>
 
@@ -41,10 +41,6 @@
                         var cnt = 5;
                         var len = data.length;
 
-                        // recentlyGoods += '<div class="slider-area "><div class="single-slider slider-height2 d-flex align-items-center" style="margin-top:2px;"> <div class="container">';
-                        // recentlyGoods += '<div class="row"> <div class="col-xl-12"><div class="hero-cap text-center">';
-                        // recentlyGoods += '<h2> 최근 본 상품 </h2> </div> </div></div></div></div></div>';
-
                         // 표시하고자 하는 5개의 목록보다 데이터가 많으면, 5개만 표시
                         if (len > 0 && len >= cnt) {
                             // 최근 본 상품을 표시할 개수를 정할 수 있음(-> 가져온 리스트에서 역순 출력. 임시로 5개로 설정(테스트))
@@ -55,11 +51,6 @@
                                 // String 형태의 값을 변환함 .으로 접근할 수 있는 JSON 객체로 변환
 
                                 var obj =JSON.parse(data[i]);
-
-                                /*
-                                recentlyGoods += obj.goods_no + "<br>";
-                                recentlyGoods += obj.imgs + "<br>";
-                                recentlyGoods += obj.goods_title + "<br> <hr>"; */
 
                                 if (i==len-1) {
 
@@ -73,9 +64,6 @@
                                 }
 
 
-
-
-                                //  recentlyGoods += '<div>최근 본 상품</div> <br>';
                                 recentlyGoods += '<div class="col" style="margin: 0 auto;">';
                                 recentlyGoods += '<a class="title" href="/noticeInfo.do?nSeq=' + obj.goods_no + '">';
                                 recentlyGoods +=  '<img src="${pageContext.request.contextPath}/resource/images/' + obj.imgs + '" style="width: 150px; height: 150px; object-fit: contain" alt="이미지 불러오기 실패"/>';
@@ -102,7 +90,6 @@
 
                                 }
 
-                              //recentlyGoods += '<div>최근 본 상품</div> <br>';
                                 recentlyGoods += '<div class="col" style="margin: 0 auto;">';
                                 recentlyGoods += '<a class="title" href="/noticeInfo.do?nSeq=' + obj.goods_no + '">';
                                 recentlyGoods +=  '<img src="${pageContext.request.contextPath}/resource/images/' + obj.imgs + '" style="width: 150px; object-fit: contain" alt="이미지 불러오기 실패"/>';
@@ -119,6 +106,8 @@
                             /* 로그인 + 최근 본 상품이 없다면
                             * 상품이 없더라도, 빈 배열값 [] 이 반환되어(null로 뜨지 않음), data.length 의 길이로 0이면(=데이터가 없으면) 안내를 띄운다.
                             */
+
+                            /* if문 돌려서 5개 이상이면 break를 줘도.. */
                         } else if (data.length == 0) {
 
                             var resultMent = '<span class="font">최근 본 상품이 없습니다. <hr/> <a class="font" href="/noticeList.do">상품 보러가기</a></span>';
@@ -185,8 +174,6 @@
             </div>
         </div>
     </main>
-<%--  <div>최근 본 상품</div>--%>
-<%--        <div id="recentlyGoods" style="margin: 0 auto;"></div>--%>
 
     <style>
         .title {
@@ -196,8 +183,12 @@
 
         #recentlyGoods {
             color: black;
-            font-family: 'Do Hyeon', sans-serif;
-            font-size: 18px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 20px;
+        }
+
+        .font {
+            font-family: 'Noto Sans KR', sans-serif;
         }
     </style>
     <!-- include Footer -->

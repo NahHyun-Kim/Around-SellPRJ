@@ -221,4 +221,24 @@ public class CartController {
 
         return rList;
     }
+
+    @ResponseBody
+    @RequestMapping(value="/getTest")
+    public String getTest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        log.info("test redis 시작");
+
+        NoticeDTO dDTO = new NoticeDTO();
+        dDTO.setUser_no("1");
+        dDTO.setImgs("2021/06/10/24083510.jpeg");
+        dDTO.setGoods_title("마우스");
+        dDTO.setGoods_no("29");
+
+        log.info("삭제 요청할 정보 받아오기 성공!" + dDTO.getGoods_title());
+
+        searchService.rmKeyword(dDTO);
+        log.info("삭제 요청 완료!");
+
+        return "success";
+    }
 }

@@ -24,7 +24,6 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /*
 * Controller 선언해야만 Spring 프레임워크에서 Controller인지 인식 가능
@@ -402,6 +401,17 @@ public class NoticeController {
                 cDTO.setImgs(def_img);
             }
 
+            // 수정된 정보를 반영하기 위해 기존 최근 본 상품 데이터 삭제
+            NoticeDTO dDTO = new NoticeDTO();
+            dDTO.setUser_no(user_no);
+
+            log.info("삭제 요청할 key값 번호 받아오기 성공!(user_no) : " + dDTO.getUser_no());
+
+            // 최근 본 상품에서 삭제함
+            searchService.rmKeyword(dDTO);
+            log.info("(수정 시) 삭제 요청 완료!");
+            dDTO = null;
+            
             pDTO.setUser_no(user_no);
             pDTO.setGoods_no(goods_no);
             pDTO.setGoods_title(goods_title);
@@ -486,12 +496,10 @@ public class NoticeController {
 
             NoticeDTO dDTO = new NoticeDTO();
             dDTO.setUser_no(user_no);
-            dDTO.setImgs(rDTO.getImgs());
-            dDTO.setGoods_title(rDTO.getGoods_title());
-            dDTO.setGoods_no(goods_no);
 
-            log.info("삭제 요청할 정보 받아오기 성공!" + dDTO.getGoods_title());
+            log.info("삭제 요청할 key값 번호 받아오기 성공!(user_no) : " + dDTO.getUser_no());
 
+            // 최근 본 상품에서 삭제함
             searchService.rmKeyword(dDTO);
             log.info("삭제 요청 완료!");
 

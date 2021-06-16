@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>AroundSell-인증번호 확인</title>
+    <title>Around-Sell 인증번호 확인</title>
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp"%>
 

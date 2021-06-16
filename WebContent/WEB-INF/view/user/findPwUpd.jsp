@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>AroundSell-비밀번호 변경</title>
+    <title>Around-Sell 비밀번호 변경</title>
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp"%>
 

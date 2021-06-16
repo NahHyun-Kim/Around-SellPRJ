@@ -259,11 +259,6 @@ box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);">지도</div>
                             })
                         });
 
-                        /*kakao.maps.event.addListener(infowindow, 'click', function() {
-                            // 클릭한 주소로 판매글 검색을 진행
-                            location.href = "/searchList.do?nowPage=1&cntPerPage=9&searchType=J&keyword=" + listData[index];
-                        }) */
-
                         map.setCenter(coords);
                     }
                 });

@@ -98,7 +98,6 @@ public class WeatherController {
 
         // 값을 받아왔다면, model에 값을 넘겨줌
         if (rDTO != null) {
-            //model.addAttribute("rDTO", rDTO);
             log.info("크롤링한 DTO 전송 완료");
         }
 

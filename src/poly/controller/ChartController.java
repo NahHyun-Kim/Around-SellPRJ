@@ -49,14 +49,6 @@ public class ChartController {
 		return "/chart/chart";
 	}
 
-	//홈페이지(index) 화면
-//	@RequestMapping(value = "index")
-//	public String Index() {
-//		log.info(this.getClass());
-//
-//		return "/index";
-//	}
-
 	@RequestMapping(value = "test")
 	public String test() {
 		log.info("부트스트랩 테스트 화면");
@@ -88,18 +80,13 @@ public class ChartController {
 
 		// 판매글 중 상품명을 담을 변수와 리스트 배열 생성
 		String title = "";
-		//String titles = "";
-
 		for (NoticeDTO i : rList) {
 			// 상품명에 문자가 아닌 기호가 있다면, 제거
 			title += i.getGoods_title().replace(":", "").replace("(", "").replace(")", "").replace(":", "") + " ";
-			// log.info("가져온 상품명 : " + title);
-			// titles += title + " ";
 
 		}
 
 		// 공백으로 상품명을 구분해서 배열에 담음
-		//String[] splitTitle = titles.split(" ");
 		String[] splitTitle = title.split(" ");
 
 		// 워드 카운트(빈도수 체크) 값을 담을 HashMap 생성
@@ -257,9 +244,7 @@ public class ChartController {
 
 		log.info("rList 가져왔는지(isNull) ? : " + (rList == null));
 
-		// 판매글 중 상품명을 담을 변수와 리스트 배열 생성
 		String title = "";
-		//String titles = "";
 
 		for (NoticeDTO i : rList) {
 			// 상품명에 문자가 아닌 기호가 있다면, 제거

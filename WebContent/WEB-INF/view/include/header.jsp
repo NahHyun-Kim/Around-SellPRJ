@@ -89,7 +89,7 @@
                                 <div class="header-chk"><a id="getLogin" href="/logIn.do">로그인 후 이용하세요</a></div>
                                 <% } %>
                             </li>
-                            <!--<li><a href="/myCart.do"><span class="flaticon-shopping-cart"></span></a> </li>-->
+
                         </ul>
                     </div>
                 </div>

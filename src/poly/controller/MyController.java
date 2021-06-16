@@ -1,8 +1,6 @@
 package poly.controller;
 
-import com.mysql.cj.protocol.x.Notice;
 import org.apache.log4j.Logger;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import poly.dto.NoticeDTO;
 import poly.dto.UserDTO;
 import poly.service.INoticeService;
+import poly.service.ISearchService;
 import poly.service.IUserService;
 import poly.util.CmmUtil;
 import poly.util.EncryptUtil;
@@ -33,6 +32,9 @@ public class MyController {
 
     @Resource(name="NoticeService")
     private INoticeService noticeService;
+
+    @Resource(name="SearchService")
+    private ISearchService searchService;
 
     // 마이페이지
     @RequestMapping(value="/myPage")
@@ -87,16 +89,18 @@ public class MyController {
 
     }
 
-    // ajax로 마이페이지 회원 판매글 삭제(다중 삭제 구현 예정)
+    // ajax로 마이페이지 회원 판매글 삭제
     @ResponseBody
     @RequestMapping(value="delMySell")
-    public int delMySell(HttpServletRequest request, HttpServletResponse response)
+    public int delMySell(HttpServletRequest request, HttpServletResponse response, HttpSession session)
         throws Exception {
 
         log.info(this.getClass().getName() + ".delMySell(ajax 판매글 삭제) Start");
         String del_num = (String) request.getParameter("del_num");
+        String user_no = (String) session.getAttribute("SS_USER_NO");
 
-        log.info("받아온 회원 번호 : " + del_num);
+        log.info("받아온 판매글 번호 : " + del_num);
+        log.info("받아온 회원 번호 : " + user_no);
 
         NoticeDTO pDTO = new NoticeDTO();
         pDTO.setGoods_no(del_num);
@@ -112,6 +116,16 @@ public class MyController {
         // 삭제에 성공했다면
         if (res > 0) {
             log.info("회원 판매글 삭제 성공!");
+
+            // 삭제가 성공했다면, 최근 본 상품 함께 삭제
+            NoticeDTO dDTO = new NoticeDTO();
+            dDTO.setUser_no(user_no);
+
+            log.info("삭제 요청할 key값 번호 받아오기 성공!(user_no) : " + dDTO.getUser_no());
+
+            // 최근 본 상품에서 삭제함
+            searchService.rmKeyword(dDTO);
+            log.info("삭제 요청 완료!");
         } else {
             log.info("삭제 실패!");
         }
@@ -344,7 +358,6 @@ public class MyController {
 
     }
 
-
     // 비밀번호 변경(회원정보 수정 시)
     @RequestMapping("/updateMyPw")
     public String updateMyPw(HttpServletRequest request, HttpServletResponse response, ModelMap model, HttpSession session) throws Exception {
@@ -434,13 +447,9 @@ public class MyController {
 
         UserDTO pDTO = new UserDTO();
 
-        // 로그인 안 한 상태로, 인증번호 발송을 통해 비밀번호 변경을 요청하고 있을 시
-        //if (user_no == null && email != null) {
             pDTO.setUser_email(email);
             pDTO.setUser_no(user_no);
             pDTO.setPassword(password);
-        //}
-
 
         UserDTO rDTO = null;
         rDTO = userService.myPwdChk(pDTO);

@@ -7,12 +7,6 @@
     String GOODS_NO = (String) rDTO.getGoods_no();
     System.out.println("가져온 상품번호 : " + GOODS_NO);
 
-    // 정보를 불러오지 못했을 경우, 객체 생성
-    /*if (rDTO == null) {
-        rDTO = new NoticeDTO();
-    }*/
-
-
     // 게시글 수정, 삭제 시 로그인&본인 여부 확인을 위한 세션값 받아오기
     String SS_USER_NO = CmmUtil.nvl(((String) session.getAttribute("SS_USER_NO")), "-1");
     String SS_USER_ADDR = CmmUtil.nvl((String) session.getAttribute("SS_USER_ADDR"));
@@ -173,10 +167,8 @@
             /**
              *  댓글 유효성에 문제가 없다면, ajax로 댓글 등록을 호출
              *  */
-            //else {
 
             }
-        //}
 
         //글자 길이 바이트 단위로 체크하기(바이트값 전달)
         function calBytes(str){
@@ -214,15 +206,18 @@
 
                     console.log("총 댓글 수 : " + total);
 
+                    comment_list += '<section class="blog_area single-post-area section-padding"><div class="container"><div class="row"><div class="col-lg-3 posts-list"></div>';
+
                     // rList로 댓글 리스트를 JSON 형태로 받아와, 전체 사이즈만큼 출력.
                     // json형태는 .변수명으로 값을 가져올 수 있다.
                     for (var i=0; i<json.length; i++) {
                         var comment_no = json[i].comment_no;
                         console.log("받아온 댓글번호 : " + comment_no);
 
-                        comment_list += '<div>';
-                        comment_list += ("작성자 : " + json[i].user_name+"<br>");
-                        comment_list += (json[i].content+"<br>");
+                        comment_list += '<div class="col-lg-6 posts-list"><div class="blog-author toShadow"><div class="media align-items-center">';
+                        <%--comment_list += '<div>';--%>
+                        <%--comment_list += ("작성자 : " + json[i].user_name+"<br>");--%>
+                        <%--comment_list += (json[i].content+"<br>");--%>
 
                         // 긍정, 부정 댓글에 따라 표시되는 이모티콘을 다르게함
                         if (json[i].polarity == "+") {
@@ -233,15 +228,22 @@
                             comment_list += '<img src="${pageContext.request.contextPath}/resources/assets/img/oing.png" style="width:30px; height:30px"/>';
                         }
 
-                        // 본인이 작성한 댓글인 경우에만 수정, 삭제할 수 있도록 수정, 삭제 버튼을 표시함
-                        if ((<%=SS_USER_NO%>) == (json[i].user_no))
-                        {
-                            console.log("SS_USER_NO == user_no(삭제 가능!)" + (json[i].user_no));
-                            comment_list += '<button type="button" class="btn view-btn3 font ml-2" onclick="editForm(' + comment_no + ')">수정</button> &nbsp;';
-                            comment_list += '<button type="button" class="btn view-btn3 font" onclick="delComment(' + comment_no + ')">X</button><br>';
-                        }
-                        comment_list += '</div><hr/>';
+                        comment_list += '<div class="media-body"><h4>';
+                        comment_list += '작성자 : ' + json[i].user_name + '</h4>';
+                        comment_list += '<p>' + json[i].content + '</p></div></div></div></div>';
+
+                        <%--// 본인이 작성한 댓글인 경우에만 수정, 삭제할 수 있도록 수정, 삭제 버튼을 표시함--%>
+                        <%--if ((<%=SS_USER_NO%>) == (json[i].user_no))--%>
+                        <%--{--%>
+                        <%--    console.log("SS_USER_NO == user_no(삭제 가능!)" + (json[i].user_no));--%>
+                        <%--    comment_list += '<button type="button" class="btn view-btn3 font ml-2" onclick="editForm(' + comment_no + ')">수정</button> &nbsp;';--%>
+                        <%--    comment_list += '<button type="button" class="btn view-btn3 font" onclick="delComment(' + comment_no + ')">X</button><br>';--%>
+                        <%--}--%>
+                        <%--comment_list += '</div><hr/>';--%>
+
+
                     }
+                        comment_list += '<div class="col-lg-3 posts-list"></div></div></div></section>';
                     $("#total").html(totalMent);
                     $("#comment_list").html(comment_list);
                 }
@@ -610,10 +612,35 @@
         .dotOverlay distanceInfo {
             font-family: "Noto Sans KR";
         }
+
+        .toShadow {
+            box-shadow: 2px 2px 3px 3px rgba(0, 0, 0, 0.2);
+            border-radius: 2%;
+        }
+
     </style>
 
     <main>
 
+        <section class="blog_area single-post-area section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 posts-list"></div>
+                    <div class="col-lg-6 posts-list">
+                        <div class="blog-author toShadow">
+                            <div class="media align-items-center">
+                                <img src="assets/img/blog/author.png" alt="">
+                                <div class="media-body">
+                                        <h4>Harvard milan</h4>
+                                    <p style="text-align: center;">댓글</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 posts-list"></div>
+                </div>
+            </div>
+        </section>
         <!--================Single Product Area =================-->
         <div class="product_image_area">
             <div class="container">
@@ -628,7 +655,7 @@
 
                             <hr/>
                             <div class="blog_right_sidebar">
-                                <aside class="single_sidebar_widget post_category_widget">
+                                <aside class="single_sidebar_widget post_category_widget toShadow">
                                     <br/>
                                     <h3 class="widget_title mt-10 fontPoor"><%=rDTO.getGoods_title()%></h3>
                                     <br/>
@@ -768,13 +795,17 @@
                                     </div>
                                     <% } %>
                                 <hr/>
-                                    <!--<div class="font" id="findpath"></div>-->
                                 </div>
 
                                 <h3 class="widget_title mt-10 fontPoor">댓글</h3>
                                 <!-- 댓글 작성란(임시) -->
                                 <div class="row">
-                                    <div class="col font">작성자 : <%=SS_USER_NAME%></div>
+                                    <div class="col font">
+                                        <% if (!SS_USER_NO.equals("-1")) { %>
+                                        작성자 : <%=SS_USER_NAME%> <% } else { %>
+                                        <a href="/logIn.do">로그인</a> 후 이용하세요!
+                                        <% } %>
+                                    </div>
                                 </div>
                                 <br/>
                                 <div class="row">
@@ -784,9 +815,9 @@
                                     </div>
                                     <div class="col-4">
                                         <br/>
-                                        <button type="button" class="btn view-btn3 font" id="regComment" onclick="doSubmit()">댓글 등록</button>
+                                        <button type="button" class="btn view-btn3 font ml-2" id="regComment" onclick="doSubmit()">댓글 등록</button>
                                         <!-- 댓글 수정을 눌렀을 때만 버튼이 표시되도록 설정 -->
-                                        <button type="button" class="btn view-btn3 font" id="editComment" onclick="editComment()" style="display: none">댓글 수정</button>
+                                        <button type="button" class="btn view-btn3 font" id="editComment" onclick="editComment()" style="display: none; margin: 0 auto;">댓글 수정</button>
                                     </div>
                                 </div>
                                 <hr/>
@@ -804,11 +835,6 @@
         <!-- subscribe part end -->
     </main>
 
-
-
-    <script type="text/javascript">
-
-    </script>
     <script type="text/javascript">
 
         function doCart(goods_no, user_no) {

@@ -1,9 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<!--script src="/resources/boot/vendor/modernizr-3.5.0.min.js"></script>-->
-<!-- Jquery, Popper, Bootstrap -->
-<!--<script src="/resources/boot/vendor/jquery-1.12.4.min.js"></script>-->
-
 <script src="/resources/boot/js/popper.min.js"></script>
 <script src="/resources/boot/js/bootstrap.min.js"></script>
 <!-- Jquery Mobile Menu -->

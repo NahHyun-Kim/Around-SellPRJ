@@ -53,11 +53,4 @@ public class CartService implements ICartService {
         cartMapper.updateCart(pDTO);
     }
 
-
-    // 장바구니 목록 전체 삭제
-    /*@Override
-    public int delCart(CartDTO pDTO) throws Exception {
-        return cartMapper.delCart(pDTO);
-    } */
-
 }

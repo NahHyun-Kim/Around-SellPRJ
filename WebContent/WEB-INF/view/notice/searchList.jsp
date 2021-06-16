@@ -8,7 +8,7 @@
 
 <html>
 <head>
-    <title>판매글 목록(페이징)</title>
+    <title>판매글 검색</title>
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp" %>
     <link rel="stylesheet" href="/resources/boot/css/nice-select.css">
@@ -59,6 +59,10 @@
     .toPurple {
         color: rebeccapurple;
     }
+
+    .font:hover {
+        cursor: pointer;
+    }
 </style>
 <!-- 상품 리스트 + 검색 section 시작 -->
 <div class="popular-items section-padding30">
@@ -107,8 +111,6 @@
                             </div>
                         </div>
 
-                        <!--<button type="button" id="searchProduct" class="btn btn-info">검색하기</button> -->
-
                         <input type="hidden" id="st" name="searchType" value="${paging.searchType}"/>
 
 
@@ -122,8 +124,7 @@
                         </select>
 
                         <input type="hidden" id="ot" name="odType" value="${paging.odType}"/>
-                        <!-- 테스트용, 추후 삭제 예정(onChange 함수로 정렬 성공) -->
-                        <!--<button type="button" id="orderProduct" class="btn btn-info">정렬하기</button>-->
+
                     </div>
 
                     <hr/>

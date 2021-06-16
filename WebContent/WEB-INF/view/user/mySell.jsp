@@ -15,7 +15,7 @@
 %>
 <html>
 <head>
-    <title>나의 판매글 조회하기</title>
+    <title>Around-Sell 마이페이지</title>
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp"%>
 
@@ -209,7 +209,7 @@
                 %>
                 <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
                     <div class="single-popular-items mb-50 text-center">
-                        <input type="radio" name="del_num" id="del_num" value="<%=rDTO.getGoods_no()%>"/>
+                        <input type="radio" name="del_num" id="del_num" class="mb-15" value="<%=rDTO.getGoods_no()%>"/>
                         <!-- 상품 이미지 -->
                         <div class="popular-img">
                             <img src="/resource/images/<%=rDTO.getImgs()%>" alt=""
@@ -217,7 +217,7 @@
 
                             <!-- hover 적용, 마우스 올릴 시 click me! 문구 표시 -->
                             <div class="img-cap">
-                                <span>My Product!</span>
+                                <span onclick="doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>')">My Product!</span>
                             </div>
 
                         </div>
@@ -294,8 +294,15 @@
                     success: function (res) {
                         console.log("res : " + res);
                         if (res == 1) {
-                            Swal.fire("삭제에 성공했습니다.", '', 'success');
-                            window.location.reload();
+                            Swal.fire({
+                                title: '삭제에 성공했습니다.',
+                                icon: 'info'
+                            }).then(value => {
+                                if (value) {
+                                    window.location.reload();
+                                }
+                            })
+
                         } else if (res == 0) {
                             Swal.fire("삭제에 실패했습니다.", '', 'error');
                             return false;

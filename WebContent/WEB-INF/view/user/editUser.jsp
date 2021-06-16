@@ -33,26 +33,7 @@
             display: none
         }
     </style>
-<%--    <script type="text/javascript">--%>
 
-<%--       $(document).ready(function() {--%>
-<%--            var validChk = <%=getLogin%>;--%>
-<%--            console.log("본인이 접근했는지 : " + validChk);--%>
-
-<%--            if (validChk == 2) {--%>
-<%--                Swal.fire({--%>
-<%--                    title: '로그인 후 이용해 주세요',--%>
-<%--                    icon: 'warning',--%>
-<%--                    setTimeout: '2500',--%>
-<%--                    showConfirmButton: false--%>
-<%--                }).then(value => {--%>
-<%--                    if (value) {--%>
-<%--                        location.href = "/logIn.do";--%>
-<%--                    }}--%>
-<%--                    )--%>
-<%--            }--%>
-<%--        })--%>
-<%--    </script>--%>
 </head>
 <body>
 <!-- preloader -->
@@ -136,7 +117,7 @@
                                             data :  sendData,
                                             success(data) {
                                                 if (data == 1) {
-                                                    //location.href = "editPwForm.do";
+
                                                         Swal.fire({
                                                             icon: 'question',
                                                             title: '변경할 비밀번호를 입력하세요.',
@@ -144,9 +125,7 @@
                                                             customClass: {
                                                                 validationMessage: 'my-validation-message',
                                                             },
-                                                            // inputAttributes: {
-                                                            //     id: "password1",
-                                                            // },
+
                                                             preConfirm: (value) => {
                                                                 if (!value) {
                                                                     Swal.showValidationMessage(

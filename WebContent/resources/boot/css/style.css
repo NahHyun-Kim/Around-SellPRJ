@@ -5588,9 +5588,11 @@ input:hover, input:focus {
 }
 
 .single-post-area .blog-author {
-    padding: 40px 30px;
+    padding: 27px 18px 30px 25px;
     background: #fbf9ff;
-    margin-top: 50px
+    margin-top: 5px;
+    height: 120px;
+
 }
 
 @media (max-width: 600px) {
@@ -5600,8 +5602,8 @@ input:hover, input:focus {
 }
 
 .single-post-area .blog-author img {
-    width: 90px;
-    height: 90px;
+    width: 65px;
+    height: 65px;
     border-radius: 50%;
     margin-right: 30px
 }

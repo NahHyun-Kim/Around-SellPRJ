@@ -113,11 +113,7 @@ $(document).ready(function() {
             console.log("if 회원 coords : " + coords2);
             console.log("if 회원 위도(lat2) : " + lat2);
             console.log("if 회원 경도(lon2) : " + lon2);
-            // 결과값으로 받은 위치를 마커로 표시
-            /* var marker = new kakao.maps.Marker({
-                map: map,
-                position: coords2
-            }); */
+
         }
     })
 

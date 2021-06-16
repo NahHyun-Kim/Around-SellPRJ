@@ -13,7 +13,7 @@
 %>
 <html>
 <head>
-    <title>관심상품</title>
+    <title>관심 상품</title>
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp"%>
 
@@ -81,12 +81,12 @@
 
                             <!-- 상품 이미지 -->
                             <div class="popular-img">
-                                <img src="/resource/images/<%=rDTO.getImgs()%>" alt=""
-                                     style="width:240px; height:240px; object-fit: contain; cursor: pointer" onclick="doDetail(<%=rDTO.getGoods_no()%>)">
+                                <a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>')"><img src="/resource/images/<%=rDTO.getImgs()%>" alt=""
+                                     style="width:240px; height:240px; object-fit: contain; cursor: pointer"/></a>
 
                                 <!-- hover 적용, 마우스 올릴 시 click me! 문구 표시 -->
                                 <div class="img-cap">
-                                    <span>Favorite!</span>
+                                    <span onclick="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>')">Favorite!</span>
                                 </div>
 
                             </div>
@@ -163,9 +163,6 @@
     var chkObj = document.getElementsByName("RowCheck");
     var rowCnt = chkObj.length;
 
-
-    //if ($("input[name='allCheck']").is(":checked") == true){
-
     // 전체 선택을 클릭한다면, 모든 rowCheck의 체크박스 value를 checked 로 변경
     $("input[name='allCheck']").click(function() {
         var chk_listArr = $("input[name='RowCheck']");
@@ -219,7 +216,6 @@
                         url: "/deleteCart.do",
                         type: "post",
                         // 배열 형태를 넘기기 위해 사용(traditional 속성)
-                        // tranditional: true,
                         data: {
                             "valueArr" : valueArr
                         },
@@ -253,7 +249,21 @@
         }
     }
 
+    // 게시글 상세보기(상품번호를 전달받아 상세보기 페이지로 이동)
+    function doDetail(seq) {
+        location.href = "/noticeInfo.do?nSeq=" + seq;
+    }
 </script>
+
+    <style>
+        .popular-caption:hover {
+            cursor: pointer;
+        }
+
+        #chk:hover {
+            cursor: pointer;
+        }
+    </style>
 <!-- bootstrap, css 파일 -->
 <link rel="stylesheet" href="/resource/css/notice.css"/>
 

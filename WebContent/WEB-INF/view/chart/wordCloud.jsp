@@ -142,10 +142,6 @@
                     title.fontWeight = "500";
                     title.style = "text-align: center";
 
-                    // setInterval(function () {
-                    //     series.dataItems.getIndex(Math.round(Math.random() * (series.dataItems.length - 1))).setValue("value", Math.round(Math.random() * 10));
-                    // }, 10000)
-
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert("에러 발생! \n" + textStatus + ":" + errorThrown);
