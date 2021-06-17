@@ -206,7 +206,7 @@
 
                     console.log("총 댓글 수 : " + total);
 
-                    comment_list += '<section class="blog_area single-post-area section-padding"><div class="container"><div class="row"><div class="col-lg-3 posts-list"></div>';
+                    comment_list += '<section class="blog_area single-post-area section-padding"><div class="container"><div class="row">';
 
                     // rList로 댓글 리스트를 JSON 형태로 받아와, 전체 사이즈만큼 출력.
                     // json형태는 .변수명으로 값을 가져올 수 있다.
@@ -214,7 +214,9 @@
                         var comment_no = json[i].comment_no;
                         console.log("받아온 댓글번호 : " + comment_no);
 
-                        comment_list += '<div class="col-lg-6 posts-list"><div class="blog-author toShadow"><div class="media align-items-center">';
+
+                        comment_list += '<div class="col-lg-1 posts-list"></div><div class="col-lg-8 posts-list">';
+                        comment_list += '<div class="blog-author toShadow" style="margin: 10px auto;"><div class="media align-items-center pt-10">';
                         <%--comment_list += '<div>';--%>
                         <%--comment_list += ("작성자 : " + json[i].user_name+"<br>");--%>
                         <%--comment_list += (json[i].content+"<br>");--%>
@@ -228,10 +230,21 @@
                             comment_list += '<img src="${pageContext.request.contextPath}/resources/assets/img/oing.png" style="width:30px; height:30px"/>';
                         }
 
-                        comment_list += '<div class="media-body"><h4>';
+                        comment_list += '<div class="media-body font"><h4>';
                         comment_list += '작성자 : ' + json[i].user_name + '</h4>';
-                        comment_list += '<p>' + json[i].content + '</p></div></div></div></div>';
+                        comment_list += '<span class="font" style="color: darkslategray">' + json[i].content + '</span>';
 
+                        comment_list += '</div></div></div></div><div class="col-lg-3 posts-list pt-50">';
+                        // 본인이 작성한 댓글인 경우에만 수정, 삭제할 수 있도록 수정, 삭제 버튼을 표시함
+                        if ((<%=SS_USER_NO%>) == (json[i].user_no))
+                        {
+                            console.log("SS_USER_NO == user_no(삭제 가능!)" + (json[i].user_no));
+                            comment_list += '<button type="button" class="btn view-btn3 font ml-2 btnSml" onclick="editForm(' + comment_no + ')">수정</button> &nbsp;';
+                            comment_list += '<button type="button" class="btn view-btn3 font btnSml" onclick="delComment(' + comment_no + ')">X</button><br>';
+                        }
+                        comment_list += '</div>';
+
+                        //<div class="col-lg-2 posts-list"></div>
                         <%--// 본인이 작성한 댓글인 경우에만 수정, 삭제할 수 있도록 수정, 삭제 버튼을 표시함--%>
                         <%--if ((<%=SS_USER_NO%>) == (json[i].user_no))--%>
                         <%--{--%>
@@ -243,7 +256,7 @@
 
 
                     }
-                        comment_list += '<div class="col-lg-3 posts-list"></div></div></div></section>';
+                        comment_list += '</div></div></section>';
                     $("#total").html(totalMent);
                     $("#comment_list").html(comment_list);
                 }
@@ -566,7 +579,6 @@
                                     <div class="header-chk"><a id="getLogin" href="/logIn.do">로그인 후 이용하세요</a></div>
                                     <% } %>
                                 </li>
-                                <!--<li><a href="/myCart.do"><span class="flaticon-shopping-cart"></span></a> </li>-->
                             </ul>
                         </div>
                     </div>
@@ -622,25 +634,25 @@
 
     <main>
 
-        <section class="blog_area single-post-area section-padding">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3 posts-list"></div>
-                    <div class="col-lg-6 posts-list">
-                        <div class="blog-author toShadow">
-                            <div class="media align-items-center">
-                                <img src="assets/img/blog/author.png" alt="">
-                                <div class="media-body">
-                                        <h4>Harvard milan</h4>
-                                    <p style="text-align: center;">댓글</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 posts-list"></div>
-                </div>
-            </div>
-        </section>
+<%--        <section class="blog_area single-post-area section-padding">--%>
+<%--            <div class="container">--%>
+<%--                <div class="row">--%>
+<%--                    <div class="col-lg-3 posts-list"></div>--%>
+<%--                    <div class="col-lg-6 posts-list">--%>
+<%--                        <div class="blog-author toShadow">--%>
+<%--                            <div class="media align-items-center">--%>
+<%--                                <img src="assets/img/blog/author.png" alt="">--%>
+<%--                                <div class="media-body">--%>
+<%--                                        <h4>Harvard milan</h4>--%>
+<%--                                    <p style="text-align: center;">댓글</p>--%>
+<%--                                </div>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
+<%--                    </div>--%>
+<%--                    <div class="col-lg-3 posts-list"></div>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </section>--%>
         <!--================Single Product Area =================-->
         <div class="product_image_area">
             <div class="container">
@@ -810,12 +822,12 @@
                                 <br/>
                                 <div class="row">
                                     <div class="col-1"></div>
-                                    <div class="col-7">
-                                        <input class="form-control" type="textarea" name="comment" id="comment" onclick="validChk()" style="width: 300px; height:100px; margin: 0 auto;" placeholder="댓글을 입력하세요."/>
+                                    <div class="col-8">
+                                        <input class="form-control" type="textarea" name="comment" id="comment" onclick="validChk()" style="width: 480px; height:100px; margin: 0 auto;" placeholder="댓글을 입력하세요."/>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-3">
                                         <br/>
-                                        <button type="button" class="btn view-btn3 font ml-2" id="regComment" onclick="doSubmit()">댓글 등록</button>
+                                        <button type="button" class="btn view-btn3 font" id="regComment" onclick="doSubmit()">댓글 등록</button>
                                         <!-- 댓글 수정을 눌렀을 때만 버튼이 표시되도록 설정 -->
                                         <button type="button" class="btn view-btn3 font" id="editComment" onclick="editComment()" style="display: none; margin: 0 auto;">댓글 수정</button>
                                     </div>
