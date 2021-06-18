@@ -19,7 +19,7 @@
 
 <!-- top 네비게이션 바 CSS -->
 <link rel="stylesheet" href="/resources/boot/css/slicknav.css">
-<link rel="stylesheet" href="/resources/boot/css/style.css?ver=3">
+<link rel="stylesheet" href="/resources/boot/css/style.css?ver=5">
 
 <link rel="stylesheet" href="/resources/boot/css/bootstrap.min.css">
 <link rel="stylesheet" href="/resources/boot/css/owl.carousel.min.css">

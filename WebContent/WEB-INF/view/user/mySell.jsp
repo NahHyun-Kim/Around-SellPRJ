@@ -229,7 +229,16 @@
                             </a></h3>
 
                             <!-- 가격 -->
-                            <h3><a href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');"><%=CmmUtil.nvl(rDTO.getGoods_price())%></a></h3>
+                            <h3><a id="<%=i%>" href="javascript:doDetail('<%=CmmUtil.nvl(rDTO.getGoods_no())%>');"><%=CmmUtil.nvl(rDTO.getGoods_price())%></a></h3>
+                            <!-- 상품 가격 -->
+                            <script type="text/javascript">
+                                $("#<%=i%>").text(numberWithCommas(<%=rDTO.getGoods_price()%>) + '원');
+
+                                <!-- 가격 콤마로 표시하는 함수-->
+                                function numberWithCommas(x) {
+                                    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                }
+                            </script>
 
                         </div>
                     </div>

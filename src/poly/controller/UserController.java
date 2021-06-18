@@ -803,4 +803,47 @@ public class UserController {
 
         return res;
     }
+
+    // 사전결제 시 수령정보 메일 발송
+    @ResponseBody
+    @RequestMapping(value="/paySuccess")
+    public int paySuccess(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+                          @RequestParam(value="goods_title") String goods_title,
+                          @RequestParam(value="goods_addr") String goods_addr,
+                          @RequestParam(value="pay_id") String pay_id) throws Exception {
+
+        log.info("메일발송(사전결제 시) 시작!");
+        log.info("받아온 정보(상품명, 결제아이디)" + goods_title + pay_id);
+
+        int res = 0;
+
+        try {
+            String user_no = (String) session.getAttribute("SS_USER_NO");
+
+            UserDTO pDTO = new UserDTO();
+            pDTO.setUser_no(user_no);
+
+            // 이메일을 가져와 결제정보 메일 발송
+            UserDTO rDTO = userService.getUserInfo(pDTO);
+
+            String user_email = CmmUtil.nvl(EncryptUtil.decAES128CBC(rDTO.getUser_email()));
+            log.info("복호화한 이메일 : " + user_email);
+
+            String sendMsg = "Around-Sell 사전 결제가 완료되었습니다. \n 결제 상품명 : " + goods_title + "\n 방문하실 상호명 : " + goods_addr + "\n 결제번호 : " + pay_id;
+
+            MailDTO mDTO = new MailDTO();
+            mDTO.setToMail(user_email);
+            mDTO.setTitle("Around-Sell 사전결제가 완료되었습니다.");
+            mDTO.setContents(sendMsg);
+
+            res = mailService.doSendMail(mDTO);
+
+        } catch (Exception e) {
+            log.info("에러 발생!(결제 메일) : " + e.toString());
+            e.printStackTrace();
+        }
+
+        log.info("doSendMail End(res 값 : ) " + res);
+        return res;
+    }
 }

@@ -206,7 +206,7 @@
 
                     console.log("총 댓글 수 : " + total);
 
-                    comment_list += '<section class="blog_area single-post-area section-padding"><div class="container"><div class="row">';
+                    comment_list += '<section class="blog_area single-post-area pt-20 pb-20"><div class="container"><div class="row">';
 
                     // rList로 댓글 리스트를 JSON 형태로 받아와, 전체 사이즈만큼 출력.
                     // json형태는 .변수명으로 값을 가져올 수 있다.
@@ -619,6 +619,8 @@
 
         #map {
             width: 500px; height: 300px; display: block; margin: 0 auto;
+            border-radius: 2%;
+            box-shadow: 0 10px 15px rgba(25, 25, 25, 0.1);
         }
 
         .dotOverlay distanceInfo {
@@ -626,33 +628,24 @@
         }
 
         .toShadow {
-            box-shadow: 2px 2px 3px 3px rgba(0, 0, 0, 0.2);
+            /*box-shadow: 2px 2px 3px 3px rgba(0, 0, 0, 0.2);*/
+            box-shadow: 0 8px 10px rgba(25, 25, 25, 0.1);
             border-radius: 2%;
         }
 
+        .commentForm {
+            width: 480px; height:100px; margin: 10px auto;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1080px) {
+            .commentForm {
+                width: 300px; height:100px; margin: 0 auto;
+            }
+        }
     </style>
 
     <main>
-
-<%--        <section class="blog_area single-post-area section-padding">--%>
-<%--            <div class="container">--%>
-<%--                <div class="row">--%>
-<%--                    <div class="col-lg-3 posts-list"></div>--%>
-<%--                    <div class="col-lg-6 posts-list">--%>
-<%--                        <div class="blog-author toShadow">--%>
-<%--                            <div class="media align-items-center">--%>
-<%--                                <img src="assets/img/blog/author.png" alt="">--%>
-<%--                                <div class="media-body">--%>
-<%--                                        <h4>Harvard milan</h4>--%>
-<%--                                    <p style="text-align: center;">댓글</p>--%>
-<%--                                </div>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-<%--                    <div class="col-lg-3 posts-list"></div>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </section>--%>
         <!--================Single Product Area =================-->
         <div class="product_image_area">
             <div class="container">
@@ -781,6 +774,23 @@
                                                             msg += '결제 물품 : ' + '<%=rDTO.getGoods_title()%>' + '<br/>';
                                                             msg += '결제 금액 : ' + rsp.paid_amount + '원<br/>';
                                                             msg += '매장 방문 후 수령해 주세요!';
+
+                                                            $.ajax({
+                                                                url: "/paySuccess.do",
+                                                                type: "get",
+                                                                data: {
+                                                                    "goods_title" : '<%=rDTO.getGoods_title()%>',
+                                                                    "goods_addr" : '<%=rDTO.getGoods_addr()%>',
+                                                                    "pay_id" : rsp.imp_uid,
+                                                                },
+                                                                success: function(res) {
+                                                                    if (res == 1) {
+                                                                        console.log('메일 발송 성공!');
+                                                                    } else if (res == 0) {
+                                                                        console.log('메일 발송 실패!');
+                                                                    }
+                                                                }
+                                                            })
                                                         } else {
                                                             var msg = '결제에 실패하였습니다.<br/>';
                                                             msg += '에러내용 : ' + rsp.error_msg;
@@ -823,7 +833,7 @@
                                 <div class="row">
                                     <div class="col-1"></div>
                                     <div class="col-8">
-                                        <input class="form-control" type="textarea" name="comment" id="comment" onclick="validChk()" style="width: 480px; height:100px; margin: 0 auto;" placeholder="댓글을 입력하세요."/>
+                                        <input class="form-control commentForm" type="textarea" name="comment" id="comment" onclick="validChk()" placeholder="댓글을 입력하세요."/>
                                     </div>
                                     <div class="col-3">
                                         <br/>
