@@ -49,12 +49,6 @@ public class ChartController {
 		return "/chart/chart";
 	}
 
-	@RequestMapping(value = "test")
-	public String test() {
-		log.info("부트스트랩 테스트 화면");
-		return "/test";
-	}
-
 	/*
 	 * @ReseponseBody를 통해 명시적으로 produces를 사용해서 utf-8로 인코딩하면, ajax에 결과값 전송 시
 	 * 오류 없이 전송된다(json 타입으로 반환할 경우에는 application/json 으로 설정하면 된다.)
