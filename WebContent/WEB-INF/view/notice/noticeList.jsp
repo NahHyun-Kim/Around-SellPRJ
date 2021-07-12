@@ -37,6 +37,17 @@
             font-family: "Poor Story";
             font-weight: 600;
         }
+
+        #maps {
+            width: 500px; height:300px;
+        }
+
+        /*@media only screen and (min-width: 768px) and (max-width: 991px) */
+        @media (max-width: 575px) {
+            #maps {
+                width: 300px; height: 200px;
+            }
+        }
     </style>
 </head>
 
@@ -64,7 +75,7 @@
 
                         <div class="section-tittle mb-70 text-center" >
                             <!-- 다중 마커 -->
-                            <div id="maps" style="width: 500px; height:300px; margin: 0 auto; border-radius: 10%; z-index: 2;
+                            <div id="maps" style="margin: 0 auto; border-radius: 10%; z-index: 2;
 box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.2);">지도</div>
                         </div>
 
