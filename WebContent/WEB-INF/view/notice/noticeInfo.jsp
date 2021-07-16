@@ -744,6 +744,7 @@
 
                                             Swal.fire({
                                                 icon: 'question',
+                                                title: 'Around-Sell',
                                                 text: '사전 결제 후, 매장 방문하여 물품을 수령할 수 있습니다. 결제하시겠습니까?',
                                                 showConfirmButton: true,
                                                 confirmButtonText: '네. 결제할래요',

@@ -28,91 +28,57 @@
                     contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                     success: function(data) {
 
-                        console.log("data null인지?(length값) : " + data.length);
-
                         // 검색어 값들을 for문을 통해 저장
                         console.log("가져오기 성공!");
                         console.log(data);
                         console.log("타입 : " + typeof data);
 
+                        // 최근에 저장된 데이터부터 불러와야하기 때문에 .reverse()로 배열 순 뒤집기
+                        var reverse = data.reverse();
+                        console.log("reverse data : " + reverse);
+
+                        // 최근 본 상품 데이터, 설명 html을 담을 변수 선언
                         let recentlyGoods = "";
 
-                        // 최근 본 상품을 출력할 개수(적은 데이터에 대한 오류를 잡기위해 임의로 5개로 정함-> 추후 변경할 수도)
+                        // 최근 본 상품을 출력할 개수(최근 5개로 지정)
                         var cnt = 5;
-                        var len = data.length;
+                        var len = reverse.length;
 
-                        // 표시하고자 하는 5개의 목록보다 데이터가 많으면, 5개만 표시
-                        if (len > 0 && len >= cnt) {
-                            // 최근 본 상품을 표시할 개수를 정할 수 있음(-> 가져온 리스트에서 역순 출력. 임시로 5개로 설정(테스트))
+                        recentlyGoods += '<div class="font">최근 본 상품</div>';
 
-                            for (let i=len-1; i>=len-cnt; i--) {
+                        // 데이터가 5개가 넘었을 경우, 총 건수에서 최근 5건만 표시되었음을 알림
+                        if (cnt < len) {
+                            recentlyGoods += "<div>총 " + len + "건의 결과, 최근 " + cnt + "건을 표시합니다.</div> <hr/>";
 
-                                console.log("dataType ? : " + typeof data[i]);
-                                // String 형태의 값을 변환함 .으로 접근할 수 있는 JSON 객체로 변환
+                        // 최근 본 상품이 없는 경우, 안내 멘트와 상품 보러가기 링크를 안내
+                        } else if (len==0) {
+                            recentlyGoods = '<span class="font">최근 본 상품이 없습니다. <hr/> <a class="font" href="/searchList.do">상품 보러가기</a></span>';
 
-                                var obj =JSON.parse(data[i]);
+                            $("#recentlyGoods").html(recentlyGoods);
+                            $("#recentlyGoods").show();
 
-                                if (i==len-1) {
+                        } else {
+                            recentlyGoods += "<div>총 " + len + "건의 상품</div> <hr/>";
+                        }
 
-                                    // 데이터가 5개가 넘었을 경우, 총 건수에서 최근 5건만 표시되었음을 알림
-                                    if (cnt < len) {
-                                        recentlyGoods += '<div class="font">최근 본 상품</div>';
-                                        recentlyGoods += "<div>총 " + len + "건의 결과, 최근 " + cnt + "건을 표시합니다.</div> <hr/>";
-                                    } else {
-                                        recentlyGoods += '<div class="font">최근 본 상품</div><hr/>';
-                                    }
-                                }
+                        // 최근 본 상품 데이터가 있다면, 최근 본 상품 최대 5개까지 불러옴
+                        if (len != 0) {
+                            for (var i=0; i<len; i++) {
 
+                                // .으로 접근 가능한 json 객체로 변환(JSON.parse)
+                                var obj =JSON.parse(reverse[i]);
 
                                 recentlyGoods += '<div class="col" style="margin: 0 auto;">';
                                 recentlyGoods += '<a class="title" href="/noticeInfo.do?nSeq=' + obj.goods_no + '">';
                                 recentlyGoods +=  '<img src="${pageContext.request.contextPath}/resource/images/' + obj.imgs + '" style="width: 150px; height: 150px; object-fit: contain" alt="이미지 불러오기 실패"/>';
                                 recentlyGoods += '<br/>' + obj.goods_title + "</a> </div> <hr/>";
 
-                            }
-                            console.log("불러오기 성공! searchList : " + recentlyGoods);
-
-                            // 검색어 목록에 담음
-                            $("#recentlyGoods").html(recentlyGoods);
-                            $("#recentlyGoods").show();
-
-                        // 데이터가 표시하고자 하는 데이터가 적을 경우, for문을 전체로 돌려 모든 데이터를 불러온다.
-                        } else if (len > 0 && len < cnt) {
-                            for (let i=len-1; i>=0; i--) {
-
-                                // String 형태의 값을 변환함 .으로 접근할 수 있는 JSON 객체로 변환
-
-                                var obj =JSON.parse(data[i]);
-
-                                if (i==len-1) {
-
-                                    recentlyGoods += "<div>최근 본 상품</div>";
-
+                                if (i >= 4) {
+                                    break;
                                 }
-
-                                recentlyGoods += '<div class="col" style="margin: 0 auto;">';
-                                recentlyGoods += '<a class="title" href="/noticeInfo.do?nSeq=' + obj.goods_no + '">';
-                                recentlyGoods +=  '<img src="${pageContext.request.contextPath}/resource/images/' + obj.imgs + '" style="width: 150px; object-fit: contain" alt="이미지 불러오기 실패"/>';
-                                recentlyGoods += '<br/>' + obj.goods_title + "</a> </div>  <hr/>";
-
                             }
-                            console.log("불러오기 성공! searchList : " + recentlyGoods);
-
-                            // 검색어 목록에 담음
+                            // 최근 본 상품 목록에 담음
                             $("#recentlyGoods").html(recentlyGoods);
-                            $("#recentlyGoods").show();
-
-
-                            /* 로그인 + 최근 본 상품이 없다면
-                            * 상품이 없더라도, 빈 배열값 [] 이 반환되어(null로 뜨지 않음), data.length 의 길이로 0이면(=데이터가 없으면) 안내를 띄운다.
-                            */
-
-                            /* if문 돌려서 5개 이상이면 break를 줘도.. */
-                        } else if (data.length == 0) {
-
-                            var resultMent = '<span class="font">최근 본 상품이 없습니다. <hr/> <a class="font" href="/noticeList.do">상품 보러가기</a></span>';
-
-                            $("#recentlyGoods").html(resultMent);
                             $("#recentlyGoods").show();
                         }
                     }
