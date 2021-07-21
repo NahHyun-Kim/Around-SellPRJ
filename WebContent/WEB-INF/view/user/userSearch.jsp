@@ -108,6 +108,9 @@
     <!-- include JS File -->
     <%@ include file="../include/jsFile.jsp"%>
 
+    <!-- include Footer -->
+    <%@ include file="../include/footer.jsp"%>
+
     <!-- 이메일/비밀번호 찾기 js -->
     <script type="text/javascript" src="/resource/valid/searchUser.js"></script>
 </body>

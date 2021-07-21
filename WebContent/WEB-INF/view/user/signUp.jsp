@@ -126,6 +126,10 @@
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b5c003de0421fade00e68efc6fb912da&libraries=services"></script>
 <script type="text/javascript" src="/resource/js/addrAPI2.js?ver=1"></script>
 
+
+<!-- include Footer -->
+<%@ include file="../include/footer.jsp"%>
+
 <!-- include JS File -->
 <%@ include file="../include/jsFile.jsp"%>
 </body>

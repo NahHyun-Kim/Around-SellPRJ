@@ -83,6 +83,9 @@
 <!-- 이메일/비밀번호 찾기 js -->
 <script type="text/javascript" src="/resource/valid/searchUser.js?ver=1"></script>
 
+<!-- include Footer -->
+<%@ include file="../include/footer.jsp"%>
+
 <!-- include JS File -->
 <%@ include file="../include/jsFile.jsp"%>
 </body>

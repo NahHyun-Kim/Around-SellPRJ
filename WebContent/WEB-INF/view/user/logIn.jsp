@@ -2,6 +2,7 @@
 <%@ include file="../include/session.jsp"%>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Around-Sell 로그인</title>
     <!-- 부트스트랩 템플릿 CSS -->
     <%@ include file="../include/cssFile.jsp"%>
