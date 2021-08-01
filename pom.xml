@@ -17,6 +17,13 @@
 
 	<dependencies>
 
+		<!-- Websocket -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-websocket</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+
 		<!-- 파일업로드 -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>

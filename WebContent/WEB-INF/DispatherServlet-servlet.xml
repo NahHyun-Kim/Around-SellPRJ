@@ -6,6 +6,7 @@
 	   xmlns:mvc="http://www.springframework.org/schema/mvc"
 	   xmlns:context="http://www.springframework.org/schema/context"
 	   xmlns:beans="http://www.springframework.org/schema/c"
+	   xmlns:websocket="http://www.springframework.org/schema/websocket"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/aop
@@ -14,7 +15,8 @@
     http://www.springframework.org/schema/mvc/spring-mvc.xsd
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context.xsd
-">
+    http://www.springframework.org/schema/websocket
+    http://www.springframework.org/schema/websocket/spring-websocket.xsd">
 
 <!-- 어노테이션 사용하기 -->
 	<mvc:annotation-driven />
@@ -49,7 +51,13 @@
 		</property>
 	</bean>
 
+<!--	<websocket:handlers>-->
+<!--		<websocket:mapping handler="echoHandler" path="/echo" />-->
+<!--		<websocket:sockjs />-->
+<!--	</websocket:handlers>-->
+
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
 		p:maxUploadSize="104857600" p:maxInMemorySize="104857600" />
+<!--	<bean id="echoHandler" class="poly.controller.EchoHandler"></bean>-->
 </beans>
 
